@@ -343,21 +343,115 @@ p9fs_msg_destroy(struct p9fs_session *p9s, void *mp)
 void
 p9fs_init_session(struct p9fs_session *p9s)
 {
-	mtx_init(&p9s->p9s_lock, "p9s->p9s_lock", NULL, MTX_DEF);
-	TAILQ_INIT(&p9s->p9s_recv.p9r_reqs);
-	(void) strlcpy(p9s->p9s_uname, "root", sizeof ("root"));
-	p9s->p9s_uid = 0;
-	p9s->p9s_afid = NOFID;
-	/*
-	 * XXX Although there can be more FIDs, the unit accounting subroutines
-	 *     flatten these values to int arguments rather than u_int.
-	 *     This will limit the number of outstanding vnodes for a p9fs
-	 *     mount to 64k.
-	 */
-	p9s->p9s_fids = new_unrhdr(1, UINT16_MAX, &p9s->p9s_lock);
-	p9s->p9s_tags = new_unrhdr(1, UINT16_MAX - 1, &p9s->p9s_lock);
-	p9s->p9s_socktype = SOCK_STREAM;
-	p9s->p9s_proto = IPPROTO_TCP;
+    struct p9_fid *fid;
+    int rc = -ENOMEM;
+
+    p9s->uid = INVALID_UID;
+    p9s->dfltuid = V9FS_DEFUID;
+    p9s->dfltgid = V9FS_DEFGID;
+    // Create the clnt, ada func pointers.
+    p9s->clnt = p9_client_create(dev_name, mp);
+
+    if (IS_ERR(p9s->clnt)) {
+
+        rc = PTR_ERR(p9s->clnt);
+        p9_debug(P9_DEBUG_ERROR, "problem initializing 9p client\n");
+        goto err_bdi;
+
+    }
+    p9s->flags = V9FS_ACCESS_USER;
+    if (p9_is_proto_dotl(p9s->clnt)) {
+        p9s->flags = V9FS_ACCESS_CLIENT;
+        p9s->flags |= V9FS_PROTO_2000L;
+
+    } else if (p9_is_proto_dotu(p9s->clnt)) {
+        p9s->flags |= V9FS_PROTO_2000U;
+    }
+
+    if (rc < 0)
+        goto err_clnt;
+
+    p9s->maxdata = p9s->clnt->msize - P9_IOHDRSZ;
+
+    if (!v9fs_proto_dotl(p9s) &&
+            ((p9s->flags & V9FS_ACCESS_MASK) == V9FS_ACCESS_CLIENT)) {
+
+        /*
+         *          * We support ACCESS_CLIENT only for dotl.
+         *                   * Fall back to ACCESS_USER
+         *                            */
+        p9s->flags &= ~V9FS_ACCESS_MASK;
+        p9s->flags |= V9FS_ACCESS_USER;
+    }
+
+    /*FIXME !! */
+    /* for legacy mode, fall back to V9FS_ACCESS_ANY */
+    if (!(v9fs_proto_dotu(p9s) || v9fs_proto_dotl(p9s)) &&
+            ((p9s->flags&V9FS_ACCESS_MASK) == V9FS_ACCESS_USER)) {
+
+        p9s->flags &= ~V9FS_ACCESS_MASK;
+        p9s->flags |= V9FS_ACCESS_ANY;
+        p9s->uid = INVALID_UID;
+    }
+
+    if (!v9fs_proto_dotl(p9s) ||
+
+            !((p9s->flags & V9FS_ACCESS_MASK) == V9FS_ACCESS_CLIENT)) {
+
+        /*
+
+         *          * We support ACL checks on clinet only if the protocol is
+
+         *                   * 9P2000.L and access is V9FS_ACCESS_CLIENT.
+
+         *                            */
+
+        p9s->flags &= ~V9FS_ACL_MASK;
+   }
+
+    fid = p9_client_attach(p9s->clnt, NULL, p9s->uname, INVALID_UID,
+
+            p9s->aname);
+
+    if (IS_ERR(fid)) {
+
+        rc = PTR_ERR(fid);
+
+        p9_debug(P9_DEBUG_ERROR, "cannot attach\n");
+
+        goto err_clnt;
+
+    }
+    if ((p9s->flags & V9FS_ACCESS_MASK) == V9FS_ACCESS_SINGLE)
+        fid->uid = p9s->uid;
+    else
+        fid->uid = INVALID_UID;
+
+#ifdef CONFIG_9P_FSCACHE
+
+    /* register the session for caching */
+    v9fs_cache_session_get_cookie(p9s);
+#endif
+    mtx_lock_spin(&v9fs_sessionlist_lock);
+    list_add(&p9s->slist, &v9fs_sessionlist);
+    mtx_unlock_spin(&v9fs_sessionlist_lock);
+
+    return fid;
+
+err_clnt:
+
+   p9_client_destroy(p9s->clnt);
+err_bdi:
+                                                                                                                                 
+   bdi_destroy(&p9s->bdi);
+err_names:
+
+   
+   kfree(p9s->uname);
+
+   kfree(p9s->aname);
+
+   return ERR_PTR(rc);
 }
 
 void

@@ -75,7 +75,6 @@ p9fs_mount_parse_opts(struct mount *mp)
 {
 	struct p9fsmount *p9mp = VFSTOP9(mp);
 	struct p9fs_session *p9s = &p9mp->p9_session;
-	struct sockaddr *saddr = NULL;
 	char *opt;
 	int error = EINVAL;
 	int fromnamelen, ret;
@@ -274,6 +273,13 @@ out:
 /* For the root vnode's vnops. */
 extern struct vop_vector p9fs_vnops;
 
+int 
+p9fs_mountfs(struct vnode *devp, struct mount *mp, struct thread *thread)
+{
+
+
+}
+
 static int
 p9fs_mount(struct mount *mp)
 {
@@ -285,59 +291,53 @@ p9fs_mount(struct mount *mp)
 	if (vfs_filteropt(mp->mnt_optnew, p9_opts))
 		goto out;
 
-	if (mp->mnt_flag & MNT_UPDATE)
-		return (p9fs_mount_parse_opts(mp));
+    td = curthread;
 
 	/* Allocate and initialize the private mount structure. */
 	p9mp = malloc(sizeof (struct p9fsmount), M_P9MNT, M_WAITOK | M_ZERO);
 	mp->mnt_data = p9mp;
 	p9mp->p9_mountp = mp;
+    // This is creating the client instance along with the session pointer.
 	p9fs_init_session(&p9mp->p9_session);
 	p9s = &p9mp->p9_session;
 	p9s->p9s_mount = mp;
 
+
+    // Get fspec from this
 	error = p9fs_mount_parse_opts(mp);
 	if (error != 0)
 		goto out;
 
-	error = p9fs_connect(mp);
-	if (error != 0) {
-		goto out;
-	}
+    /*
+     ** Not an update, or updating the name: look up the name
+     ** and verify that it refers to a sensible disk device.
+     **/
+    NDINIT(&ndp, LOOKUP, FOLLOW | LOCKLEAF, UIO_SYSSPACE, fspec, td);
+    if ((error = namei(&ndp)) != 0)
+        return (error);
+    NDFREE(&ndp, NDF_ONLY_PNBUF);
+    devvp = ndp.ni_vp;
+    if (!vn_isdisk(devvp, &error)) {
+        vput(devvp);
+        return (error);
+    }
 
-	/* Negotiate with the remote service.  XXX: Add auth call. */
-	error = p9fs_client_version(p9s);
-	if (error == 0) {
-		/* Initialize the root vnode just before attaching. */
-		struct vnode *vp, *ivp;
-		struct p9fs_node *np = &p9s->p9s_rootnp;
+    /*
+     ** If mount by non-root, then verify that user has necessary
+     ** permissions on the device.
+     **/
+    accmode = VREAD;
+    if ((mp->mnt_flag & MNT_RDONLY) == 0)
+         accmode |= VWRITE;
+         error = VOP_ACCESS(devvp, accmode, td->td_ucred, td);
+         if (error)
+            error = priv_check(td, PRIV_VFS_MOUNT_PERM);
+         if (error) {
+              vput(devvp);
+             return (error);
+    }
 
-		np->p9n_fid = ROOTFID;
-		np->p9n_session = p9s;
-		error = getnewvnode("p9fs", mp, &p9fs_vnops, &vp);
-		if (error == 0) {
-			vn_lock(vp, LK_EXCLUSIVE);
-			error = insmntque(vp, mp);
-		}
-		ivp = NULL;
-		if (error == 0)
-			error = vfs_hash_insert(vp, ROOTFID, LK_EXCLUSIVE,
-			    curthread, &ivp, NULL, NULL);
-		if (error == 0 && ivp != NULL)
-			error = EBUSY;
-		if (error == 0) {
-			np->p9n_vnode = vp;
-			vp->v_data = np;
-			vp->v_type = VDIR;
-			vp->v_vflag |= VV_ROOT;
-			VOP_UNLOCK(vp, 0);
-		}
-	}
-	if (error == 0)
-		error = p9fs_client_attach(p9s);
-	if (error == 0)
-		p9s->p9s_state = P9S_RUNNING;
-
+    9pfs_mountfs(devpp, mp, td);
 out:
 	if (error != 0)
 		(void) p9fs_unmount(mp, MNT_FORCE);

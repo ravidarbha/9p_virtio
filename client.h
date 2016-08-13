@@ -150,7 +150,7 @@ struct p9_req_t {
  */
 
 struct p9_client {
-	spinlock_t lock; /* protect client structure */
+	mtx_lock_spin lock; /* protect client structure */
 	unsigned int msize;
 	unsigned char proto_version;
 	struct p9_trans_module *trans_mod;
@@ -158,7 +158,7 @@ struct p9_client {
 	void *trans;
 
 	struct p9_idpool *fidpool;
-	struct list_head fidlist;
+	TAILQ_HEAD fidlist;
 
 	struct p9_idpool *tagpool;
 	struct p9_req_t *reqs[P9_ROW_MAXTAG];

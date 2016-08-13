@@ -153,55 +153,6 @@ p9fs_client_auth(struct p9fs_session *p9s)
 	return (EINVAL);
 }
 
-int
-p9fs_client_attach(struct p9fs_session *p9s)
-{
-	void *m;
-	int error = 0;
-	struct p9fs_node *np = &p9s->p9s_rootnp;
-
-retry:
-	m = p9fs_msg_create(Tattach, p9fs_gettag(p9s));
-	if (m == NULL)
-		return (ENOBUFS);
-
-	if (error == 0) /* fid[4] */
-		error = p9fs_msg_add(m, sizeof (uint32_t), &np->p9n_fid);
-	if (error == 0) /* afid[4] */
-		error = p9fs_msg_add(m, sizeof (uint32_t), &p9s->p9s_afid);
-	if (error == 0) /* uname[s] */
-		error = p9fs_msg_add_string(m, p9s->p9s_uname,
-		    strlen(p9s->p9s_uname));
-	if (error == 0) /* aname[s] */
-		error = p9fs_msg_add_string(m, p9s->p9s_path,
-		    strlen(p9s->p9s_path));
-	if (error == 0) /* uid[4] */
-		error = p9fs_msg_add(m, sizeof (uint32_t), &p9s->p9s_uid);
-	if (error != 0) {
-		p9fs_msg_destroy(p9s, m);
-		return (error);
-	}
-
-	error = p9fs_msg_send(p9s, &m);
-	if (error == EMSGSIZE)
-		goto retry;
-
-	if (m != NULL) {
-		size_t off = sizeof (struct p9fs_msg_hdr);
-		struct p9fs_qid *qid;
-
-		error = p9fs_client_error(p9s, &m, Rattach);
-		if (error != 0)
-			return (error);
-
-		p9fs_msg_get(m, &off, (void *)&qid, sizeof (struct p9fs_qid));
-		bcopy(qid, &np->p9n_qid, sizeof (struct p9fs_qid));
-		p9fs_msg_destroy(p9s, m);
-	}
-
-	return (error);
-}
-
 /*
  * clunk - forget about a fid
  *

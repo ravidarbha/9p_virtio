@@ -4,51 +4,31 @@
  * This is a block based transport driver based on the lguest block driver
  * code.
  *
- *  Copyright (C) 2007, 2008 Eric Van Hensbergen, IBM Corporation
- *
  *  Based on virtio console driver
- *  Copyright (C) 2006, 2007 Rusty Russell, IBM Corporation
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License version 2
- *  as published by the Free Software Foundation.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to:
- *  Free Software Foundation
- *  51 Franklin Street, Fifth Floor
- *  Boston, MA  02111-1301  USA
  *
  */
 
-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-
-#include <linux/in.h>
-#include <linux/module.h>
-#include <linux/net.h>
-#include <linux/ipv6.h>
-#include <linux/errno.h>
-#include <linux/kernel.h>
-#include <linux/un.h>
-#include <linux/uaccess.h>
-#include <linux/inet.h>
-#include <linux/idr.h>
-#include <linux/file.h>
-#include <linux/highmem.h>
-#include <linux/slab.h>
+#include <sys/in.h>
+#include <sys/module.h>
+#include <sys/net.h>
+#include <sys/ipv6.h>
+#include <sys/errno.h>
+#include <sys/kernel.h>
+#include <sys/un.h>
+#include <sys/uaccess.h>
+#include <sys/inet.h>
+#include <sys/idr.h>
+#include <sys/file.h>
+#include <sys/highmem.h>
+#include <sys/slab.h>
 #include <net/9p/9p.h>
-#include <linux/parser.h>
+#include <sys/parser.h>
 #include <net/9p/client.h>
 #include <net/9p/transport.h>
-#include <linux/scatterlist.h>
-#include <linux/swap.h>
-#include <linux/virtio.h>
-#include <linux/virtio_9p.h>
+#include <sys/scatterlist.h>
+#include <sys/swap.h>
+#include <sys/virtio.h>
+#include <sys/virtio_9p.h>
 #include "trans_common.h"
 
 #define VIRTQUEUE_NUM	128
@@ -59,7 +39,7 @@ static DECLARE_WAIT_QUEUE_HEAD(vp_wq);
 static atomic_t vp_pinned = ATOMIC_INIT(0);
 
 /**
- * struct virtio_chan - per-instance transport information
+ * struct vchan_softc - per-instance transport information
  * @initialized: whether the channel is initialized
  * @inuse: whether the channel is in use
  * @lock: protects multiple elements within this structure
@@ -74,22 +54,22 @@ static atomic_t vp_pinned = ATOMIC_INIT(0);
  *
  */
 
-struct virtio_chan {
-	bool inuse;
+struct vchan_softc {
+	int inuse;
 
-	spinlock_t lock;
+	mtx_lock_spin lock;
 
 	struct p9_client *client;
-	struct virtio_device *vdev;
+	device_t vdev;
 	struct virtqueue *vq;
 	int ring_bufs_avail;
-	wait_queue_head_t *vc_wq;
+	TAILQ_HEAD vc_wq;
+
 	/* This is global limit. Since we don't have a global structure,
 	 * will be placing it in each channel.
 	 */
 	unsigned long p9_max_pages;
-	/* Scatterlist: can be too big for stack. */
-	struct scatterlist sg[VIRTQUEUE_NUM];
+	struct sglist *sg;
 
 	int tag_len;
 	/*
@@ -97,10 +77,11 @@ struct virtio_chan {
 	 */
 	char *tag;
 
-	struct list_head chan_list;
+	// tail queue head for channel list.
+	TAILQ_HEAD (,vchan_softc) chan_list;
 };
 
-static struct list_head virtio_chan_list;
+static TAILQ_HEAD (,vchan_softc) vchan_softc_list;
 
 /* How many bytes left in this page. */
 static unsigned int rest_of_page(void *data)
@@ -119,7 +100,7 @@ static unsigned int rest_of_page(void *data)
 
 static void p9_virtio_close(struct p9_client *client)
 {
-	struct virtio_chan *chan = client->trans;
+	struct vchan_softc *chan = client->trans;
 
 	mutex_lock(&virtio_9p_lock);
 	if (chan)
@@ -142,7 +123,8 @@ static void p9_virtio_close(struct p9_client *client)
 
 static void req_done(struct virtqueue *vq)
 {
-	struct virtio_chan *chan = vq->vdev->priv;
+	device_t dev = vq->v_dev;
+	struct vchan_softc *chan = device_get_softc(dev);
 	unsigned int len;
 	struct p9_req_t *req;
 	unsigned long flags;
@@ -150,16 +132,16 @@ static void req_done(struct virtqueue *vq)
 	p9_debug(P9_DEBUG_TRANS, ": request done\n");
 
 	while (1) {
-		spin_lock_irqsave(&chan->lock, flags);
-		req = virtqueue_get_buf(chan->vq, &len);
+		mutex_lock_spin(&chan->lock);
+		req = virtqueue_dequeue(chan->vq, NULL);
 		if (req == NULL) {
-			spin_unlock_irqrestore(&chan->lock, flags);
+			mutex_unlock_spin(&chan->lock);
 			break;
 		}
 		chan->ring_bufs_avail = 1;
-		spin_unlock_irqrestore(&chan->lock, flags);
+		mutex_unlock_spin(&chan->lock);
 		/* Wakeup if anyone waiting for VirtIO ring space. */
-		wake_up(chan->vc_wq);
+		wakeup(chan->vc_wq);
 		p9_client_cb(chan->client, req, REQ_STATUS_RCVD);
 	}
 }
@@ -178,27 +160,6 @@ static void req_done(struct virtqueue *vq)
  *
  */
 
-static int pack_sg_list(struct scatterlist *sg, int start,
-			int limit, char *data, int count)
-{
-	int s;
-	int index = start;
-
-	while (count) {
-		s = rest_of_page(data);
-		if (s > count)
-			s = count;
-		BUG_ON(index > limit);
-		/* Make sure we don't terminate early. */
-		sg_unmark_end(&sg[index]);
-		sg_set_buf(&sg[index++], data, s);
-		count -= s;
-		data += s;
-	}
-	if (index-start)
-		sg_mark_end(&sg[index - 1]);
-	return index-start;
-}
 
 /* We don't currently allow canceling of virtio requests */
 static int p9_virtio_cancel(struct p9_client *client, struct p9_req_t *req)
@@ -259,33 +220,35 @@ p9_virtio_request(struct p9_client *client, struct p9_req_t *req)
 	int err;
 	int in, out, out_sgs, in_sgs;
 	unsigned long flags;
-	struct virtio_chan *chan = client->trans;
-	struct scatterlist *sgs[2];
+	struct vchan_softc *chan = client->trans;
+	struct sglist *sgs[2];
 
 	p9_debug(P9_DEBUG_TRANS, "9p debug: virtio request\n");
 
 	req->status = REQ_STATUS_SENT;
 req_retry:
-	spin_lock_irqsave(&chan->lock, flags);
+	mtx_lock_spin(&chan->lock);
 
 	out_sgs = in_sgs = 0;
 	/* Handle out VirtIO ring buffers */
-	out = pack_sg_list(chan->sg, 0,
-			   VIRTQUEUE_NUM, req->tc->sdata, req->tc->size);
+	out = sglist_append(chan->sg, req->tc->sdata, req->tc->size);
 	if (out)
 		sgs[out_sgs++] = chan->sg;
 
-	in = pack_sg_list(chan->sg, out,
-			  VIRTQUEUE_NUM, req->rc->sdata, req->rc->capacity);
+	in = sglist_append(chan->sg, req->rc->sdata, req->rc->capacity);
 	if (in)
 		sgs[out_sgs + in_sgs++] = chan->sg + out;
 
-	err = virtqueue_add_sgs(chan->vq, sgs, out_sgs, in_sgs, req,
-				GFP_ATOMIC);
+	err = virtqueue_enqueue(chan->vq, req, sgs, in, out);
+
+    // Retry mechanism for the requeue. We could either
+    // do it this way - Where we sleep in this context and 
+    // wakeup again when we have resources or create a new 
+    // queue to enqueue and return back.
 	if (err < 0) {
 		if (err == -ENOSPC) {
 			chan->ring_bufs_avail = 0;
-			spin_unlock_irqrestore(&chan->lock, flags);
+			mtx_lock_spin(&chan->lock);
 			err = wait_event_interruptible(*chan->vc_wq,
 							chan->ring_bufs_avail);
 			if (err  == -ERESTARTSYS)
@@ -294,20 +257,21 @@ req_retry:
 			p9_debug(P9_DEBUG_TRANS, "Retry virtio request\n");
 			goto req_retry;
 		} else {
-			spin_unlock_irqrestore(&chan->lock, flags);
+			mtx_unlock_spin(&chan->lock);
 			p9_debug(P9_DEBUG_TRANS,
 				 "virtio rpc add_sgs returned failure\n");
 			return -EIO;
 		}
-	}
-	virtqueue_kick(chan->vq);
-	spin_unlock_irqrestore(&chan->lock, flags);
+	 }
+    // The actual kick.
+	virtqueue_notify(chan->vq);
+	mtx_unlock_spin(&chan->lock);
 
 	p9_debug(P9_DEBUG_TRANS, "virtio request kicked\n");
 	return 0;
 }
 
-static int p9_get_mapped_pages(struct virtio_chan *chan,
+static int p9_get_mapped_pages(struct vchan_softc *chan,
 			       struct page ***pages,
 			       struct iov_iter *data,
 			       int count,
@@ -397,7 +361,7 @@ p9_virtio_zc_request(struct p9_client *client, struct p9_req_t *req,
 	unsigned long flags;
 	int in_nr_pages = 0, out_nr_pages = 0;
 	struct page **in_pages = NULL, **out_pages = NULL;
-	struct virtio_chan *chan = client->trans;
+	struct vchan_softc *chan = client->trans;
 	struct scatterlist *sgs[4];
 	size_t offs;
 	int need_drop = 0;
@@ -515,7 +479,7 @@ err_out:
 static ssize_t p9_mount_tag_show(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
-	struct virtio_chan *chan;
+	struct vchan_softc *chan;
 	struct virtio_device *vdev;
 
 	vdev = dev_to_virtio(dev);
@@ -529,6 +493,49 @@ static ssize_t p9_mount_tag_show(struct device *dev,
 
 static DEVICE_ATTR(mount_tag, 0444, p9_mount_tag_show, NULL);
 
+static void
+vtblk_vq_intr(void *xsc)
+{
+ 
+    struct vtblk_softc *sc;
+    struct virtqueue *vq;
+    struct bio_queue queue;
+
+    sc = xsc;
+    vq = sc->vtblk_vq;
+    TAILQ_INIT(&queue);
+    VTBLK_LOCK(sc);
+again:
+    if (sc->vtblk_flags & VTBLK_FLAG_DETACH)
+        goto out;
+    
+    vtblk_queue_completed(sc, &queue);
+    vtblk_startio(sc);
+
+    if (virtqueue_enable_intr(vq) != 0) {
+        virtqueue_disable_intr(vq);
+        goto again;
+    }
+    if (sc->vtblk_flags & VTBLK_FLAG_SUSPEND)
+        wakeup(&sc->vtblk_vq);
+out:
+    VTBLK_UNLOCK(sc);
+    vtblk_done_completed(sc, &queue);
+
+}
+
+static int virtio_alloc_queue(struct vchan_softc *sc)
+{
+    struct vq_alloc_info vq_info;
+    device_t dev = sc->vdev;
+
+    VQ_ALLOC_INFO_INIT(&vq_info, sc->vtblk_max_nsegs,
+            req_done, sc, &sc->vq,
+            "%s request", device_get_nameunit(dev));
+
+       return (virtio_alloc_virtqueues(dev, 0, 1, &vq_info));
+}
+
 /**
  * p9_virtio_probe - probe for existence of 9P virtio channels
  * @vdev: virtio device to probe
@@ -537,47 +544,64 @@ static DEVICE_ATTR(mount_tag, 0444, p9_mount_tag_show, NULL);
  *
  */
 
-static int p9_virtio_probe(struct virtio_device *vdev)
+static int p9_virtio_probe(device_t dev)
 {
-	__u16 tag_len;
-	char *tag;
+    if (virtio_get_device_type(dev) != VIRTIO_ID_BLOCK)
+        return (ENXIO);
+    device_set_desc(dev, "VirtIO Trans FS ");
+
+    return (BUS_PROBE_DEFAULT); 
+}
+
+static int p9_virtio_attach(device_t dev)
+{
+	__u16 name_len;
+	char *name;
 	int err;
-	struct virtio_chan *chan;
+	struct vchan_softc *chan;
 
-	if (!vdev->config->get) {
-		dev_err(&vdev->dev, "%s failure: config access disabled\n",
-			__func__);
-		return -EINVAL;
-	}
-
-	chan = kmalloc(sizeof(struct virtio_chan), GFP_KERNEL);
-	if (!chan) {
-		pr_err("Failed to allocate virtio 9P channel\n");
-		err = -ENOMEM;
-		goto fail;
-	}
-
-	chan->vdev = vdev;
+    chan = device_get_softc(dev);
+	chan->vdev = dev;
 
 	/* We expect one virtqueue, for requests. */
-	chan->vq = virtio_find_single_vq(vdev, req_done, "requests");
+	chan->vq = virtio_alloc_queue(chan);
 	if (IS_ERR(chan->vq)) {
 		err = PTR_ERR(chan->vq);
 		goto out_free_vq;
 	}
-	chan->vq->vdev->priv = chan;
-	spin_lock_init(&chan->lock);
+	mtx_lock_init(&chan->lock);
 
-	sg_init_table(chan->sg, VIRTQUEUE_NUM);
+    chan->sg = sglist_alloc(VIRTQUEUE_NUM, M_NOWAIT);
+ 
+    if (chan->sg == NULL) {
+        error = ENOMEM;
+        device_printf(dev, "cannot allocate sglist\n");
+        goto fail;
+    }
 
 	chan->inuse = false;
+    // Name of the transport being used.
+	name = malloc(name_len);
+	if (!name) {
+		err = -ENOMEM;
+		goto out_free_vq;
+	}
+
+	chan->name = name;
+	chan->name_len = name_len;
+
+#if 0
+    // WE are not doing configs for now... hardcoded values .
+    // UNdo this when we are ready.
+	virtio_cread_bytes(vdev, offsetof(struct virtio_9p_config, tag),
+			   tag, tag_len);
 	if (virtio_has_feature(vdev, VIRTIO_9P_MOUNT_TAG)) {
 		virtio_cread(vdev, struct virtio_9p_config, tag_len, &tag_len);
 	} else {
 		err = -EINVAL;
 		goto out_free_vq;
 	}
-	tag = kmalloc(tag_len, GFP_KERNEL);
+	tag = kmalloc(tag_len);
 	if (!tag) {
 		err = -ENOMEM;
 		goto out_free_vq;
@@ -596,26 +620,30 @@ static int p9_virtio_probe(struct virtio_device *vdev)
 		err = -ENOMEM;
 		goto out_free_tag;
 	}
-	init_waitqueue_head(chan->vc_wq);
+#endif 
+    // Add to this wait queue which will later be woken up.
+	TAILQ_INIT(&chan->vc_wq);
 	chan->ring_bufs_avail = 1;
 	/* Ceiling limit to avoid denial of service attacks */
 	chan->p9_max_pages = nr_free_buffer_pages()/4;
 
-	virtio_device_ready(vdev);
-
+    // Add all of them to the channel list so that we can create(mount) only to one.
 	mutex_lock(&virtio_9p_lock);
-	list_add_tail(&chan->chan_list, &virtio_chan_list);
+	TAILQ_INSERT_TAIL(&chan->chan_list, &vchan_softc_list);
 	mutex_unlock(&virtio_9p_lock);
 
-	/* Let udev rules use the new mount_tag attribute. */
-	kobject_uevent(&(vdev->dev.kobj), KOBJ_CHANGE);
-
+    error = virtio_setup_intr(dev, INTR_ENTROPY);
+    if (error) {
+        device_printf(dev, "cannot setup virtqueue interrupt\n");
+        goto fail;
+    }
+    virtqueue_enable_intr(chan->vq);
 	return 0;
 
 out_free_tag:
-	kfree(tag);
+	free(name, name_len);
 out_free_vq:
-	vdev->config->del_vqs(vdev);
+	vdev->config->del_vqs(vde // For now no tags present.v);
 	kfree(chan);
 fail:
 	return err;
@@ -639,14 +667,14 @@ fail:
 static int
 p9_virtio_create(struct p9_client *client, const char *devname, char *args)
 {
-	struct virtio_chan *chan;
+	struct vchan_softc *chan;
 	int ret = -ENOENT;
 	int found = 0;
 
 	mutex_lock(&virtio_9p_lock);
-	list_for_each_entry(chan, &virtio_chan_list, chan_list) {
-		if (!strncmp(devname, chan->tag, chan->tag_len) &&
-		    strlen(devname) == chan->tag_len) {
+	TAILQ_FOREACH(chan, &vchan_softc_list, chan_list) {
+		if (!strncmp(devname, chan->name, chan->name_len) &&
+		    strlen(devname) == chan->name_len) {
 			if (!chan->inuse) {
 				chan->inuse = true;
 				found = 1;
@@ -675,9 +703,9 @@ p9_virtio_create(struct p9_client *client, const char *devname, char *args)
  *
  */
 
-static void p9_virtio_remove(struct virtio_device *vdev)
+static void p9_virtio_remove(device_t vdev)
 {
-	struct virtio_chan *chan = vdev->priv;
+	struct vchan_softc *chan = vdev->priv;
 	unsigned long warning_time;
 
 	mutex_lock(&virtio_9p_lock);
@@ -700,17 +728,18 @@ static void p9_virtio_remove(struct virtio_device *vdev)
 
 	mutex_unlock(&virtio_9p_lock);
 
-	vdev->config->reset(vdev);
 	vdev->config->del_vqs(vdev);
 
+#if 0
+	vdev->config->reset(vdev);
 	sysfs_remove_file(&(vdev->dev.kobj), &dev_attr_mount_tag.attr);
 	kobject_uevent(&(vdev->dev.kobj), KOBJ_CHANGE);
-	kfree(chan->tag);
-	kfree(chan->vc_wq);
-	kfree(chan);
-
+#endif 
+	free(chan->name, strlen(chan->name));
+	free(chan->vc_wq, sizeof(*chan->vc_wq));
 }
 
+#if 0 // No unnecessary stuff.
 static struct virtio_device_id id_table[] = {
 	{ VIRTIO_ID_9P, VIRTIO_DEV_ANY_ID },
 	{ 0 },
@@ -719,17 +748,7 @@ static struct virtio_device_id id_table[] = {
 static unsigned int features[] = {
 	VIRTIO_9P_MOUNT_TAG,
 };
-
-/* The standard "struct lguest_driver": */
-static struct virtio_driver p9_virtio_drv = {
-	.feature_table  = features,
-	.feature_table_size = ARRAY_SIZE(features),
-	.driver.name    = KBUILD_MODNAME,
-	.driver.owner	= THIS_MODULE,
-	.id_table	= id_table,
-	.probe		= p9_virtio_probe,
-	.remove		= p9_virtio_remove,
-};
+#endif 
 
 static struct p9_trans_module p9_virtio_trans = {
 	.name = "virtio",
@@ -749,25 +768,60 @@ static struct p9_trans_module p9_virtio_trans = {
 	.owner = THIS_MODULE,
 };
 
-/* The standard init function */
-static int __init p9_virtio_init(void)
-{
-	INIT_LIST_HEAD(&virtio_chan_list);
+static device_method_t p9_virtio_mthds = {
+    /* Device methods. */
+    DEVMETHOD(device_probe,     p9_virtio_probe),
+    DEVMETHOD(device_attach,    p9_virtio_attach),
+#if 0
+    DEVMETHOD(device_detach,    vtblk_detach),
+    DEVMETHOD(device_suspend,   vtblk_suspend),
+    DEVMETHOD(device_resume,    vtblk_resume),
+    DEVMETHOD(device_shutdown,  vtblk_shutdown),
+    /* VirtIO methods. */
+    DEVMETHOD(virtio_config_change, vtblk_config_change),
+    DEVMETHOD_END
+#endif
+};
 
-	v9fs_register_trans(&p9_virtio_trans);
-	return register_virtio_driver(&p9_virtio_drv);
+static driver_t p9_virtio_drv = {
+    "9p_virtio",
+    p9_virtio_mthds,
+    sizeof(struct vchan_softc)
+};
+static devclass_t vtblk_devclass;
+
+DRIVER_MODULE(virtio_blk, virtio_mmio, 9p_virtio_drv, vtblk_devclass,
+            virtio_9p_modevent, 0);
+DRIVER_MODULE(virtio_blk, virtio_pci, 9p_virtio_drv, vtblk_devclass,
+            virtio_9p_modevent, 0);
+MODULE_VERSION(p9_virtio, 1);
+MODULE_DEPEND(p9_virtio, virtio, 1, 1, 1);
+
+static int
+virtio_9p_modevent(module_t mod, int type, void *unused)
+{
+
+    int error;
+    error = 0;
+
+    switch (type) {
+        case MOD_LOAD: {
+            INIT_LIST_HEAD(&vchan_softc_list);
+	        v9fs_register_trans(&p9_virtio_trans);
+            break;
+        }
+        case MOD_UNLOAD: { 
+	        v9fs_unregister_trans(&p9_virtio_trans);
+            break;
+        }
+        case MOD_SHUTDOWN:
+            break;
+        default:
+            error = EOPNOTSUPP;
+            break;
+    }
+    return (error);
 }
 
-static void __exit p9_virtio_cleanup(void)
-{
-	unregister_virtio_driver(&p9_virtio_drv);
-	v9fs_unregister_trans(&p9_virtio_trans);
-}
-
-module_init(p9_virtio_init);
-module_exit(p9_virtio_cleanup);
-
-MODULE_DEVICE_TABLE(virtio, id_table);
-MODULE_AUTHOR("Eric Van Hensbergen <ericvh@gmail.com>");
+MODULE_AUTHOR("Raviprakash Darbha <raviprakash.darbha@gmail.com>");
 MODULE_DESCRIPTION("Virtio 9p Transport");
-MODULE_LICENSE("GPL");

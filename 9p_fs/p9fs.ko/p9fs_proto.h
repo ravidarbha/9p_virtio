@@ -624,28 +624,27 @@ struct p9fs_node {
 
 #define	MAXUNAMELEN	32
 struct p9fs_session {
-	enum p9s_state p9s_state;
-	struct sockaddr p9s_sockaddr;
-	struct mtx p9s_lock;
-	struct p9fs_recv p9s_recv;
-	int p9s_sockaddr_len;
-	struct socket *p9s_sock;
-	int p9s_socktype;
-	int p9s_proto;
-	int p9s_threads;
 
-	uint32_t p9s_uid;
-	char p9s_uname[MAXUNAMELEN];
-	uint32_t p9s_afid;
-	char p9s_path[MAXPATHLEN];
-
-	struct mount *p9s_mount;
-	struct p9fs_node p9s_rootnp;
-
-	/* Units for fids and tags; protected by p9s_lock. */
-	struct unrhdr *p9s_fids;
-	struct unrhdr *p9s_tags;
+     unsigned char flags;
+     unsigned char nodev;
+     unsigned short debug;
+     unsigned int afid;
+     unsigned int cache;
+     // These look important .
+	 struct mount *p9s_mount;
+	 struct p9fs_node p9s_rootnp;
+     char *uname;        /* user name to mount as */
+     char *aname;        /* name of remote hierarchy being mounted */
+     unsigned int maxdata;   /* max data for client interface */
+     kuid_t dfltuid;     /* default uid/muid for legacy support */
+     kgid_t dfltgid;     /* default gid for legacy support */
+     kuid_t uid;     /* if ACCESS_SINGLE, the uid that has access */
+     struct p9_client *clnt; /* 9p client */
+     struct list_head slist; /* list of sessions registered with v9fs */
+     // use the below lock for protection.
+	 mtx_lock p9s_lock;
 };
+
 
 typedef int (*io_callback)(void *, uint32_t, size_t *, struct uio *);
 

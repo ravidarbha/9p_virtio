@@ -2,41 +2,22 @@
  * net/9p/clnt.c
  *
  * 9P Client
- *
- *  Copyright (C) 2008 by Eric Van Hensbergen <ericvh@gmail.com>
- *  Copyright (C) 2007 by Latchesar Ionkov <lucho@ionkov.net>
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License version 2
- *  as published by the Free Software Foundation.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to:
- *  Free Software Foundation
- *  51 Franklin Street, Fifth Floor
- *  Boston, MA  02111-1301  USA
- *
  */
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
-#include <linux/module.h>
-#include <linux/errno.h>
-#include <linux/fs.h>
-#include <linux/poll.h>
-#include <linux/idr.h>
-#include <linux/mutex.h>
-#include <linux/slab.h>
-#include <linux/sched.h>
-#include <linux/uaccess.h>
-#include <linux/uio.h>
+#include <sys/module.h>
+#include <sys/errno.h>
+#include <sys/fs.h>
+#include <sys/poll.h>
+#include <sys/idr.h>
+#include <sys/mutex.h>
+#include <sys/slab.h>
+#include <sys/sched.h>
+#include <sys/uaccess.h>
+#include <sys/uio.h>
 #include <net/9p/9p.h>
-#include <linux/parser.h>
+#include <sys/parser.h>
 #include <net/9p/client.h>
 #include <net/9p/transport.h>
 #include "protocol.h"
@@ -69,13 +50,11 @@ inline int p9_is_proto_dotl(struct p9_client *clnt)
 {
 	return clnt->proto_version == p9_proto_2000L;
 }
-EXPORT_SYMBOL(p9_is_proto_dotl);
 
 inline int p9_is_proto_dotu(struct p9_client *clnt)
 {
 	return clnt->proto_version == p9_proto_2000u;
 }
-EXPORT_SYMBOL(p9_is_proto_dotu);
 
 /*
  * Some error codes are taken directly from the server replies,
@@ -119,96 +98,32 @@ static int get_protocol_version(char *s)
  * Return 0 upon success, -ERRNO upon failure
  */
 
-static int parse_opts(char *opts, struct p9_client *clnt)
+static int parse_opts(struct mount  *mp, struct p9_client *clnt)
 {
-	char *options, *tmp_options;
-	char *p;
-	substring_t args[MAX_OPT_ARGS];
-	int option;
-	char *s;
+	char *trans;
 	int ret = 0;
 
 	clnt->proto_version = p9_proto_2000L;
 	clnt->msize = 8192;
 
-	if (!opts)
-		return 0;
+	// Find only the trans option for now to load that particular func pointers.
+    	trans = vfs_getopts(mp->mnt_optnew, "trans", &error);
+    	if (error)
+        	return (error);
 
-	tmp_options = kstrdup(opts, GFP_KERNEL);
-	if (!tmp_options) {
-		p9_debug(P9_DEBUG_ERROR,
-			 "failed to allocate copy of option string\n");
-		return -ENOMEM;
-	}
-	options = tmp_options;
-
-	while ((p = strsep(&options, ",")) != NULL) {
-		int token, r;
-		if (!*p)
-			continue;
-		token = match_token(p, tokens, args);
-		switch (token) {
-		case Opt_msize:
-			r = match_int(&args[0], &option);
-			if (r < 0) {
-				p9_debug(P9_DEBUG_ERROR,
-					 "integer field, but no integer?\n");
-				ret = r;
-				continue;
-			}
-			clnt->msize = option;
-			break;
-		case Opt_trans:
-			s = match_strdup(&args[0]);
-			if (!s) {
-				ret = -ENOMEM;
-				p9_debug(P9_DEBUG_ERROR,
-					 "problem allocating copy of trans arg\n");
-				goto free_and_return;
-			 }
-			clnt->trans_mod = v9fs_get_trans_by_name(s);
-			if (clnt->trans_mod == NULL) {
-				pr_info("Could not find request transport: %s\n",
-					s);
-				ret = -EINVAL;
-				kfree(s);
-				goto free_and_return;
-			}
-			kfree(s);
-			break;
-		case Opt_legacy:
-			clnt->proto_version = p9_proto_legacy;
-			break;
-		case Opt_version:
-			s = match_strdup(&args[0]);
-			if (!s) {
-				ret = -ENOMEM;
-				p9_debug(P9_DEBUG_ERROR,
-					 "problem allocating copy of version arg\n");
-				goto free_and_return;
-			}
-			ret = get_protocol_version(s);
-			if (ret == -EINVAL) {
-				kfree(s);
-				goto free_and_return;
-			}
-			kfree(s);
-			clnt->proto_version = ret;
-			break;
-		default:
-			continue;
-		}
-	}
-
-free_and_return:
-	kfree(tmp_options);
+    	clnt->trans_mod = v9fs_get_trans_by_name(trans);
+    	if (clnt->trans_mod == NULL) {
+            	printf("Could not find request transport: %s\n",s);
+            	ret = -EINVAL;
+           	free(trans, sizeof(*trans));
+        }
 	return ret;
 }
 
 static struct p9_fcall *p9_fcall_alloc(int alloc_msize)
 {
 	struct p9_fcall *fc;
-	fc = kmalloc(sizeof(struct p9_fcall) + alloc_msize, GFP_NOFS);
+	fc = malloc(sizeof(struct p9_fcall) + alloc_msize);
 	if (!fc)
 		return NULL;
 	fc->capacity = alloc_msize;
@@ -244,7 +159,7 @@ p9_tag_alloc(struct p9_client *c, u16 tag, unsigned int max_size)
 	tag++;
 
 	if (tag >= c->max_tag) {
-		spin_lock_irqsave(&c->lock, flags);
+		mtx_lock_spin_irqsave(&c->lock, flags);
 		/* check again since original check was outside of lock */
 		while (tag >= c->max_tag) {
 			row = (tag / P9_ROW_MAXTAG);
@@ -253,7 +168,7 @@ p9_tag_alloc(struct p9_client *c, u16 tag, unsigned int max_size)
 
 			if (!c->reqs[row]) {
 				pr_err("Couldn't grow tag array\n");
-				spin_unlock_irqrestore(&c->lock, flags);
+				mtx_unlock_spin_irqrestore(&c->lock, flags);
 				return ERR_PTR(-ENOMEM);
 			}
 			for (col = 0; col < P9_ROW_MAXTAG; col++) {
@@ -262,7 +177,7 @@ p9_tag_alloc(struct p9_client *c, u16 tag, unsigned int max_size)
 			}
 			c->max_tag += P9_ROW_MAXTAG;
 		}
-		spin_unlock_irqrestore(&c->lock, flags);
+		mtx_unlock_spin_irqrestore(&c->lock, flags);
 	}
 	row = tag / P9_ROW_MAXTAG;
 	col = tag % P9_ROW_MAXTAG;
@@ -427,7 +342,7 @@ void p9_client_cb(struct p9_client *c, struct p9_req_t *req, int status)
 	smp_wmb();
 	req->status = status;
 
-	wake_up(req->wq);
+	wakeup(req->wq);
 	p9_debug(P9_DEBUG_MUX, "wakeup: %d\n", req->tc->tag);
 }
 EXPORT_SYMBOL(p9_client_cb);
@@ -472,7 +387,6 @@ p9_parse_header(struct p9_fcall *pdu, int32_t *size, int8_t *type, int16_t *tag,
 		*tag = r_tag;
 	if (size)
 		*size = r_size;
-
 
 rewind_and_exit:
 	if (rewind)
@@ -782,9 +696,9 @@ again:
 			err = 0;
 	}
 	if (sigpending) {
-		spin_lock_irqsave(&current->sighand->siglock, flags);
+		mtx_lock_spin_irqsave(&current->sighand->siglock, flags);
 		recalc_sigpending();
-		spin_unlock_irqrestore(&current->sighand->siglock, flags);
+		mtx_unlock_spin_irqrestore(&current->sighand->siglock, flags);
 	}
 	if (err < 0)
 		goto reterr;
@@ -863,9 +777,9 @@ static struct p9_req_t *p9_client_zc_rpc(struct p9_client *c, int8_t type,
 			err = 0;
 	}
 	if (sigpending) {
-		spin_lock_irqsave(&current->sighand->siglock, flags);
+		mtx_lock_spin_irqsave(&current->sighand->siglock, flags);
 		recalc_sigpending();
-		spin_unlock_irqrestore(&current->sighand->siglock, flags);
+		mtx_unlock_spin_irqrestore(&current->sighand->siglock, flags);
 	}
 	if (err < 0)
 		goto reterr;
@@ -902,9 +816,9 @@ static struct p9_fid *p9_fid_create(struct p9_client *clnt)
 	fid->uid = current_fsuid();
 	fid->clnt = clnt;
 	fid->rdir = NULL;
-	spin_lock_irqsave(&clnt->lock, flags);
+	mtx_lock_spin_irqsave(&clnt->lock, flags);
 	list_add(&fid->flist, &clnt->fidlist);
-	spin_unlock_irqrestore(&clnt->lock, flags);
+	mtx_unlock_spin_irqrestore(&clnt->lock, flags);
 
 	return fid;
 
@@ -921,9 +835,9 @@ static void p9_fid_destroy(struct p9_fid *fid)
 	p9_debug(P9_DEBUG_FID, "fid %d\n", fid->fid);
 	clnt = fid->clnt;
 	p9_idpool_put(fid->fid, clnt->fidpool);
-	spin_lock_irqsave(&clnt->lock, flags);
+	mtx_lock_spin_irqsave(&clnt->lock, flags);
 	list_del(&fid->flist);
-	spin_unlock_irqrestore(&clnt->lock, flags);
+	mtx_unlock_spin_irqrestore(&clnt->lock, flags);
 	kfree(fid->rdir);
 	kfree(fid);
 }
@@ -987,31 +901,33 @@ error:
 	return err;
 }
 
-struct p9_client *p9_client_create(const char *dev_name, char *options)
+struct p9_client *p9_client_create(const char *dev_name, struct mount *mp)
 {
 	int err;
 	struct p9_client *clnt;
 	char *client_id;
 
 	err = 0;
-	clnt = kmalloc(sizeof(struct p9_client), GFP_KERNEL);
+	clnt = malloc(sizeof(struct p9_client));
 	if (!clnt)
 		return ERR_PTR(-ENOMEM);
 
 	clnt->trans_mod = NULL;
 	clnt->trans = NULL;
 
-	client_id = utsname()->nodename;
-	memcpy(clnt->name, client_id, strlen(client_id) + 1);
+    // Do we need this client_id ?
+	//client_id = utsname()->nodename;
+	//memcpy(clnt->name, client_id, strlen(client_id) + 1);
 
-	spin_lock_init(&clnt->lock);
-	INIT_LIST_HEAD(&clnt->fidlist);
+	mtx_spin_init(&clnt->lock);
+	TAILQ_INIT(&clnt->fidlist);
 
-	err = p9_tag_init(clnt);
+    // Do we need the tag pool ?
+	//err = p9_tag_init(clnt);
 	if (err < 0)
 		goto free_client;
 
-	err = parse_opts(options, clnt);
+	err = parse_opts(mp, clnt);
 	if (err < 0)
 		goto destroy_tagpool;
 
@@ -1059,7 +975,6 @@ free_client:
 	kfree(clnt);
 	return ERR_PTR(err);
 }
-EXPORT_SYMBOL(p9_client_create);
 
 void p9_client_destroy(struct p9_client *clnt)
 {

@@ -24,13 +24,12 @@
  *
  */
 
-#include <linux/module.h>
-#include <linux/errno.h>
-#include <linux/fs.h>
-#include <linux/sched.h>
-#include <linux/parser.h>
-#include <linux/idr.h>
-#include <linux/slab.h>
+#include <sys/module.h>
+#include <sys/errno.h>
+#include <sys/fs.h>
+#include <sys/sched.h>
+#include <sys/parser.h>
+#include <sys/slab.h>
 #include <net/9p/9p.h>
 
 /**
@@ -40,9 +39,10 @@
  *
  */
 
+
 struct p9_idpool {
-	spinlock_t lock;
-	struct idr pool;
+	mtx_spin_lock lock;
+    struct idr pool;
 };
 
 /**
@@ -54,16 +54,15 @@ struct p9_idpool *p9_idpool_create(void)
 {
 	struct p9_idpool *p;
 
-	p = kmalloc(sizeof(struct p9_idpool), GFP_KERNEL);
+	p = malloc(sizeof(struct p9_idpool));
 	if (!p)
 		return ERR_PTR(-ENOMEM);
 
-	spin_lock_init(&p->lock);
+	mtx_spin_init(&p->lock);
 	idr_init(&p->pool);
 
 	return p;
 }
-EXPORT_SYMBOL(p9_idpool_create);
 
 /**
  * p9_idpool_destroy - create a new per-connection id pool
@@ -75,7 +74,6 @@ void p9_idpool_destroy(struct p9_idpool *p)
 	idr_destroy(&p->pool);
 	kfree(p);
 }
-EXPORT_SYMBOL(p9_idpool_destroy);
 
 /**
  * p9_idpool_get - allocate numeric id from pool
@@ -91,7 +89,7 @@ int p9_idpool_get(struct p9_idpool *p)
 	unsigned long flags;
 
 	idr_preload(GFP_NOFS);
-	spin_lock_irqsave(&p->lock, flags);
+	mtx_spin_lock(&p->lock);
 
 	/* no need to store exactly p, we just need something non-null */
 	i = idr_alloc(&p->pool, p, 0, 0, GFP_NOWAIT);
