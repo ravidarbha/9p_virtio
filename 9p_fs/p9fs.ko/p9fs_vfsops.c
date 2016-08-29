@@ -298,7 +298,7 @@ p9fs_mount(struct mount *mp)
 	mp->mnt_data = p9mp;
 	p9mp->p9_mountp = mp;
     // This is creating the client instance along with the session pointer.
-	p9fs_init_session(&p9mp->p9_session);
+	p9fs_init_session(mp);
 	p9s = &p9mp->p9_session;
 	p9s->p9s_mount = mp;
 

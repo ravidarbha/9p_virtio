@@ -8,7 +8,6 @@
  *
  */
 
-#include <sys/in.h>
 #include <sys/module.h>
 #include <sys/net.h>
 #include <sys/ipv6.h>
@@ -19,8 +18,6 @@
 #include <sys/inet.h>
 #include <sys/idr.h>
 #include <sys/file.h>
-#include <sys/highmem.h>
-#include <sys/slab.h>
 #include <net/9p/9p.h>
 #include <sys/parser.h>
 #include <net/9p/client.h>
@@ -34,9 +31,7 @@
 #define VIRTQUEUE_NUM	128
 
 /* a single mutex to manage channel initialization and attachment */
-static DEFINE_MUTEX(virtio_9p_lock);
-static DECLARE_WAIT_QUEUE_HEAD(vp_wq);
-static atomic_t vp_pinned = ATOMIC_INIT(0);
+struct mtx virtio_9p_lock;
 
 /**
  * struct vchan_softc - per-instance transport information
@@ -56,9 +51,9 @@ static atomic_t vp_pinned = ATOMIC_INIT(0);
 
 struct vchan_softc {
 	int inuse;
-
-	mtx_lock_spin lock;
-
+	struct mtx lock; // Init as a spin lock for intr cxt.Spin lock.
+	struct cv  submit_cv; 
+	struct mtx submit_cv_lock;
 	struct p9_client *client;
 	device_t vdev;
 	struct virtqueue *vq;
@@ -68,14 +63,16 @@ struct vchan_softc {
 	/* This is global limit. Since we don't have a global structure,
 	 * will be placing it in each channel.
 	 */
+	// Do we need this ? NUmber of pages ?
 	unsigned long p9_max_pages;
+	// Sglist for this channel 
 	struct sglist *sg;
 
-	int tag_len;
+	int chan_name_len;
 	/*
 	 * tag name to identify a mount Non-null terminated
 	 */
-	char *tag;
+	char *chan_name;
 
 	// tail queue head for channel list.
 	TAILQ_HEAD (,vchan_softc) chan_list;
@@ -102,109 +99,16 @@ static void p9_virtio_close(struct p9_client *client)
 {
 	struct vchan_softc *chan = client->trans;
 
-	mutex_lock(&virtio_9p_lock);
+	mtx_lock(&virtio_9p_lock);
 	if (chan)
 		chan->inuse = false;
-	mutex_unlock(&virtio_9p_lock);
+	mtx_unlock(&virtio_9p_lock);
 }
-
-/**
- * req_done - callback which signals activity from the server
- * @vq: virtio queue activity was received on
- *
- * This notifies us that the server has triggered some activity
- * on the virtio channel - most likely a response to request we
- * sent.  Figure out which requests now have responses and wake up
- * those threads.
- *
- * Bugs: could do with some additional sanity checking, but appears to work.
- *
- */
-
-static void req_done(struct virtqueue *vq)
-{
-	device_t dev = vq->v_dev;
-	struct vchan_softc *chan = device_get_softc(dev);
-	unsigned int len;
-	struct p9_req_t *req;
-	unsigned long flags;
-
-	p9_debug(P9_DEBUG_TRANS, ": request done\n");
-
-	while (1) {
-		mutex_lock_spin(&chan->lock);
-		req = virtqueue_dequeue(chan->vq, NULL);
-		if (req == NULL) {
-			mutex_unlock_spin(&chan->lock);
-			break;
-		}
-		chan->ring_bufs_avail = 1;
-		mutex_unlock_spin(&chan->lock);
-		/* Wakeup if anyone waiting for VirtIO ring space. */
-		wakeup(chan->vc_wq);
-		p9_client_cb(chan->client, req, REQ_STATUS_RCVD);
-	}
-}
-
-/**
- * pack_sg_list - pack a scatter gather list from a linear buffer
- * @sg: scatter/gather list to pack into
- * @start: which segment of the sg_list to start at
- * @limit: maximum segment to pack data to
- * @data: data to pack into scatter/gather list
- * @count: amount of data to pack into the scatter/gather list
- *
- * sg_lists have multiple segments of various sizes.  This will pack
- * arbitrary data into an existing scatter gather list, segmenting the
- * data as necessary within constraints.
- *
- */
-
 
 /* We don't currently allow canceling of virtio requests */
 static int p9_virtio_cancel(struct p9_client *client, struct p9_req_t *req)
 {
 	return 1;
-}
-
-/**
- * pack_sg_list_p - Just like pack_sg_list. Instead of taking a buffer,
- * this takes a list of pages.
- * @sg: scatter/gather list to pack into
- * @start: which segment of the sg_list to start at
- * @pdata: a list of pages to add into sg.
- * @nr_pages: number of pages to pack into the scatter/gather list
- * @offs: amount of data in the beginning of first page _not_ to pack
- * @count: amount of data to pack into the scatter/gather list
- */
-static int
-pack_sg_list_p(struct scatterlist *sg, int start, int limit,
-	       struct page **pdata, int nr_pages, size_t offs, int count)
-{
-	int i = 0, s;
-	int data_off = offs;
-	int index = start;
-
-	BUG_ON(nr_pages > (limit - start));
-	/*
-	 * if the first page doesn't start at
-	 * page boundary find the offset
-	 */
-	while (nr_pages) {
-		s = PAGE_SIZE - data_off;
-		if (s > count)
-			s = count;
-		/* Make sure we don't terminate early. */
-		sg_unmark_end(&sg[index]);
-		sg_set_page(&sg[index++], pdata[i++], s, data_off);
-		data_off = 0;
-		count -= s;
-		nr_pages--;
-	}
-
-	if (index-start)
-		sg_mark_end(&sg[index - 1]);
-	return index - start;
 }
 
 /**
@@ -218,10 +122,8 @@ static int
 p9_virtio_request(struct p9_client *client, struct p9_req_t *req)
 {
 	int err;
-	int in, out, out_sgs, in_sgs;
 	unsigned long flags;
 	struct vchan_softc *chan = client->trans;
-	struct sglist *sgs[2];
 
 	p9_debug(P9_DEBUG_TRANS, "9p debug: virtio request\n");
 
@@ -229,7 +131,6 @@ p9_virtio_request(struct p9_client *client, struct p9_req_t *req)
 req_retry:
 	mtx_lock_spin(&chan->lock);
 
-	out_sgs = in_sgs = 0;
 	/* Handle out VirtIO ring buffers */
 	out = sglist_append(chan->sg, req->tc->sdata, req->tc->size);
 	if (out)
@@ -241,19 +142,16 @@ req_retry:
 
 	err = virtqueue_enqueue(chan->vq, req, sgs, in, out);
 
-    // Retry mechanism for the requeue. We could either
-    // do it this way - Where we sleep in this context and 
-    // wakeup again when we have resources or create a new 
-    // queue to enqueue and return back.
+	// Retry mechanism for the requeue. We could either
+	// do it this way - Where we sleep in this context and
+	// wakeup again when we have resources or create a new
+	// queue to enqueue and return back.
 	if (err < 0) {
 		if (err == -ENOSPC) {
 			chan->ring_bufs_avail = 0;
-			mtx_lock_spin(&chan->lock);
-			err = wait_event_interruptible(*chan->vc_wq,
-							chan->ring_bufs_avail);
-			if (err  == -ERESTARTSYS)
-				return err;
-
+			mtx_unlock_spin(&chan->lock);
+			// Condvar for the submit queue.
+			cv_wait(&chan->submit_cv, &chan->submit_cv_lock);
 			p9_debug(P9_DEBUG_TRANS, "Retry virtio request\n");
 			goto req_retry;
 		} else {
@@ -262,10 +160,7 @@ req_retry:
 				 "virtio rpc add_sgs returned failure\n");
 			return -EIO;
 		}
-	 }
-    // The actual kick.
-	virtqueue_notify(chan->vq);
-	mtx_unlock_spin(&chan->lock);
+	}
 
 	p9_debug(P9_DEBUG_TRANS, "virtio request kicked\n");
 	return 0;
@@ -494,34 +389,57 @@ static ssize_t p9_mount_tag_show(struct device *dev,
 static DEVICE_ATTR(mount_tag, 0444, p9_mount_tag_show, NULL);
 
 static void
-vtblk_vq_intr(void *xsc)
+p9_done_completed(struct vchan_softc *sc, struct p9_req_t *queue)
 {
- 
-    struct vtblk_softc *sc;
-    struct virtqueue *vq;
-    struct bio_queue queue;
+        struct p9_req_t *req;
 
-    sc = xsc;
-    vq = sc->vtblk_vq;
-    TAILQ_INIT(&queue);
-    VTBLK_LOCK(sc);
+        TAILQ_FOREACH(req, queue, req_queue) {
+                if (bp->bio_error != 0)
+                        disk_err(bp, "hard error", -1, 1);
+                p9_client_cb(sc, req);
+        }
+}
+
+
+static void
+p9_queue_completed(struct vchan_softc *chan, struct req_queue *queue)
+{
+	struct p9_req_t *req;
+
+	while ((req = virtqueue_dequeue(chan->vq, NULL)) != NULL) {
+		if (req != NULL) {
+			// Client side callback complete.
+			TAILQ_INSERT_TAIL(queue, req);
+		}
+        }
+}
+
+// Completion of the request from the virt queue.
+static void
+p9_intr_complete(void *xsc)
+{
+	struct vchan_softc *chan;
+	struct virtqueue *vq;
+	struct req_queue queue;
+
+	TAIL_INIT(&queue);
+	chan = (struct vchan_softc *)xsc;
+	vq = chan->vq;
+	mtx_lock_spin(&chan->lock);
 again:
-    if (sc->vtblk_flags & VTBLK_FLAG_DETACH)
-        goto out;
-    
-    vtblk_queue_completed(sc, &queue);
-    vtblk_startio(sc);
+	p9_queue_completed(chan, &queue);
 
-    if (virtqueue_enable_intr(vq) != 0) {
-        virtqueue_disable_intr(vq);
-        goto again;
-    }
-    if (sc->vtblk_flags & VTBLK_FLAG_SUSPEND)
-        wakeup(&sc->vtblk_vq);
+	// check if we need to start ?
+	if (virtqueue_enable_intr(vq) != 0) {
+		virtqueue_disable_intr(vq);
+		goto again;
+	}
+
+	// Signal for submit queue.
+	cv_signal(&chan->submit_cv);
 out:
-    VTBLK_UNLOCK(sc);
-    vtblk_done_completed(sc, &queue);
-
+ 	mtx_unlock_spin(&chan->lock);
+	p9_done_completed(chan, &queue);
 }
 
 static int virtio_alloc_queue(struct vchan_softc *sc)
@@ -530,7 +448,7 @@ static int virtio_alloc_queue(struct vchan_softc *sc)
     device_t dev = sc->vdev;
 
     VQ_ALLOC_INFO_INIT(&vq_info, sc->vtblk_max_nsegs,
-            req_done, sc, &sc->vq,
+            p9_intr_complete, sc, &sc->vq,
             "%s request", device_get_nameunit(dev));
 
        return (virtio_alloc_virtqueues(dev, 0, 1, &vq_info));
@@ -590,37 +508,6 @@ static int p9_virtio_attach(device_t dev)
 	chan->name = name;
 	chan->name_len = name_len;
 
-#if 0
-    // WE are not doing configs for now... hardcoded values .
-    // UNdo this when we are ready.
-	virtio_cread_bytes(vdev, offsetof(struct virtio_9p_config, tag),
-			   tag, tag_len);
-	if (virtio_has_feature(vdev, VIRTIO_9P_MOUNT_TAG)) {
-		virtio_cread(vdev, struct virtio_9p_config, tag_len, &tag_len);
-	} else {
-		err = -EINVAL;
-		goto out_free_vq;
-	}
-	tag = kmalloc(tag_len);
-	if (!tag) {
-		err = -ENOMEM;
-		goto out_free_vq;
-	}
-
-	virtio_cread_bytes(vdev, offsetof(struct virtio_9p_config, tag),
-			   tag, tag_len);
-	chan->tag = tag;
-	chan->tag_len = tag_len;
-	err = sysfs_create_file(&(vdev->dev.kobj), &dev_attr_mount_tag.attr);
-	if (err) {
-		goto out_free_tag;
-	}
-	chan->vc_wq = kmalloc(sizeof(wait_queue_head_t), GFP_KERNEL);
-	if (!chan->vc_wq) {
-		err = -ENOMEM;
-		goto out_free_tag;
-	}
-#endif 
     // Add to this wait queue which will later be woken up.
 	TAILQ_INIT(&chan->vc_wq);
 	chan->ring_bufs_avail = 1;
@@ -628,9 +515,9 @@ static int p9_virtio_attach(device_t dev)
 	chan->p9_max_pages = nr_free_buffer_pages()/4;
 
     // Add all of them to the channel list so that we can create(mount) only to one.
-	mutex_lock(&virtio_9p_lock);
+	mtx_lock(&virtio_9p_lock);
 	TAILQ_INSERT_TAIL(&chan->chan_list, &vchan_softc_list);
-	mutex_unlock(&virtio_9p_lock);
+	mtx_unlock(&virtio_9p_lock);
 
     error = virtio_setup_intr(dev, INTR_ENTROPY);
     if (error) {
@@ -671,7 +558,7 @@ p9_virtio_create(struct p9_client *client, const char *devname, char *args)
 	int ret = -ENOENT;
 	int found = 0;
 
-	mutex_lock(&virtio_9p_lock);
+	mtx_lock(&virtio_9p_lock);
 	TAILQ_FOREACH(chan, &vchan_softc_list, chan_list) {
 		if (!strncmp(devname, chan->name, chan->name_len) &&
 		    strlen(devname) == chan->name_len) {
@@ -683,7 +570,7 @@ p9_virtio_create(struct p9_client *client, const char *devname, char *args)
 			ret = -EBUSY;
 		}
 	}
-	mutex_unlock(&virtio_9p_lock);
+	mtx_unlock(&virtio_9p_lock);
 
 	if (!found) {
 		pr_err("no channels available for device %s\n", devname);
@@ -708,7 +595,7 @@ static void p9_virtio_remove(device_t vdev)
 	struct vchan_softc *chan = vdev->priv;
 	unsigned long warning_time;
 
-	mutex_lock(&virtio_9p_lock);
+	mtx_lock(&virtio_9p_lock);
 
 	/* Remove self from list so we don't get new users. */
 	list_del(&chan->chan_list);
@@ -716,17 +603,17 @@ static void p9_virtio_remove(device_t vdev)
 
 	/* Wait for existing users to close. */
 	while (chan->inuse) {
-		mutex_unlock(&virtio_9p_lock);
+		mtx_unlock(&virtio_9p_lock);
 		msleep(250);
 		if (time_after(jiffies, warning_time + 10 * HZ)) {
 			dev_emerg(&vdev->dev,
 				  "p9_virtio_remove: waiting for device in use.\n");
 			warning_time = jiffies;
 		}
-		mutex_lock(&virtio_9p_lock);
+		mtx_lock(&virtio_9p_lock);
 	}
 
-	mutex_unlock(&virtio_9p_lock);
+	mtx_unlock(&virtio_9p_lock);
 
 	vdev->config->del_vqs(vdev);
 

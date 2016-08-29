@@ -1,0 +1,1550 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+9pnet-objs	9p_net/Makefile	/^9pnet-objs := \\$/;"	m
+9pnet_rdma-objs	9p_net/Makefile	/^9pnet_rdma-objs := \\$/;"	m
+9pnet_virtio-objs	9p_net/Makefile	/^9pnet_virtio-objs := \\$/;"	m
+BINDIR	9p_fs/mount_p9fs/Makefile	/^BINDIR=	\/sbin$/;"	m
+BeginDisconnect	client.h	/^	BeginDisconnect,$/;"	e	enum:p9_trans_status
+CREATE_TRACE_POINTS	9p_net/client.c	24;"	d	file:
+Connected	client.h	/^	Connected,$/;"	e	enum:p9_trans_status
+DIRENT_MIN_LEN	9p_fs/p9fs.ko/p9fs_vnops.c	567;"	d	file:
+DMAPPEND	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMAPPEND =	0x40000000,$/;"	e	enum:p9fs_mode
+DMAUTH	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMAUTH =	0x08000000,$/;"	e	enum:p9fs_mode
+DMDEVICE	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMDEVICE =	0x00800000,$/;"	e	enum:p9fs_mode
+DMDIR	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMDIR =		0x80000000,$/;"	e	enum:p9fs_mode
+DMEXCL	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMEXCL =	0x20000000,$/;"	e	enum:p9fs_mode
+DMMOUNT	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMMOUNT =	0x10000000,$/;"	e	enum:p9fs_mode
+DMNAMEDPIPE	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMNAMEDPIPE =	0x00200000,$/;"	e	enum:p9fs_mode
+DMSETGID	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMSETGID =	0x00040000,$/;"	e	enum:p9fs_mode
+DMSETUID	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMSETUID =	0x00080000,$/;"	e	enum:p9fs_mode
+DMSOCKET	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMSOCKET =	0x00100000,$/;"	e	enum:p9fs_mode
+DMSYMLINK	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMSYMLINK =	0x02000000,$/;"	e	enum:p9fs_mode
+DMTMP	9p_fs/p9fs.ko/p9fs_proto.h	/^	DMTMP =		0x04000000,$/;"	e	enum:p9fs_mode
+Disconnected	client.h	/^	Disconnected,$/;"	e	enum:p9_trans_status
+ERRHASHSZ	9p_net/error.c	53;"	d	file:
+Hung	client.h	/^	Hung,$/;"	e	enum:p9_trans_status
+KMOD	9p_fs/p9fs.ko/Makefile	/^KMOD=	p9fs$/;"	m
+MAN	9p_fs/mount_p9fs/Makefile	/^MAN=	mount_p9fs.8$/;"	m
+MAXPOLLWADDR	9p_net/trans_fd.c	52;"	d	file:
+MAXUNAMELEN	9p_fs/p9fs.ko/p9fs_proto.h	625;"	d
+MAX_SOCK_BUF	9p_net/trans_fd.c	51;"	d	file:
+MOUNT	9p_fs/mount_p9fs/Makefile	/^MOUNT=	${.CURDIR}\/..\/mount$/;"	m
+MOUNT	9p_fs/mount_p9fs/Makefile	/^MOUNT=	${WORLDDIR}\/sbin\/mount$/;"	m
+MOUNT	9p_fs/mount_p9fs/Makefile	/^MOUNT=	\/usr\/src\/sbin\/mount$/;"	m
+NET_9P_CLIENT_H	client.h	27;"	d
+NET_9P_H	9p.h	28;"	d
+NET_9P_TRANSPORT_H	transport.h	27;"	d
+NOFID	9p_fs/p9fs.ko/p9fs_proto.h	542;"	d
+NOTAG	9p_fs/p9fs.ko/p9fs_proto.h	541;"	d
+OEXEC	9p_fs/p9fs.ko/p9fs_proto.h	553;"	d
+ORDWR	9p_fs/p9fs.ko/p9fs_proto.h	552;"	d
+OREAD	9p_fs/p9fs.ko/p9fs_proto.h	550;"	d
+OTRUNC	9p_fs/p9fs.ko/p9fs_proto.h	554;"	d
+OWRITE	9p_fs/p9fs.ko/p9fs_proto.h	551;"	d
+Opt_err	9p_net/client.c	/^	Opt_err,$/;"	e	enum:__anon1	file:
+Opt_err	9p_net/trans_fd.c	/^	Opt_port, Opt_rfdno, Opt_wfdno, Opt_err,$/;"	e	enum:__anon2	file:
+Opt_legacy	9p_net/client.c	/^	Opt_legacy,$/;"	e	enum:__anon1	file:
+Opt_msize	9p_net/client.c	/^	Opt_msize,$/;"	e	enum:__anon1	file:
+Opt_port	9p_net/trans_fd.c	/^	Opt_port, Opt_rfdno, Opt_wfdno, Opt_err,$/;"	e	enum:__anon2	file:
+Opt_privport	9p_net/trans_fd.c	/^	Opt_privport,$/;"	e	enum:__anon2	file:
+Opt_rfdno	9p_net/trans_fd.c	/^	Opt_port, Opt_rfdno, Opt_wfdno, Opt_err,$/;"	e	enum:__anon2	file:
+Opt_trans	9p_net/client.c	/^	Opt_trans,$/;"	e	enum:__anon1	file:
+Opt_version	9p_net/client.c	/^	Opt_version,$/;"	e	enum:__anon1	file:
+Opt_wfdno	9p_net/trans_fd.c	/^	Opt_port, Opt_rfdno, Opt_wfdno, Opt_err,$/;"	e	enum:__anon2	file:
+P9MODEUPPER	9p_fs/p9fs.ko/p9fs_proto.h	/^	P9MODEUPPER =	0xffff0000,$/;"	e	enum:p9fs_mode
+P9S_CLOSED	9p_fs/p9fs.ko/p9fs_proto.h	/^	P9S_CLOSED,$/;"	e	enum:p9s_state
+P9S_CLOSING	9p_fs/p9fs.ko/p9fs_proto.h	/^	P9S_CLOSING,$/;"	e	enum:p9s_state
+P9S_INIT	9p_fs/p9fs.ko/p9fs_proto.h	/^	P9S_INIT,$/;"	e	enum:p9s_state
+P9S_RUNNING	9p_fs/p9fs.ko/p9fs_proto.h	/^	P9S_RUNNING,$/;"	e	enum:p9s_state
+P9_DEBUG_9P	9p.h	/^	P9_DEBUG_9P = 		(1<<2),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_CONV	9p.h	/^	P9_DEBUG_CONV =		(1<<4),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_ERROR	9p.h	/^	P9_DEBUG_ERROR = 	(1<<0),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_FCALL	9p.h	/^	P9_DEBUG_FCALL =	(1<<8),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_FID	9p.h	/^	P9_DEBUG_FID =		(1<<9),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_FSC	9p.h	/^	P9_DEBUG_FSC =		(1<<11),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_MUX	9p.h	/^	P9_DEBUG_MUX =		(1<<5),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_PKT	9p.h	/^	P9_DEBUG_PKT =		(1<<10),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_SLABS	9p.h	/^	P9_DEBUG_SLABS =      	(1<<7),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_TRANS	9p.h	/^	P9_DEBUG_TRANS =	(1<<6),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_VFS	9p.h	/^	P9_DEBUG_VFS =		(1<<3),$/;"	e	enum:p9_debug_flags
+P9_DEBUG_VPKT	9p.h	/^	P9_DEBUG_VPKT =		(1<<12),$/;"	e	enum:p9_debug_flags
+P9_DEF_MAX_RESVPORT	transport.h	30;"	d
+P9_DEF_MIN_RESVPORT	transport.h	29;"	d
+P9_DMAPPEND	9p.h	/^	P9_DMAPPEND = 0x40000000,$/;"	e	enum:p9_perm_t
+P9_DMAUTH	9p.h	/^	P9_DMAUTH = 0x08000000,$/;"	e	enum:p9_perm_t
+P9_DMDEVICE	9p.h	/^	P9_DMDEVICE = 0x00800000,$/;"	e	enum:p9_perm_t
+P9_DMDIR	9p.h	/^	P9_DMDIR = 0x80000000,$/;"	e	enum:p9_perm_t
+P9_DMEXCL	9p.h	/^	P9_DMEXCL = 0x20000000,$/;"	e	enum:p9_perm_t
+P9_DMLINK	9p.h	/^	P9_DMLINK = 0x01000000,$/;"	e	enum:p9_perm_t
+P9_DMMOUNT	9p.h	/^	P9_DMMOUNT = 0x10000000,$/;"	e	enum:p9_perm_t
+P9_DMNAMEDPIPE	9p.h	/^	P9_DMNAMEDPIPE = 0x00200000,$/;"	e	enum:p9_perm_t
+P9_DMSETGID	9p.h	/^	P9_DMSETGID = 0x00040000,$/;"	e	enum:p9_perm_t
+P9_DMSETUID	9p.h	/^	P9_DMSETUID = 0x00080000,$/;"	e	enum:p9_perm_t
+P9_DMSETVTX	9p.h	/^	P9_DMSETVTX = 0x00010000,$/;"	e	enum:p9_perm_t
+P9_DMSOCKET	9p.h	/^	P9_DMSOCKET = 0x00100000,$/;"	e	enum:p9_perm_t
+P9_DMSYMLINK	9p.h	/^	P9_DMSYMLINK = 0x02000000,$/;"	e	enum:p9_perm_t
+P9_DMTMP	9p.h	/^	P9_DMTMP = 0x04000000,$/;"	e	enum:p9_perm_t
+P9_DOTL_APPEND	9p.h	283;"	d
+P9_DOTL_AT_REMOVEDIR	9p.h	296;"	d
+P9_DOTL_CLOEXEC	9p.h	292;"	d
+P9_DOTL_CREATE	9p.h	279;"	d
+P9_DOTL_DIRECT	9p.h	287;"	d
+P9_DOTL_DIRECTORY	9p.h	289;"	d
+P9_DOTL_DSYNC	9p.h	285;"	d
+P9_DOTL_EXCL	9p.h	280;"	d
+P9_DOTL_FASYNC	9p.h	286;"	d
+P9_DOTL_LARGEFILE	9p.h	288;"	d
+P9_DOTL_NOACCESS	9p.h	278;"	d
+P9_DOTL_NOATIME	9p.h	291;"	d
+P9_DOTL_NOCTTY	9p.h	281;"	d
+P9_DOTL_NOFOLLOW	9p.h	290;"	d
+P9_DOTL_NONBLOCK	9p.h	284;"	d
+P9_DOTL_RDONLY	9p.h	275;"	d
+P9_DOTL_RDWR	9p.h	277;"	d
+P9_DOTL_SYNC	9p.h	293;"	d
+P9_DOTL_TRUNC	9p.h	282;"	d
+P9_DOTL_WRONLY	9p.h	276;"	d
+P9_IOHDRSZ	9p.h	340;"	d
+P9_LOCK_BLOCKED	9p.h	484;"	d
+P9_LOCK_ERROR	9p.h	485;"	d
+P9_LOCK_FLAGS_BLOCK	9p.h	488;"	d
+P9_LOCK_FLAGS_RECLAIM	9p.h	489;"	d
+P9_LOCK_GRACE	9p.h	486;"	d
+P9_LOCK_SUCCESS	9p.h	483;"	d
+P9_LOCK_TYPE_RDLCK	9p.h	299;"	d
+P9_LOCK_TYPE_UNLCK	9p.h	301;"	d
+P9_LOCK_TYPE_WRLCK	9p.h	300;"	d
+P9_MAXWELEM	9p.h	337;"	d
+P9_MSG_MAX	9p_fs/p9fs.ko/p9fs_proto.h	548;"	d
+P9_NOFID	9p.h	336;"	d
+P9_NOTAG	9p.h	335;"	d
+P9_OAPPEND	9p.h	/^	P9_OAPPEND = 0x80,$/;"	e	enum:p9_open_mode_t
+P9_OEXCL	9p.h	/^	P9_OEXCL = 0x1000,$/;"	e	enum:p9_open_mode_t
+P9_OEXEC	9p.h	/^	P9_OEXEC = 0x03,$/;"	e	enum:p9_open_mode_t
+P9_ORCLOSE	9p.h	/^	P9_ORCLOSE = 0x40,$/;"	e	enum:p9_open_mode_t
+P9_ORDWR	9p.h	/^	P9_ORDWR = 0x02,$/;"	e	enum:p9_open_mode_t
+P9_OREAD	9p.h	/^	P9_OREAD = 0x00,$/;"	e	enum:p9_open_mode_t
+P9_OREXEC	9p.h	/^	P9_OREXEC = 0x20,$/;"	e	enum:p9_open_mode_t
+P9_OTRUNC	9p.h	/^	P9_OTRUNC = 0x10,$/;"	e	enum:p9_open_mode_t
+P9_OWRITE	9p.h	/^	P9_OWRITE = 0x01,$/;"	e	enum:p9_open_mode_t
+P9_PORT	9p_net/trans_fd.c	50;"	d	file:
+P9_QTAPPEND	9p.h	/^	P9_QTAPPEND = 0x40,$/;"	e	enum:p9_qid_t
+P9_QTAUTH	9p.h	/^	P9_QTAUTH = 0x08,$/;"	e	enum:p9_qid_t
+P9_QTDIR	9p.h	/^	P9_QTDIR = 0x80,$/;"	e	enum:p9_qid_t
+P9_QTEXCL	9p.h	/^	P9_QTEXCL = 0x20,$/;"	e	enum:p9_qid_t
+P9_QTFILE	9p.h	/^	P9_QTFILE = 0x00,$/;"	e	enum:p9_qid_t
+P9_QTLINK	9p.h	/^	P9_QTLINK = 0x01,$/;"	e	enum:p9_qid_t
+P9_QTMOUNT	9p.h	/^	P9_QTMOUNT = 0x10,$/;"	e	enum:p9_qid_t
+P9_QTSYMLINK	9p.h	/^	P9_QTSYMLINK = 0x02,$/;"	e	enum:p9_qid_t
+P9_QTTMP	9p.h	/^	P9_QTTMP = 0x04,$/;"	e	enum:p9_qid_t
+P9_RATTACH	9p.h	/^	P9_RATTACH,$/;"	e	enum:p9_msg_t
+P9_RAUTH	9p.h	/^	P9_RAUTH,$/;"	e	enum:p9_msg_t
+P9_RCLUNK	9p.h	/^	P9_RCLUNK,$/;"	e	enum:p9_msg_t
+P9_RCREATE	9p.h	/^	P9_RCREATE,$/;"	e	enum:p9_msg_t
+P9_READDIRHDRSZ	9p.h	343;"	d
+P9_RERROR	9p.h	/^	P9_RERROR,$/;"	e	enum:p9_msg_t
+P9_RFLUSH	9p.h	/^	P9_RFLUSH,$/;"	e	enum:p9_msg_t
+P9_RFSYNC	9p.h	/^	P9_RFSYNC,$/;"	e	enum:p9_msg_t
+P9_RGETATTR	9p.h	/^	P9_RGETATTR,$/;"	e	enum:p9_msg_t
+P9_RGETLOCK	9p.h	/^	P9_RGETLOCK,$/;"	e	enum:p9_msg_t
+P9_RLCREATE	9p.h	/^	P9_RLCREATE,$/;"	e	enum:p9_msg_t
+P9_RLERROR	9p.h	/^	P9_RLERROR,$/;"	e	enum:p9_msg_t
+P9_RLINK	9p.h	/^	P9_RLINK,$/;"	e	enum:p9_msg_t
+P9_RLOCK	9p.h	/^	P9_RLOCK,$/;"	e	enum:p9_msg_t
+P9_RLOPEN	9p.h	/^	P9_RLOPEN,$/;"	e	enum:p9_msg_t
+P9_RMKDIR	9p.h	/^	P9_RMKDIR,$/;"	e	enum:p9_msg_t
+P9_RMKNOD	9p.h	/^	P9_RMKNOD,$/;"	e	enum:p9_msg_t
+P9_ROPEN	9p.h	/^	P9_ROPEN,$/;"	e	enum:p9_msg_t
+P9_ROW_MAXTAG	client.h	32;"	d
+P9_RREAD	9p.h	/^	P9_RREAD,$/;"	e	enum:p9_msg_t
+P9_RREADDIR	9p.h	/^	P9_RREADDIR,$/;"	e	enum:p9_msg_t
+P9_RREADLINK	9p.h	/^	P9_RREADLINK,$/;"	e	enum:p9_msg_t
+P9_RREMOVE	9p.h	/^	P9_RREMOVE,$/;"	e	enum:p9_msg_t
+P9_RRENAME	9p.h	/^	P9_RRENAME,$/;"	e	enum:p9_msg_t
+P9_RRENAMEAT	9p.h	/^	P9_RRENAMEAT,$/;"	e	enum:p9_msg_t
+P9_RSETATTR	9p.h	/^	P9_RSETATTR,$/;"	e	enum:p9_msg_t
+P9_RSTAT	9p.h	/^	P9_RSTAT,$/;"	e	enum:p9_msg_t
+P9_RSTATFS	9p.h	/^	P9_RSTATFS,$/;"	e	enum:p9_msg_t
+P9_RSYMLINK	9p.h	/^	P9_RSYMLINK,$/;"	e	enum:p9_msg_t
+P9_RUNLINKAT	9p.h	/^	P9_RUNLINKAT,$/;"	e	enum:p9_msg_t
+P9_RVERSION	9p.h	/^	P9_RVERSION,$/;"	e	enum:p9_msg_t
+P9_RWALK	9p.h	/^	P9_RWALK,$/;"	e	enum:p9_msg_t
+P9_RWRITE	9p.h	/^	P9_RWRITE,$/;"	e	enum:p9_msg_t
+P9_RWSTAT	9p.h	/^	P9_RWSTAT,$/;"	e	enum:p9_msg_t
+P9_RXATTRCREATE	9p.h	/^	P9_RXATTRCREATE,$/;"	e	enum:p9_msg_t
+P9_RXATTRWALK	9p.h	/^	P9_RXATTRWALK,$/;"	e	enum:p9_msg_t
+P9_STATS_ALL	9p.h	455;"	d
+P9_STATS_ATIME	9p.h	443;"	d
+P9_STATS_BASIC	9p.h	454;"	d
+P9_STATS_BLOCKS	9p.h	448;"	d
+P9_STATS_BTIME	9p.h	450;"	d
+P9_STATS_CTIME	9p.h	445;"	d
+P9_STATS_DATA_VERSION	9p.h	452;"	d
+P9_STATS_GEN	9p.h	451;"	d
+P9_STATS_GID	9p.h	441;"	d
+P9_STATS_INO	9p.h	446;"	d
+P9_STATS_MODE	9p.h	438;"	d
+P9_STATS_MTIME	9p.h	444;"	d
+P9_STATS_NLINK	9p.h	439;"	d
+P9_STATS_RDEV	9p.h	442;"	d
+P9_STATS_SIZE	9p.h	447;"	d
+P9_STATS_UID	9p.h	440;"	d
+P9_TATTACH	9p.h	/^	P9_TATTACH = 104,$/;"	e	enum:p9_msg_t
+P9_TAUTH	9p.h	/^	P9_TAUTH = 102,$/;"	e	enum:p9_msg_t
+P9_TCLUNK	9p.h	/^	P9_TCLUNK = 120,$/;"	e	enum:p9_msg_t
+P9_TCREATE	9p.h	/^	P9_TCREATE = 114,$/;"	e	enum:p9_msg_t
+P9_TERROR	9p.h	/^	P9_TERROR = 106,$/;"	e	enum:p9_msg_t
+P9_TFLUSH	9p.h	/^	P9_TFLUSH = 108,$/;"	e	enum:p9_msg_t
+P9_TFSYNC	9p.h	/^	P9_TFSYNC = 50,$/;"	e	enum:p9_msg_t
+P9_TGETATTR	9p.h	/^	P9_TGETATTR = 24,$/;"	e	enum:p9_msg_t
+P9_TGETLOCK	9p.h	/^	P9_TGETLOCK = 54,$/;"	e	enum:p9_msg_t
+P9_TLCREATE	9p.h	/^	P9_TLCREATE = 14,$/;"	e	enum:p9_msg_t
+P9_TLERROR	9p.h	/^	P9_TLERROR = 6,$/;"	e	enum:p9_msg_t
+P9_TLINK	9p.h	/^	P9_TLINK = 70,$/;"	e	enum:p9_msg_t
+P9_TLOCK	9p.h	/^	P9_TLOCK = 52,$/;"	e	enum:p9_msg_t
+P9_TLOPEN	9p.h	/^	P9_TLOPEN = 12,$/;"	e	enum:p9_msg_t
+P9_TMKDIR	9p.h	/^	P9_TMKDIR = 72,$/;"	e	enum:p9_msg_t
+P9_TMKNOD	9p.h	/^	P9_TMKNOD = 18,$/;"	e	enum:p9_msg_t
+P9_TOPEN	9p.h	/^	P9_TOPEN = 112,$/;"	e	enum:p9_msg_t
+P9_TREAD	9p.h	/^	P9_TREAD = 116,$/;"	e	enum:p9_msg_t
+P9_TREADDIR	9p.h	/^	P9_TREADDIR = 40,$/;"	e	enum:p9_msg_t
+P9_TREADLINK	9p.h	/^	P9_TREADLINK = 22,$/;"	e	enum:p9_msg_t
+P9_TREMOVE	9p.h	/^	P9_TREMOVE = 122,$/;"	e	enum:p9_msg_t
+P9_TRENAME	9p.h	/^	P9_TRENAME = 20,$/;"	e	enum:p9_msg_t
+P9_TRENAMEAT	9p.h	/^	P9_TRENAMEAT = 74,$/;"	e	enum:p9_msg_t
+P9_TSETATTR	9p.h	/^	P9_TSETATTR = 26,$/;"	e	enum:p9_msg_t
+P9_TSTAT	9p.h	/^	P9_TSTAT = 124,$/;"	e	enum:p9_msg_t
+P9_TSTATFS	9p.h	/^	P9_TSTATFS = 8,$/;"	e	enum:p9_msg_t
+P9_TSYMLINK	9p.h	/^	P9_TSYMLINK = 16,$/;"	e	enum:p9_msg_t
+P9_TUNLINKAT	9p.h	/^	P9_TUNLINKAT = 76,$/;"	e	enum:p9_msg_t
+P9_TVERSION	9p.h	/^	P9_TVERSION = 100,$/;"	e	enum:p9_msg_t
+P9_TWALK	9p.h	/^	P9_TWALK = 110,$/;"	e	enum:p9_msg_t
+P9_TWRITE	9p.h	/^	P9_TWRITE = 118,$/;"	e	enum:p9_msg_t
+P9_TWSTAT	9p.h	/^	P9_TWSTAT = 126,$/;"	e	enum:p9_msg_t
+P9_TXATTRCREATE	9p.h	/^	P9_TXATTRCREATE = 32,$/;"	e	enum:p9_msg_t
+P9_TXATTRWALK	9p.h	/^	P9_TXATTRWALK = 30,$/;"	e	enum:p9_msg_t
+P9_VERS	9p_fs/p9fs.ko/p9fs_proto.h	546;"	d
+P9_ZC_HDR_SZ	9p.h	346;"	d
+PROG	9p_fs/mount_p9fs/Makefile	/^PROG=	mount_p9fs$/;"	m
+QTAPPEND	9p_fs/p9fs.ko/p9fs_proto.h	/^	QTAPPEND =	0x40,$/;"	e	enum:p9fs_qid_type
+QTAUTH	9p_fs/p9fs.ko/p9fs_proto.h	/^	QTAUTH =	0x08,$/;"	e	enum:p9fs_qid_type
+QTDIR	9p_fs/p9fs.ko/p9fs_proto.h	/^	QTDIR =		0x80,$/;"	e	enum:p9fs_qid_type
+QTEXCL	9p_fs/p9fs.ko/p9fs_proto.h	/^	QTEXCL =	0x20,$/;"	e	enum:p9fs_qid_type
+QTFILE	9p_fs/p9fs.ko/p9fs_proto.h	/^	QTFILE =	0x00,$/;"	e	enum:p9fs_qid_type
+QTLINK	9p_fs/p9fs.ko/p9fs_proto.h	/^	QTLINK =	0x02,$/;"	e	enum:p9fs_qid_type
+QTMOUNT	9p_fs/p9fs.ko/p9fs_proto.h	/^	QTMOUNT =	0x10,$/;"	e	enum:p9fs_qid_type
+QTTMP	9p_fs/p9fs.ko/p9fs_proto.h	/^	QTTMP =		0x04,$/;"	e	enum:p9fs_qid_type
+REQ_STATUS_ALLOC	client.h	/^	REQ_STATUS_ALLOC,$/;"	e	enum:p9_req_status_t
+REQ_STATUS_ERROR	client.h	/^	REQ_STATUS_ERROR,$/;"	e	enum:p9_req_status_t
+REQ_STATUS_FLSHD	client.h	/^	REQ_STATUS_FLSHD,$/;"	e	enum:p9_req_status_t
+REQ_STATUS_IDLE	client.h	/^	REQ_STATUS_IDLE,$/;"	e	enum:p9_req_status_t
+REQ_STATUS_RCVD	client.h	/^	REQ_STATUS_RCVD,$/;"	e	enum:p9_req_status_t
+REQ_STATUS_SENT	client.h	/^	REQ_STATUS_SENT,$/;"	e	enum:p9_req_status_t
+REQ_STATUS_UNSENT	client.h	/^	REQ_STATUS_UNSENT,$/;"	e	enum:p9_req_status_t
+ROOTFID	9p_fs/p9fs.ko/p9fs_proto.h	544;"	d
+Rattach	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rattach,$/;"	e	enum:p9fs_msg_type
+Rattach_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rattach_hdr;$/;"	m	struct:p9fs_msg_Rattach	typeref:struct:p9fs_msg_Rattach::p9fs_msg_hdr
+Rattach_qid	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_qid Rattach_qid;$/;"	m	struct:p9fs_msg_Rattach	typeref:struct:p9fs_msg_Rattach::p9fs_qid
+Rauth	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rauth,$/;"	e	enum:p9fs_msg_type
+Rauth_aqid	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_qid Rauth_aqid;$/;"	m	struct:p9fs_msg_Rauth	typeref:struct:p9fs_msg_Rauth::p9fs_qid
+Rauth_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rauth_hdr;$/;"	m	struct:p9fs_msg_Rauth	typeref:struct:p9fs_msg_Rauth::p9fs_msg_hdr
+Rclunk	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rclunk,$/;"	e	enum:p9fs_msg_type
+Rclunk_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rclunk_hdr;$/;"	m	struct:p9fs_msg_Rclunk	typeref:struct:p9fs_msg_Rclunk::p9fs_msg_hdr
+Rcreate	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rcreate,$/;"	e	enum:p9fs_msg_type
+Rcreate_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rcreate_hdr;$/;"	m	struct:p9fs_msg_Rcreate	typeref:struct:p9fs_msg_Rcreate::p9fs_msg_hdr
+Rcreate_iounit	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Rcreate_iounit;$/;"	m	struct:p9fs_msg_Rcreate
+Rcreate_qid	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_qid Rcreate_qid;$/;"	m	struct:p9fs_msg_Rcreate	typeref:struct:p9fs_msg_Rcreate::p9fs_qid
+Rerror	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rerror =	107,$/;"	e	enum:p9fs_msg_type
+Rerror_errno	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Rerror_errno;$/;"	m	struct:p9fs_msg_Rerror
+Rerror_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rerror_hdr;$/;"	m	struct:p9fs_msg_Rerror	typeref:struct:p9fs_msg_Rerror::p9fs_msg_hdr
+Rflush	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rflush,$/;"	e	enum:p9fs_msg_type
+Rflush_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rflush_hdr;$/;"	m	struct:p9fs_msg_Rflush	typeref:struct:p9fs_msg_Rflush::p9fs_msg_hdr
+Ropen	9p_fs/p9fs.ko/p9fs_proto.h	/^	Ropen,$/;"	e	enum:p9fs_msg_type
+Ropen_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Ropen_hdr;$/;"	m	struct:p9fs_msg_Ropen	typeref:struct:p9fs_msg_Ropen::p9fs_msg_hdr
+Ropen_iounit	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Ropen_iounit;$/;"	m	struct:p9fs_msg_Ropen
+Ropen_qid	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_qid Ropen_qid;$/;"	m	struct:p9fs_msg_Ropen	typeref:struct:p9fs_msg_Ropen::p9fs_qid
+Rpending	9p_net/trans_fd.c	/^	Rpending = 2,		\/* can read *\/$/;"	e	enum:__anon3	file:
+Rread	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rread,$/;"	e	enum:p9fs_msg_type
+Rread_count	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Rread_count;$/;"	m	struct:p9fs_msg_Rread
+Rread_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rread_hdr;$/;"	m	struct:p9fs_msg_Rread	typeref:struct:p9fs_msg_Rread::p9fs_msg_hdr
+Rremove	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rremove,$/;"	e	enum:p9fs_msg_type
+Rremove_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rremove_hdr;$/;"	m	struct:p9fs_msg_Rremove	typeref:struct:p9fs_msg_Rremove::p9fs_msg_hdr
+Rstat	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rstat,$/;"	e	enum:p9fs_msg_type
+Rstat_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rstat_hdr;$/;"	m	struct:p9fs_msg_Rstat	typeref:struct:p9fs_msg_Rstat::p9fs_msg_hdr
+Rstat_stat	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_stat Rstat_stat;$/;"	m	struct:p9fs_msg_Rstat	typeref:struct:p9fs_msg_Rstat::p9fs_stat
+Rversion	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rversion,$/;"	e	enum:p9fs_msg_type
+Rversion_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rversion_hdr;$/;"	m	struct:p9fs_msg_Rversion	typeref:struct:p9fs_msg_Rversion::p9fs_msg_hdr
+Rversion_max_size	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Rversion_max_size;$/;"	m	struct:p9fs_msg_Rversion
+Rwalk	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rwalk,$/;"	e	enum:p9fs_msg_type
+Rwalk_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rwalk_hdr;$/;"	m	struct:p9fs_msg_Rwalk	typeref:struct:p9fs_msg_Rwalk::p9fs_msg_hdr
+Rwalk_nwqid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t Rwalk_nwqid;$/;"	m	struct:p9fs_msg_Rwalk
+Rworksched	9p_net/trans_fd.c	/^	Rworksched = 1,		\/* read work scheduled or running *\/$/;"	e	enum:__anon3	file:
+Rwrite	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rwrite,$/;"	e	enum:p9fs_msg_type
+Rwrite_count	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Rwrite_count;$/;"	m	struct:p9fs_msg_Rwrite
+Rwrite_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rwrite_hdr;$/;"	m	struct:p9fs_msg_Rwrite	typeref:struct:p9fs_msg_Rwrite::p9fs_msg_hdr
+Rwstat	9p_fs/p9fs.ko/p9fs_proto.h	/^	Rwstat,$/;"	e	enum:p9fs_msg_type
+Rwstat_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Rwstat_hdr;$/;"	m	struct:p9fs_msg_Rwstat	typeref:struct:p9fs_msg_Rwstat::p9fs_msg_hdr
+SRCS	9p_fs/mount_p9fs/Makefile	/^SRCS=	mount_p9fs.c getmntopts.c$/;"	m
+Tattach	9p_fs/p9fs.ko/p9fs_proto.h	/^	Tattach,$/;"	e	enum:p9fs_msg_type
+Tattach_afid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tattach_afid;$/;"	m	struct:p9fs_msg_Tattach
+Tattach_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tattach_fid;$/;"	m	struct:p9fs_msg_Tattach
+Tattach_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Tattach_hdr;$/;"	m	struct:p9fs_msg_Tattach	typeref:struct:p9fs_msg_Tattach::p9fs_msg_hdr
+Tauth	9p_fs/p9fs.ko/p9fs_proto.h	/^	Tauth,$/;"	e	enum:p9fs_msg_type
+Tauth_afid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tauth_afid;$/;"	m	struct:p9fs_msg_Tauth
+Tauth_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Tauth_hdr;$/;"	m	struct:p9fs_msg_Tauth	typeref:struct:p9fs_msg_Tauth::p9fs_msg_hdr
+Tclunk	9p_fs/p9fs.ko/p9fs_proto.h	/^	Tclunk,$/;"	e	enum:p9fs_msg_type
+Tclunk_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tclunk_fid;$/;"	m	struct:p9fs_msg_Tclunk
+Tclunk_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Tclunk_hdr;$/;"	m	struct:p9fs_msg_Tclunk	typeref:struct:p9fs_msg_Tclunk::p9fs_msg_hdr
+Tcreate	9p_fs/p9fs.ko/p9fs_proto.h	/^	Tcreate,$/;"	e	enum:p9fs_msg_type
+Tcreate_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tcreate_fid;$/;"	m	struct:p9fs_msg_Tcreate
+Tcreate_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Tcreate_hdr;$/;"	m	struct:p9fs_msg_Tcreate	typeref:struct:p9fs_msg_Tcreate::p9fs_msg_hdr
+Tcreate_mode	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint8_t Tcreate_mode;$/;"	m	struct:p9fs_msg_Tcreate
+Tcreate_perm	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tcreate_perm;$/;"	m	struct:p9fs_msg_Tcreate
+Tflush	9p_fs/p9fs.ko/p9fs_proto.h	/^	Tflush,$/;"	e	enum:p9fs_msg_type
+Tflush_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Tflush_hdr;$/;"	m	struct:p9fs_msg_Tflush	typeref:struct:p9fs_msg_Tflush::p9fs_msg_hdr
+Tflush_oldtag	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t Tflush_oldtag;$/;"	m	struct:p9fs_msg_Tflush
+Topen	9p_fs/p9fs.ko/p9fs_proto.h	/^	Topen,$/;"	e	enum:p9fs_msg_type
+Topen_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Topen_fid;$/;"	m	struct:p9fs_msg_Topen
+Topen_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Topen_hdr;$/;"	m	struct:p9fs_msg_Topen	typeref:struct:p9fs_msg_Topen::p9fs_msg_hdr
+Topen_mode	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint8_t Topen_mode;$/;"	m	struct:p9fs_msg_Topen
+Tread	9p_fs/p9fs.ko/p9fs_proto.h	/^	Tread,$/;"	e	enum:p9fs_msg_type
+Tread_count	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tread_count;$/;"	m	struct:p9fs_msg_Tread
+Tread_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tread_fid;$/;"	m	struct:p9fs_msg_Tread
+Tread_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Tread_hdr;$/;"	m	struct:p9fs_msg_Tread	typeref:struct:p9fs_msg_Tread::p9fs_msg_hdr
+Tread_offset	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint64_t Tread_offset;$/;"	m	struct:p9fs_msg_Tread
+Tremove	9p_fs/p9fs.ko/p9fs_proto.h	/^	Tremove,$/;"	e	enum:p9fs_msg_type
+Tremove_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tremove_fid;$/;"	m	struct:p9fs_msg_Tremove
+Tremove_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Tremove_hdr;$/;"	m	struct:p9fs_msg_Tremove	typeref:struct:p9fs_msg_Tremove::p9fs_msg_hdr
+Tstat	9p_fs/p9fs.ko/p9fs_proto.h	/^	Tstat,$/;"	e	enum:p9fs_msg_type
+Tstat_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tstat_fid;$/;"	m	struct:p9fs_msg_Tstat
+Tstat_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Tstat_hdr;$/;"	m	struct:p9fs_msg_Tstat	typeref:struct:p9fs_msg_Tstat::p9fs_msg_hdr
+Tversion	9p_fs/p9fs.ko/p9fs_proto.h	/^	Tversion =	100,$/;"	e	enum:p9fs_msg_type
+Tversion_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Tversion_hdr;$/;"	m	struct:p9fs_msg_Tversion	typeref:struct:p9fs_msg_Tversion::p9fs_msg_hdr
+Tversion_max_size	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Tversion_max_size;$/;"	m	struct:p9fs_msg_Tversion
+Twalk	9p_fs/p9fs.ko/p9fs_proto.h	/^	Twalk,$/;"	e	enum:p9fs_msg_type
+Twalk_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Twalk_fid;$/;"	m	struct:p9fs_msg_Twalk
+Twalk_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Twalk_hdr;$/;"	m	struct:p9fs_msg_Twalk	typeref:struct:p9fs_msg_Twalk::p9fs_msg_hdr
+Twalk_newfid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Twalk_newfid;$/;"	m	struct:p9fs_msg_Twalk
+Twalk_nwname	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t Twalk_nwname;$/;"	m	struct:p9fs_msg_Twalk
+Twrite	9p_fs/p9fs.ko/p9fs_proto.h	/^	Twrite,$/;"	e	enum:p9fs_msg_type
+Twrite_count	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Twrite_count;$/;"	m	struct:p9fs_msg_Twrite
+Twrite_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Twrite_fid;$/;"	m	struct:p9fs_msg_Twrite
+Twrite_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Twrite_hdr;$/;"	m	struct:p9fs_msg_Twrite	typeref:struct:p9fs_msg_Twrite::p9fs_msg_hdr
+Twrite_offset	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint64_t Twrite_offset;$/;"	m	struct:p9fs_msg_Twrite
+Twstat	9p_fs/p9fs.ko/p9fs_proto.h	/^	Twstat,$/;"	e	enum:p9fs_msg_type
+Twstat_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t Twstat_fid;$/;"	m	struct:p9fs_msg_Twstat
+Twstat_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr Twstat_hdr;$/;"	m	struct:p9fs_msg_Twstat	typeref:struct:p9fs_msg_Twstat::p9fs_msg_hdr
+Twstat_stat	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_stat Twstat_stat;$/;"	m	struct:p9fs_msg_Twstat	typeref:struct:p9fs_msg_Twstat::p9fs_stat
+UN_VERS	9p_fs/p9fs.ko/p9fs_proto.h	547;"	d
+VFSTOP9	9p_fs/p9fs.ko/p9fs_vfsops.c	69;"	d	file:
+VIRTQUEUE_NUM	9p_net/trans_virtio.c	34;"	d	file:
+VNOP_UNIMPLEMENTED	9p_fs/p9fs.ko/p9fs_vnops.c	174;"	d	file:
+VOP_ACCESS	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_ACCESS($/;"	f
+VOP_ACCESSX	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_ACCESSX($/;"	f
+VOP_ACLCHECK	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_ACLCHECK($/;"	f
+VOP_ADD_WRITECOUNT	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_ADD_WRITECOUNT($/;"	f
+VOP_ADVISE	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_ADVISE($/;"	f
+VOP_ADVLOCK	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_ADVLOCK($/;"	f
+VOP_ADVLOCKASYNC	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_ADVLOCKASYNC($/;"	f
+VOP_ADVLOCKPURGE	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_ADVLOCKPURGE($/;"	f
+VOP_ALLOCATE	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_ALLOCATE($/;"	f
+VOP_BMAP	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_BMAP($/;"	f
+VOP_CACHEDLOOKUP	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_CACHEDLOOKUP($/;"	f
+VOP_CLOSE	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_CLOSE($/;"	f
+VOP_CLOSEEXTATTR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_CLOSEEXTATTR($/;"	f
+VOP_CREATE	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_CREATE($/;"	f
+VOP_DELETEEXTATTR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_DELETEEXTATTR($/;"	f
+VOP_FSYNC	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_FSYNC($/;"	f
+VOP_GETACL	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_GETACL($/;"	f
+VOP_GETATTR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_GETATTR($/;"	f
+VOP_GETEXTATTR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_GETEXTATTR($/;"	f
+VOP_GETPAGES	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_GETPAGES($/;"	f
+VOP_GETWRITEMOUNT	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_GETWRITEMOUNT($/;"	f
+VOP_GET_WRITECOUNT	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_GET_WRITECOUNT($/;"	f
+VOP_INACTIVE	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_INACTIVE($/;"	f
+VOP_IOCTL	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_IOCTL($/;"	f
+VOP_ISLOCKED	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_ISLOCKED($/;"	f
+VOP_IS_TEXT	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_IS_TEXT($/;"	f
+VOP_KQFILTER	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_KQFILTER($/;"	f
+VOP_LINK	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_LINK($/;"	f
+VOP_LISTEXTATTR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_LISTEXTATTR($/;"	f
+VOP_LOCK1	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_LOCK1($/;"	f
+VOP_LOOKUP	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_LOOKUP($/;"	f
+VOP_MARKATIME	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_MARKATIME($/;"	f
+VOP_MKDIR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_MKDIR($/;"	f
+VOP_MKNOD	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_MKNOD($/;"	f
+VOP_OPEN	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_OPEN($/;"	f
+VOP_OPENEXTATTR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_OPENEXTATTR($/;"	f
+VOP_PATHCONF	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_PATHCONF($/;"	f
+VOP_POLL	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_POLL($/;"	f
+VOP_PRINT	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_PRINT($/;"	f
+VOP_PUTPAGES	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_PUTPAGES($/;"	f
+VOP_READ	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_READ($/;"	f
+VOP_READDIR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_READDIR($/;"	f
+VOP_READLINK	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_READLINK($/;"	f
+VOP_REALLOCBLKS	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_REALLOCBLKS($/;"	f
+VOP_RECLAIM	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_RECLAIM($/;"	f
+VOP_REMOVE	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_REMOVE($/;"	f
+VOP_RENAME	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_RENAME($/;"	f
+VOP_REVOKE	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_REVOKE($/;"	f
+VOP_RMDIR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_RMDIR($/;"	f
+VOP_SETACL	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SETACL($/;"	f
+VOP_SETATTR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SETATTR($/;"	f
+VOP_SETEXTATTR	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SETEXTATTR($/;"	f
+VOP_SETLABEL	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SETLABEL($/;"	f
+VOP_SET_TEXT	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SET_TEXT($/;"	f
+VOP_SPARE1	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SPARE1($/;"	f
+VOP_SPARE2	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SPARE2($/;"	f
+VOP_SPARE3	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SPARE3($/;"	f
+VOP_SPARE4	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SPARE4($/;"	f
+VOP_SPARE5	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SPARE5($/;"	f
+VOP_STRATEGY	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_STRATEGY($/;"	f
+VOP_SYMLINK	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_SYMLINK($/;"	f
+VOP_UNLOCK	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_UNLOCK($/;"	f
+VOP_UNP_BIND	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_UNP_BIND($/;"	f
+VOP_UNP_CONNECT	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_UNP_CONNECT($/;"	f
+VOP_UNP_DETACH	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_UNP_DETACH($/;"	f
+VOP_UNSET_TEXT	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_UNSET_TEXT($/;"	f
+VOP_VPTOCNP	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_VPTOCNP($/;"	f
+VOP_VPTOFH	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_VPTOFH($/;"	f
+VOP_WHITEOUT	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_WHITEOUT($/;"	f
+VOP_WRITE	9p_fs/p9fs.ko/vnode_if.h	/^static __inline int VOP_WRITE($/;"	f
+Wpending	9p_net/trans_fd.c	/^	Wpending = 8,		\/* can write *\/$/;"	e	enum:__anon3	file:
+Wworksched	9p_net/trans_fd.c	/^	Wworksched = 4,		\/* write work scheduled or running *\/$/;"	e	enum:__anon3	file:
+__P9FS_PROTO_H__	9p_fs/p9fs.ko/p9fs_proto.h	230;"	d
+__P9FS_SUBR_H__	9p_fs/p9fs.ko/p9fs_subr.h	32;"	d
+_p9_debug	9p_net/mod.c	/^void _p9_debug(enum p9_debug_flags level, const char *func,$/;"	f
+a_accmode	9p_fs/p9fs.ko/vnode_if.h	/^	accmode_t a_accmode;$/;"	m	struct:vop_access_args
+a_accmode	9p_fs/p9fs.ko/vnode_if.h	/^	accmode_t a_accmode;$/;"	m	struct:vop_accessx_args
+a_aclp	9p_fs/p9fs.ko/vnode_if.h	/^	struct acl *a_aclp;$/;"	m	struct:vop_aclcheck_args	typeref:struct:vop_aclcheck_args::acl
+a_aclp	9p_fs/p9fs.ko/vnode_if.h	/^	struct acl *a_aclp;$/;"	m	struct:vop_getacl_args	typeref:struct:vop_getacl_args::acl
+a_aclp	9p_fs/p9fs.ko/vnode_if.h	/^	struct acl *a_aclp;$/;"	m	struct:vop_setacl_args	typeref:struct:vop_setacl_args::acl
+a_advice	9p_fs/p9fs.ko/vnode_if.h	/^	int a_advice;$/;"	m	struct:vop_advise_args
+a_attrnamespace	9p_fs/p9fs.ko/vnode_if.h	/^	int a_attrnamespace;$/;"	m	struct:vop_deleteextattr_args
+a_attrnamespace	9p_fs/p9fs.ko/vnode_if.h	/^	int a_attrnamespace;$/;"	m	struct:vop_getextattr_args
+a_attrnamespace	9p_fs/p9fs.ko/vnode_if.h	/^	int a_attrnamespace;$/;"	m	struct:vop_listextattr_args
+a_attrnamespace	9p_fs/p9fs.ko/vnode_if.h	/^	int a_attrnamespace;$/;"	m	struct:vop_setextattr_args
+a_bn	9p_fs/p9fs.ko/vnode_if.h	/^	daddr_t a_bn;$/;"	m	struct:vop_bmap_args
+a_bnp	9p_fs/p9fs.ko/vnode_if.h	/^	daddr_t *a_bnp;$/;"	m	struct:vop_bmap_args
+a_bop	9p_fs/p9fs.ko/vnode_if.h	/^	struct bufobj **a_bop;$/;"	m	struct:vop_bmap_args	typeref:struct:vop_bmap_args::bufobj
+a_bp	9p_fs/p9fs.ko/vnode_if.h	/^	struct buf *a_bp;$/;"	m	struct:vop_strategy_args	typeref:struct:vop_strategy_args::buf
+a_buf	9p_fs/p9fs.ko/vnode_if.h	/^	char *a_buf;$/;"	m	struct:vop_vptocnp_args
+a_buflen	9p_fs/p9fs.ko/vnode_if.h	/^	int *a_buflen;$/;"	m	struct:vop_vptocnp_args
+a_buflist	9p_fs/p9fs.ko/vnode_if.h	/^	struct cluster_save *a_buflist;$/;"	m	struct:vop_reallocblks_args	typeref:struct:vop_reallocblks_args::cluster_save
+a_cnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_cnp;$/;"	m	struct:vop_cachedlookup_args	typeref:struct:vop_cachedlookup_args::componentname
+a_cnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_cnp;$/;"	m	struct:vop_create_args	typeref:struct:vop_create_args::componentname
+a_cnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_cnp;$/;"	m	struct:vop_link_args	typeref:struct:vop_link_args::componentname
+a_cnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_cnp;$/;"	m	struct:vop_lookup_args	typeref:struct:vop_lookup_args::componentname
+a_cnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_cnp;$/;"	m	struct:vop_mkdir_args	typeref:struct:vop_mkdir_args::componentname
+a_cnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_cnp;$/;"	m	struct:vop_mknod_args	typeref:struct:vop_mknod_args::componentname
+a_cnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_cnp;$/;"	m	struct:vop_remove_args	typeref:struct:vop_remove_args::componentname
+a_cnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_cnp;$/;"	m	struct:vop_rmdir_args	typeref:struct:vop_rmdir_args::componentname
+a_cnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_cnp;$/;"	m	struct:vop_symlink_args	typeref:struct:vop_symlink_args::componentname
+a_cnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_cnp;$/;"	m	struct:vop_whiteout_args	typeref:struct:vop_whiteout_args::componentname
+a_command	9p_fs/p9fs.ko/vnode_if.h	/^	u_long a_command;$/;"	m	struct:vop_ioctl_args
+a_commit	9p_fs/p9fs.ko/vnode_if.h	/^	int a_commit;$/;"	m	struct:vop_closeextattr_args
+a_cookiep	9p_fs/p9fs.ko/vnode_if.h	/^	void **a_cookiep;$/;"	m	struct:vop_advlockasync_args
+a_cookies	9p_fs/p9fs.ko/vnode_if.h	/^	u_long **a_cookies;$/;"	m	struct:vop_readdir_args
+a_count	9p_fs/p9fs.ko/vnode_if.h	/^	int a_count;$/;"	m	struct:vop_getpages_args
+a_count	9p_fs/p9fs.ko/vnode_if.h	/^	int a_count;$/;"	m	struct:vop_putpages_args
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_access_args	typeref:struct:vop_access_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_accessx_args	typeref:struct:vop_accessx_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_aclcheck_args	typeref:struct:vop_aclcheck_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_close_args	typeref:struct:vop_close_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_closeextattr_args	typeref:struct:vop_closeextattr_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_deleteextattr_args	typeref:struct:vop_deleteextattr_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_getacl_args	typeref:struct:vop_getacl_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_getattr_args	typeref:struct:vop_getattr_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_getextattr_args	typeref:struct:vop_getextattr_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_ioctl_args	typeref:struct:vop_ioctl_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_listextattr_args	typeref:struct:vop_listextattr_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_open_args	typeref:struct:vop_open_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_openextattr_args	typeref:struct:vop_openextattr_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_poll_args	typeref:struct:vop_poll_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_read_args	typeref:struct:vop_read_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_readdir_args	typeref:struct:vop_readdir_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_readlink_args	typeref:struct:vop_readlink_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_setacl_args	typeref:struct:vop_setacl_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_setattr_args	typeref:struct:vop_setattr_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_setextattr_args	typeref:struct:vop_setextattr_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_setlabel_args	typeref:struct:vop_setlabel_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_vptocnp_args	typeref:struct:vop_vptocnp_args::ucred
+a_cred	9p_fs/p9fs.ko/vnode_if.h	/^	struct ucred *a_cred;$/;"	m	struct:vop_write_args	typeref:struct:vop_write_args::ucred
+a_data	9p_fs/p9fs.ko/vnode_if.h	/^	void *a_data;$/;"	m	struct:vop_ioctl_args
+a_dvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_dvp;$/;"	m	struct:vop_cachedlookup_args	typeref:struct:vop_cachedlookup_args::vnode
+a_dvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_dvp;$/;"	m	struct:vop_create_args	typeref:struct:vop_create_args::vnode
+a_dvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_dvp;$/;"	m	struct:vop_lookup_args	typeref:struct:vop_lookup_args::vnode
+a_dvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_dvp;$/;"	m	struct:vop_mkdir_args	typeref:struct:vop_mkdir_args::vnode
+a_dvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_dvp;$/;"	m	struct:vop_mknod_args	typeref:struct:vop_mknod_args::vnode
+a_dvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_dvp;$/;"	m	struct:vop_remove_args	typeref:struct:vop_remove_args::vnode
+a_dvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_dvp;$/;"	m	struct:vop_rmdir_args	typeref:struct:vop_rmdir_args::vnode
+a_dvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_dvp;$/;"	m	struct:vop_symlink_args	typeref:struct:vop_symlink_args::vnode
+a_dvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_dvp;$/;"	m	struct:vop_whiteout_args	typeref:struct:vop_whiteout_args::vnode
+a_end	9p_fs/p9fs.ko/vnode_if.h	/^	off_t a_end;$/;"	m	struct:vop_advise_args
+a_eofflag	9p_fs/p9fs.ko/vnode_if.h	/^	int *a_eofflag;$/;"	m	struct:vop_readdir_args
+a_events	9p_fs/p9fs.ko/vnode_if.h	/^	int a_events;$/;"	m	struct:vop_poll_args
+a_fcnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_fcnp;$/;"	m	struct:vop_rename_args	typeref:struct:vop_rename_args::componentname
+a_fdvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_fdvp;$/;"	m	struct:vop_rename_args	typeref:struct:vop_rename_args::vnode
+a_fflag	9p_fs/p9fs.ko/vnode_if.h	/^	int a_fflag;$/;"	m	struct:vop_close_args
+a_fflag	9p_fs/p9fs.ko/vnode_if.h	/^	int a_fflag;$/;"	m	struct:vop_ioctl_args
+a_fhp	9p_fs/p9fs.ko/vnode_if.h	/^	struct fid *a_fhp;$/;"	m	struct:vop_vptofh_args	typeref:struct:vop_vptofh_args::fid
+a_file	9p_fs/p9fs.ko/vnode_if.h	/^	char *a_file;$/;"	m	struct:vop_lock1_args
+a_fl	9p_fs/p9fs.ko/vnode_if.h	/^	struct flock *a_fl;$/;"	m	struct:vop_advlock_args	typeref:struct:vop_advlock_args::flock
+a_fl	9p_fs/p9fs.ko/vnode_if.h	/^	struct flock *a_fl;$/;"	m	struct:vop_advlockasync_args	typeref:struct:vop_advlockasync_args::flock
+a_flags	9p_fs/p9fs.ko/vnode_if.h	/^	int a_flags;$/;"	m	struct:vop_advlock_args
+a_flags	9p_fs/p9fs.ko/vnode_if.h	/^	int a_flags;$/;"	m	struct:vop_advlockasync_args
+a_flags	9p_fs/p9fs.ko/vnode_if.h	/^	int a_flags;$/;"	m	struct:vop_lock1_args
+a_flags	9p_fs/p9fs.ko/vnode_if.h	/^	int a_flags;$/;"	m	struct:vop_revoke_args
+a_flags	9p_fs/p9fs.ko/vnode_if.h	/^	int a_flags;$/;"	m	struct:vop_unlock_args
+a_flags	9p_fs/p9fs.ko/vnode_if.h	/^	int a_flags;$/;"	m	struct:vop_whiteout_args
+a_fp	9p_fs/p9fs.ko/vnode_if.h	/^	struct file *a_fp;$/;"	m	struct:vop_open_args	typeref:struct:vop_open_args::file
+a_fvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_fvp;$/;"	m	struct:vop_rename_args	typeref:struct:vop_rename_args::vnode
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_access_args	typeref:struct:vop_access_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_accessx_args	typeref:struct:vop_accessx_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_aclcheck_args	typeref:struct:vop_aclcheck_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_add_writecount_args	typeref:struct:vop_add_writecount_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_advise_args	typeref:struct:vop_advise_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_advlock_args	typeref:struct:vop_advlock_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_advlockasync_args	typeref:struct:vop_advlockasync_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_advlockpurge_args	typeref:struct:vop_advlockpurge_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_allocate_args	typeref:struct:vop_allocate_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_bmap_args	typeref:struct:vop_bmap_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_cachedlookup_args	typeref:struct:vop_cachedlookup_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_close_args	typeref:struct:vop_close_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_closeextattr_args	typeref:struct:vop_closeextattr_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_create_args	typeref:struct:vop_create_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_deleteextattr_args	typeref:struct:vop_deleteextattr_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_fsync_args	typeref:struct:vop_fsync_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_get_writecount_args	typeref:struct:vop_get_writecount_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_getacl_args	typeref:struct:vop_getacl_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_getattr_args	typeref:struct:vop_getattr_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_getextattr_args	typeref:struct:vop_getextattr_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_getpages_args	typeref:struct:vop_getpages_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_getwritemount_args	typeref:struct:vop_getwritemount_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_inactive_args	typeref:struct:vop_inactive_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_ioctl_args	typeref:struct:vop_ioctl_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_is_text_args	typeref:struct:vop_is_text_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_islocked_args	typeref:struct:vop_islocked_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_kqfilter_args	typeref:struct:vop_kqfilter_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_link_args	typeref:struct:vop_link_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_listextattr_args	typeref:struct:vop_listextattr_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_lock1_args	typeref:struct:vop_lock1_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_lookup_args	typeref:struct:vop_lookup_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_markatime_args	typeref:struct:vop_markatime_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_mkdir_args	typeref:struct:vop_mkdir_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_mknod_args	typeref:struct:vop_mknod_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_open_args	typeref:struct:vop_open_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_openextattr_args	typeref:struct:vop_openextattr_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_pathconf_args	typeref:struct:vop_pathconf_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_poll_args	typeref:struct:vop_poll_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_print_args	typeref:struct:vop_print_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_putpages_args	typeref:struct:vop_putpages_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_read_args	typeref:struct:vop_read_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_readdir_args	typeref:struct:vop_readdir_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_readlink_args	typeref:struct:vop_readlink_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_reallocblks_args	typeref:struct:vop_reallocblks_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_reclaim_args	typeref:struct:vop_reclaim_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_remove_args	typeref:struct:vop_remove_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_rename_args	typeref:struct:vop_rename_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_revoke_args	typeref:struct:vop_revoke_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_rmdir_args	typeref:struct:vop_rmdir_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_set_text_args	typeref:struct:vop_set_text_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_setacl_args	typeref:struct:vop_setacl_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_setattr_args	typeref:struct:vop_setattr_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_setextattr_args	typeref:struct:vop_setextattr_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_setlabel_args	typeref:struct:vop_setlabel_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_spare1_args	typeref:struct:vop_spare1_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_spare2_args	typeref:struct:vop_spare2_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_spare3_args	typeref:struct:vop_spare3_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_spare4_args	typeref:struct:vop_spare4_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_spare5_args	typeref:struct:vop_spare5_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_strategy_args	typeref:struct:vop_strategy_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_symlink_args	typeref:struct:vop_symlink_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_unlock_args	typeref:struct:vop_unlock_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_unp_bind_args	typeref:struct:vop_unp_bind_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_unp_connect_args	typeref:struct:vop_unp_connect_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_unp_detach_args	typeref:struct:vop_unp_detach_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_unset_text_args	typeref:struct:vop_unset_text_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_vptocnp_args	typeref:struct:vop_vptocnp_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_vptofh_args	typeref:struct:vop_vptofh_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_whiteout_args	typeref:struct:vop_whiteout_args::vop_generic_args
+a_gen	9p_fs/p9fs.ko/vnode_if.h	/^	struct vop_generic_args a_gen;$/;"	m	struct:vop_write_args	typeref:struct:vop_write_args::vop_generic_args
+a_id	9p_fs/p9fs.ko/vnode_if.h	/^	void *a_id;$/;"	m	struct:vop_advlock_args
+a_id	9p_fs/p9fs.ko/vnode_if.h	/^	void *a_id;$/;"	m	struct:vop_advlockasync_args
+a_inc	9p_fs/p9fs.ko/vnode_if.h	/^	int a_inc;$/;"	m	struct:vop_add_writecount_args
+a_ioflag	9p_fs/p9fs.ko/vnode_if.h	/^	int a_ioflag;$/;"	m	struct:vop_read_args
+a_ioflag	9p_fs/p9fs.ko/vnode_if.h	/^	int a_ioflag;$/;"	m	struct:vop_write_args
+a_kn	9p_fs/p9fs.ko/vnode_if.h	/^	struct knote *a_kn;$/;"	m	struct:vop_kqfilter_args	typeref:struct:vop_kqfilter_args::knote
+a_label	9p_fs/p9fs.ko/vnode_if.h	/^	struct label *a_label;$/;"	m	struct:vop_setlabel_args	typeref:struct:vop_setlabel_args::label
+a_len	9p_fs/p9fs.ko/vnode_if.h	/^	off_t *a_len;$/;"	m	struct:vop_allocate_args
+a_line	9p_fs/p9fs.ko/vnode_if.h	/^	int a_line;$/;"	m	struct:vop_lock1_args
+a_m	9p_fs/p9fs.ko/vnode_if.h	/^	vm_page_t *a_m;$/;"	m	struct:vop_getpages_args
+a_m	9p_fs/p9fs.ko/vnode_if.h	/^	vm_page_t *a_m;$/;"	m	struct:vop_putpages_args
+a_mode	9p_fs/p9fs.ko/vnode_if.h	/^	int a_mode;$/;"	m	struct:vop_open_args
+a_mpp	9p_fs/p9fs.ko/vnode_if.h	/^	struct mount **a_mpp;$/;"	m	struct:vop_getwritemount_args	typeref:struct:vop_getwritemount_args::mount
+a_name	9p_fs/p9fs.ko/vnode_if.h	/^	const char *a_name;$/;"	m	struct:vop_deleteextattr_args
+a_name	9p_fs/p9fs.ko/vnode_if.h	/^	const char *a_name;$/;"	m	struct:vop_getextattr_args
+a_name	9p_fs/p9fs.ko/vnode_if.h	/^	const char *a_name;$/;"	m	struct:vop_setextattr_args
+a_name	9p_fs/p9fs.ko/vnode_if.h	/^	int a_name;$/;"	m	struct:vop_pathconf_args
+a_ncookies	9p_fs/p9fs.ko/vnode_if.h	/^	int *a_ncookies;$/;"	m	struct:vop_readdir_args
+a_offset	9p_fs/p9fs.ko/vnode_if.h	/^	off_t *a_offset;$/;"	m	struct:vop_allocate_args
+a_offset	9p_fs/p9fs.ko/vnode_if.h	/^	vm_ooffset_t a_offset;$/;"	m	struct:vop_getpages_args
+a_offset	9p_fs/p9fs.ko/vnode_if.h	/^	vm_ooffset_t a_offset;$/;"	m	struct:vop_putpages_args
+a_op	9p_fs/p9fs.ko/vnode_if.h	/^	int a_op;$/;"	m	struct:vop_advlock_args
+a_op	9p_fs/p9fs.ko/vnode_if.h	/^	int a_op;$/;"	m	struct:vop_advlockasync_args
+a_reqpage	9p_fs/p9fs.ko/vnode_if.h	/^	int a_reqpage;$/;"	m	struct:vop_getpages_args
+a_retval	9p_fs/p9fs.ko/vnode_if.h	/^	register_t *a_retval;$/;"	m	struct:vop_pathconf_args
+a_rtvals	9p_fs/p9fs.ko/vnode_if.h	/^	int *a_rtvals;$/;"	m	struct:vop_putpages_args
+a_runb	9p_fs/p9fs.ko/vnode_if.h	/^	int *a_runb;$/;"	m	struct:vop_bmap_args
+a_runp	9p_fs/p9fs.ko/vnode_if.h	/^	int *a_runp;$/;"	m	struct:vop_bmap_args
+a_size	9p_fs/p9fs.ko/vnode_if.h	/^	size_t *a_size;$/;"	m	struct:vop_getextattr_args
+a_size	9p_fs/p9fs.ko/vnode_if.h	/^	size_t *a_size;$/;"	m	struct:vop_listextattr_args
+a_socket	9p_fs/p9fs.ko/vnode_if.h	/^	struct socket **a_socket;$/;"	m	struct:vop_unp_connect_args	typeref:struct:vop_unp_connect_args::socket
+a_socket	9p_fs/p9fs.ko/vnode_if.h	/^	struct socket *a_socket;$/;"	m	struct:vop_unp_bind_args	typeref:struct:vop_unp_bind_args::socket
+a_start	9p_fs/p9fs.ko/vnode_if.h	/^	off_t a_start;$/;"	m	struct:vop_advise_args
+a_sync	9p_fs/p9fs.ko/vnode_if.h	/^	int a_sync;$/;"	m	struct:vop_putpages_args
+a_target	9p_fs/p9fs.ko/vnode_if.h	/^	char *a_target;$/;"	m	struct:vop_symlink_args
+a_task	9p_fs/p9fs.ko/vnode_if.h	/^	struct task *a_task;$/;"	m	struct:vop_advlockasync_args	typeref:struct:vop_advlockasync_args::task
+a_tcnp	9p_fs/p9fs.ko/vnode_if.h	/^	struct componentname *a_tcnp;$/;"	m	struct:vop_rename_args	typeref:struct:vop_rename_args::componentname
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_access_args	typeref:struct:vop_access_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_accessx_args	typeref:struct:vop_accessx_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_aclcheck_args	typeref:struct:vop_aclcheck_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_close_args	typeref:struct:vop_close_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_closeextattr_args	typeref:struct:vop_closeextattr_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_deleteextattr_args	typeref:struct:vop_deleteextattr_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_fsync_args	typeref:struct:vop_fsync_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_getacl_args	typeref:struct:vop_getacl_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_getextattr_args	typeref:struct:vop_getextattr_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_inactive_args	typeref:struct:vop_inactive_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_ioctl_args	typeref:struct:vop_ioctl_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_listextattr_args	typeref:struct:vop_listextattr_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_open_args	typeref:struct:vop_open_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_openextattr_args	typeref:struct:vop_openextattr_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_poll_args	typeref:struct:vop_poll_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_reclaim_args	typeref:struct:vop_reclaim_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_setacl_args	typeref:struct:vop_setacl_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_setextattr_args	typeref:struct:vop_setextattr_args::thread
+a_td	9p_fs/p9fs.ko/vnode_if.h	/^	struct thread *a_td;$/;"	m	struct:vop_setlabel_args	typeref:struct:vop_setlabel_args::thread
+a_tdvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_tdvp;$/;"	m	struct:vop_link_args	typeref:struct:vop_link_args::vnode
+a_tdvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_tdvp;$/;"	m	struct:vop_rename_args	typeref:struct:vop_rename_args::vnode
+a_tvp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_tvp;$/;"	m	struct:vop_rename_args	typeref:struct:vop_rename_args::vnode
+a_type	9p_fs/p9fs.ko/vnode_if.h	/^	acl_type_t a_type;$/;"	m	struct:vop_aclcheck_args
+a_type	9p_fs/p9fs.ko/vnode_if.h	/^	acl_type_t a_type;$/;"	m	struct:vop_getacl_args
+a_type	9p_fs/p9fs.ko/vnode_if.h	/^	acl_type_t a_type;$/;"	m	struct:vop_setacl_args
+a_uio	9p_fs/p9fs.ko/vnode_if.h	/^	struct uio *a_uio;$/;"	m	struct:vop_getextattr_args	typeref:struct:vop_getextattr_args::uio
+a_uio	9p_fs/p9fs.ko/vnode_if.h	/^	struct uio *a_uio;$/;"	m	struct:vop_listextattr_args	typeref:struct:vop_listextattr_args::uio
+a_uio	9p_fs/p9fs.ko/vnode_if.h	/^	struct uio *a_uio;$/;"	m	struct:vop_read_args	typeref:struct:vop_read_args::uio
+a_uio	9p_fs/p9fs.ko/vnode_if.h	/^	struct uio *a_uio;$/;"	m	struct:vop_readdir_args	typeref:struct:vop_readdir_args::uio
+a_uio	9p_fs/p9fs.ko/vnode_if.h	/^	struct uio *a_uio;$/;"	m	struct:vop_readlink_args	typeref:struct:vop_readlink_args::uio
+a_uio	9p_fs/p9fs.ko/vnode_if.h	/^	struct uio *a_uio;$/;"	m	struct:vop_setextattr_args	typeref:struct:vop_setextattr_args::uio
+a_uio	9p_fs/p9fs.ko/vnode_if.h	/^	struct uio *a_uio;$/;"	m	struct:vop_write_args	typeref:struct:vop_write_args::uio
+a_vap	9p_fs/p9fs.ko/vnode_if.h	/^	struct vattr *a_vap;$/;"	m	struct:vop_create_args	typeref:struct:vop_create_args::vattr
+a_vap	9p_fs/p9fs.ko/vnode_if.h	/^	struct vattr *a_vap;$/;"	m	struct:vop_getattr_args	typeref:struct:vop_getattr_args::vattr
+a_vap	9p_fs/p9fs.ko/vnode_if.h	/^	struct vattr *a_vap;$/;"	m	struct:vop_mkdir_args	typeref:struct:vop_mkdir_args::vattr
+a_vap	9p_fs/p9fs.ko/vnode_if.h	/^	struct vattr *a_vap;$/;"	m	struct:vop_mknod_args	typeref:struct:vop_mknod_args::vattr
+a_vap	9p_fs/p9fs.ko/vnode_if.h	/^	struct vattr *a_vap;$/;"	m	struct:vop_setattr_args	typeref:struct:vop_setattr_args::vattr
+a_vap	9p_fs/p9fs.ko/vnode_if.h	/^	struct vattr *a_vap;$/;"	m	struct:vop_symlink_args	typeref:struct:vop_symlink_args::vattr
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_access_args	typeref:struct:vop_access_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_accessx_args	typeref:struct:vop_accessx_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_aclcheck_args	typeref:struct:vop_aclcheck_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_add_writecount_args	typeref:struct:vop_add_writecount_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_advise_args	typeref:struct:vop_advise_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_advlock_args	typeref:struct:vop_advlock_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_advlockasync_args	typeref:struct:vop_advlockasync_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_advlockpurge_args	typeref:struct:vop_advlockpurge_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_allocate_args	typeref:struct:vop_allocate_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_bmap_args	typeref:struct:vop_bmap_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_close_args	typeref:struct:vop_close_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_closeextattr_args	typeref:struct:vop_closeextattr_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_deleteextattr_args	typeref:struct:vop_deleteextattr_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_fsync_args	typeref:struct:vop_fsync_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_get_writecount_args	typeref:struct:vop_get_writecount_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_getacl_args	typeref:struct:vop_getacl_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_getattr_args	typeref:struct:vop_getattr_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_getextattr_args	typeref:struct:vop_getextattr_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_getpages_args	typeref:struct:vop_getpages_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_getwritemount_args	typeref:struct:vop_getwritemount_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_inactive_args	typeref:struct:vop_inactive_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_ioctl_args	typeref:struct:vop_ioctl_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_is_text_args	typeref:struct:vop_is_text_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_islocked_args	typeref:struct:vop_islocked_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_kqfilter_args	typeref:struct:vop_kqfilter_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_link_args	typeref:struct:vop_link_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_listextattr_args	typeref:struct:vop_listextattr_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_lock1_args	typeref:struct:vop_lock1_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_markatime_args	typeref:struct:vop_markatime_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_open_args	typeref:struct:vop_open_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_openextattr_args	typeref:struct:vop_openextattr_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_pathconf_args	typeref:struct:vop_pathconf_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_poll_args	typeref:struct:vop_poll_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_print_args	typeref:struct:vop_print_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_putpages_args	typeref:struct:vop_putpages_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_read_args	typeref:struct:vop_read_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_readdir_args	typeref:struct:vop_readdir_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_readlink_args	typeref:struct:vop_readlink_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_reallocblks_args	typeref:struct:vop_reallocblks_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_reclaim_args	typeref:struct:vop_reclaim_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_remove_args	typeref:struct:vop_remove_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_revoke_args	typeref:struct:vop_revoke_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_rmdir_args	typeref:struct:vop_rmdir_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_set_text_args	typeref:struct:vop_set_text_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_setacl_args	typeref:struct:vop_setacl_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_setattr_args	typeref:struct:vop_setattr_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_setextattr_args	typeref:struct:vop_setextattr_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_setlabel_args	typeref:struct:vop_setlabel_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_spare1_args	typeref:struct:vop_spare1_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_spare2_args	typeref:struct:vop_spare2_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_spare3_args	typeref:struct:vop_spare3_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_spare4_args	typeref:struct:vop_spare4_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_spare5_args	typeref:struct:vop_spare5_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_strategy_args	typeref:struct:vop_strategy_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_unlock_args	typeref:struct:vop_unlock_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_unp_bind_args	typeref:struct:vop_unp_bind_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_unp_connect_args	typeref:struct:vop_unp_connect_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_unp_detach_args	typeref:struct:vop_unp_detach_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_unset_text_args	typeref:struct:vop_unset_text_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_vptocnp_args	typeref:struct:vop_vptocnp_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_vptofh_args	typeref:struct:vop_vptofh_args::vnode
+a_vp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode *a_vp;$/;"	m	struct:vop_write_args	typeref:struct:vop_write_args::vnode
+a_vpp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode **a_vpp;$/;"	m	struct:vop_cachedlookup_args	typeref:struct:vop_cachedlookup_args::vnode
+a_vpp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode **a_vpp;$/;"	m	struct:vop_create_args	typeref:struct:vop_create_args::vnode
+a_vpp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode **a_vpp;$/;"	m	struct:vop_lookup_args	typeref:struct:vop_lookup_args::vnode
+a_vpp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode **a_vpp;$/;"	m	struct:vop_mkdir_args	typeref:struct:vop_mkdir_args::vnode
+a_vpp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode **a_vpp;$/;"	m	struct:vop_mknod_args	typeref:struct:vop_mknod_args::vnode
+a_vpp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode **a_vpp;$/;"	m	struct:vop_symlink_args	typeref:struct:vop_symlink_args::vnode
+a_vpp	9p_fs/p9fs.ko/vnode_if.h	/^	struct vnode **a_vpp;$/;"	m	struct:vop_vptocnp_args	typeref:struct:vop_vptocnp_args::vnode
+a_waitfor	9p_fs/p9fs.ko/vnode_if.h	/^	int a_waitfor;$/;"	m	struct:vop_fsync_args
+a_writecount	9p_fs/p9fs.ko/vnode_if.h	/^	int *a_writecount;$/;"	m	struct:vop_get_writecount_args
+afid	9p_fs/p9fs.ko/p9fs_proto.h	/^     unsigned int afid;$/;"	m	struct:p9fs_session
+aname	9p_fs/p9fs.ko/p9fs_proto.h	/^     char *aname;        \/* name of remote hierarchy being mounted *\/$/;"	m	struct:p9fs_session
+atime	9p.h	/^	u32 atime;$/;"	m	struct:p9_wstat
+atime_nsec	9p.h	/^	u64 atime_nsec;$/;"	m	struct:p9_iattr_dotl
+atime_sec	9p.h	/^	u64 atime_sec;$/;"	m	struct:p9_iattr_dotl
+aux	client.h	/^	void *aux;$/;"	m	struct:p9_req_t
+bavail	9p.h	/^	u64 bavail;$/;"	m	struct:p9_rstatfs
+bfree	9p.h	/^	u64 bfree;$/;"	m	struct:p9_rstatfs
+blocks	9p.h	/^	u64 blocks;$/;"	m	struct:p9_rstatfs
+bsize	9p.h	/^	u32 bsize;$/;"	m	struct:p9_rstatfs
+cache	9p_fs/p9fs.ko/p9fs_proto.h	/^     unsigned int cache;$/;"	m	struct:p9fs_session
+cancel	transport.h	/^	int (*cancel) (struct p9_client *, struct p9_req_t *req);$/;"	m	struct:p9_trans_module
+cancelled	transport.h	/^	int (*cancelled)(struct p9_client *, struct p9_req_t *req);$/;"	m	struct:p9_trans_module
+capacity	9p.h	/^	size_t capacity;$/;"	m	struct:p9_fcall
+client	9p_net/trans_fd.c	/^	struct p9_client *client;$/;"	m	struct:p9_conn	typeref:struct:p9_conn::p9_client	file:
+client	9p_net/trans_virtio.c	/^	struct p9_client *client;$/;"	m	struct:vchan_softc	typeref:struct:vchan_softc::p9_client	file:
+client_id	9p.h	/^	char *client_id;$/;"	m	struct:p9_flock
+client_id	9p.h	/^	char *client_id;$/;"	m	struct:p9_getlock
+clnt	9p_fs/p9fs.ko/p9fs_proto.h	/^     struct p9_client *clnt; \/* 9p client *\/$/;"	m	struct:p9fs_session	typeref:struct:p9fs_session::p9_client
+clnt	client.h	/^	struct p9_client *clnt;$/;"	m	struct:p9_fid	typeref:struct:p9_fid::p9_client
+close	transport.h	/^	void (*close) (struct p9_client *);$/;"	m	struct:p9_trans_module
+conn	9p_net/trans_fd.c	/^	struct p9_conn *conn;$/;"	m	struct:p9_poll_wait	typeref:struct:p9_poll_wait::p9_conn	file:
+conn	9p_net/trans_fd.c	/^	struct p9_conn conn;$/;"	m	struct:p9_trans_fd	typeref:struct:p9_trans_fd::p9_conn	file:
+create	transport.h	/^	int (*create)(struct p9_client *, const char *, char *);$/;"	m	struct:p9_trans_module
+d_name	client.h	/^	char d_name[256];$/;"	m	struct:p9_dirent
+d_off	client.h	/^	u64 d_off;$/;"	m	struct:p9_dirent
+d_type	client.h	/^	unsigned char d_type;$/;"	m	struct:p9_dirent
+debug	9p_fs/p9fs.ko/p9fs_proto.h	/^     unsigned short debug;$/;"	m	struct:p9fs_session
+def	transport.h	/^	int def;		\/* this transport should be default *\/$/;"	m	struct:p9_trans_module
+dev	9p.h	/^	u32 dev;$/;"	m	struct:p9_wstat
+dfltgid	9p_fs/p9fs.ko/p9fs_proto.h	/^     kgid_t dfltgid;     \/* default gid for legacy support *\/$/;"	m	struct:p9fs_session
+dfltuid	9p_fs/p9fs.ko/p9fs_proto.h	/^     kuid_t dfltuid;     \/* default uid\/muid for legacy support *\/$/;"	m	struct:p9fs_session
+dlist	client.h	/^	struct hlist_node dlist;	\/* list of all fids attached to a dentry *\/$/;"	m	struct:p9_fid	typeref:struct:p9_fid::hlist_node
+err	9p_net/trans_fd.c	/^	int err;$/;"	m	struct:p9_conn	file:
+errmap	9p_net/error.c	/^static struct errormap errmap[] = {$/;"	v	typeref:struct:errormap	file:
+errmsg	9p_fs/mount_p9fs/mount_p9fs.c	/^	char errmsg[256];$/;"	m	struct:mnt_context	file:
+errormap	9p_net/error.c	/^struct errormap {$/;"	s	file:
+extension	9p.h	/^	char *extension;	\/* 9p2000.u extensions *\/$/;"	m	struct:p9_wstat
+extract_addrinfo	9p_fs/mount_p9fs/mount_p9fs.c	/^extract_addrinfo(struct addrinfo *ai, int *family, char *hn, char *sn)$/;"	f	file:
+ffree	9p.h	/^	u64 ffree;$/;"	m	struct:p9_rstatfs
+fid	client.h	/^	u32 fid;$/;"	m	struct:p9_fid
+fidlist	client.h	/^	TAILQ_HEAD fidlist;$/;"	m	struct:p9_client
+fidpool	client.h	/^	struct p9_idpool *fidpool;$/;"	m	struct:p9_client	typeref:struct:p9_client::p9_idpool
+files	9p.h	/^	u64 files;$/;"	m	struct:p9_rstatfs
+flags	9p.h	/^	u32 flags;$/;"	m	struct:p9_flock
+flags	9p_fs/p9fs.ko/p9fs_proto.h	/^     unsigned char flags;$/;"	m	struct:p9fs_session
+flist	client.h	/^	struct list_head flist;$/;"	m	struct:p9_fid	typeref:struct:p9_fid::list_head
+fsid	9p.h	/^	u64 fsid;$/;"	m	struct:p9_rstatfs
+get_protocol_version	9p_net/client.c	/^static int get_protocol_version(char *s)$/;"	f	file:
+gid	9p.h	/^	char *gid;$/;"	m	struct:p9_wstat
+gid	9p.h	/^	kgid_t gid;$/;"	m	struct:p9_iattr_dotl
+hash_errmap	9p_net/error.c	/^static struct hlist_head hash_errmap[ERRHASHSZ];$/;"	v	typeref:struct:hlist_head	file:
+hdr_size	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t	hdr_size;$/;"	m	struct:p9fs_msg_hdr
+hdr_tag	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t	hdr_tag;$/;"	m	struct:p9fs_msg_hdr
+hdr_type	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint8_t		hdr_type;$/;"	m	struct:p9fs_msg_hdr
+id	9p.h	/^	u8 id;$/;"	m	struct:p9_fcall
+inuse	9p_net/trans_virtio.c	/^	int inuse;$/;"	m	struct:vchan_softc	file:
+io_callback	9p_fs/p9fs.ko/p9fs_proto.h	/^typedef int (*io_callback)(void *, uint32_t, size_t *, struct uio *);$/;"	t
+iounit	client.h	/^	u32 iounit;$/;"	m	struct:p9_fid
+iov	9p_fs/mount_p9fs/mount_p9fs.c	/^	struct iovec *iov;$/;"	m	struct:mnt_context	typeref:struct:mnt_context::iovec	file:
+iovlen	9p_fs/mount_p9fs/mount_p9fs.c	/^	int iovlen;$/;"	m	struct:mnt_context	file:
+length	9p.h	/^	u64 length;$/;"	m	struct:p9_flock
+length	9p.h	/^	u64 length;$/;"	m	struct:p9_getlock
+length	9p.h	/^	u64 length;$/;"	m	struct:p9_wstat
+list	9p_net/error.c	/^	struct hlist_node list;$/;"	m	struct:errormap	typeref:struct:errormap::hlist_node	file:
+list	transport.h	/^	struct list_head list;$/;"	m	struct:p9_trans_module	typeref:struct:p9_trans_module::list_head
+lock	9p_net/trans_virtio.c	/^	mtx_lock_spin lock;$/;"	m	struct:vchan_softc	file:
+lock	9p_net/util.c	/^	mtx_spin_lock lock;$/;"	m	struct:p9_idpool	file:
+lock	client.h	/^	mtx_lock_spin lock; \/* protect client structure *\/$/;"	m	struct:p9_client
+main	9p_fs/mount_p9fs/mount_p9fs.c	/^main(int argc, char **argv)$/;"	f
+max_tag	client.h	/^	int max_tag;$/;"	m	struct:p9_client
+maxdata	9p_fs/p9fs.ko/p9fs_proto.h	/^     unsigned int maxdata;   \/* max data for client interface *\/$/;"	m	struct:p9fs_session
+maxsize	transport.h	/^	int maxsize;		\/* max message size of transport *\/$/;"	m	struct:p9_trans_module
+mnt_context	9p_fs/mount_p9fs/mount_p9fs.c	/^struct mnt_context {$/;"	s	file:
+mode	9p.h	/^	u32 mode;$/;"	m	struct:p9_iattr_dotl
+mode	9p.h	/^	u32 mode;$/;"	m	struct:p9_wstat
+mode	client.h	/^	int mode;$/;"	m	struct:p9_fid
+msize	client.h	/^	unsigned int msize;$/;"	m	struct:p9_client
+mtime	9p.h	/^	u32 mtime;$/;"	m	struct:p9_wstat
+mtime_nsec	9p.h	/^	u64 mtime_nsec;$/;"	m	struct:p9_iattr_dotl
+mtime_sec	9p.h	/^	u64 mtime_sec;$/;"	m	struct:p9_iattr_dotl
+muid	9p.h	/^	char *muid;$/;"	m	struct:p9_wstat
+mux_list	9p_net/trans_fd.c	/^	struct list_head mux_list;$/;"	m	struct:p9_conn	typeref:struct:p9_conn::list_head	file:
+n_gid	9p.h	/^	kgid_t n_gid;		\/* 9p2000.u extensions *\/$/;"	m	struct:p9_wstat
+n_gid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t n_gid;$/;"	m	struct:p9fs_stat_u_footer
+n_muid	9p.h	/^	kuid_t n_muid;		\/* 9p2000.u extensions *\/$/;"	m	struct:p9_wstat
+n_muid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t n_muid;$/;"	m	struct:p9fs_stat_u_footer
+n_uid	9p.h	/^	kuid_t n_uid;		\/* 9p2000.u extensions *\/$/;"	m	struct:p9_wstat
+n_uid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t n_uid;$/;"	m	struct:p9fs_stat_u_footer
+name	9p.h	/^	char *name;$/;"	m	struct:p9_wstat
+name	9p_net/error.c	/^	char *name;$/;"	m	struct:errormap	file:
+name	client.h	/^	char name[__NEW_UTS_LEN + 1];$/;"	m	struct:p9_client
+name	transport.h	/^	char *name;		\/* name of transport *\/$/;"	m	struct:p9_trans_module
+namelen	9p.h	/^	u32 namelen;$/;"	m	struct:p9_rstatfs
+namelen	9p_net/error.c	/^	int namelen;$/;"	m	struct:errormap	file:
+nodev	9p_fs/p9fs.ko/p9fs_proto.h	/^     unsigned char nodev;$/;"	m	struct:p9fs_session
+offset	9p.h	/^	size_t offset;$/;"	m	struct:p9_fcall
+owner	transport.h	/^	struct module *owner;$/;"	m	struct:p9_trans_module	typeref:struct:p9_trans_module::module
+p9_bind_privport	9p_net/trans_fd.c	/^static int p9_bind_privport(struct socket *sock)$/;"	f	file:
+p9_check_errors	9p_net/client.c	/^static int p9_check_errors(struct p9_client *c, struct p9_req_t *req)$/;"	f	file:
+p9_check_zc_errors	9p_net/client.c	/^static int p9_check_zc_errors(struct p9_client *c, struct p9_req_t *req,$/;"	f	file:
+p9_client	client.h	/^struct p9_client {$/;"	s
+p9_client_attach	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_attach);$/;"	v
+p9_client_attach	9p_net/client.c	/^struct p9_fid *p9_client_attach(struct p9_client *clnt, struct p9_fid *afid,$/;"	f
+p9_client_begin_disconnect	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_begin_disconnect);$/;"	v
+p9_client_begin_disconnect	9p_net/client.c	/^void p9_client_begin_disconnect(struct p9_client *clnt)$/;"	f
+p9_client_cb	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_cb);$/;"	v
+p9_client_cb	9p_net/client.c	/^void p9_client_cb(struct p9_client *c, struct p9_req_t *req, int status)$/;"	f
+p9_client_clunk	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_clunk);$/;"	v
+p9_client_clunk	9p_net/client.c	/^int p9_client_clunk(struct p9_fid *fid)$/;"	f
+p9_client_create	9p_net/client.c	/^struct p9_client *p9_client_create(const char *dev_name, struct mount *mp)$/;"	f
+p9_client_create_dotl	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_create_dotl);$/;"	v
+p9_client_create_dotl	9p_net/client.c	/^int p9_client_create_dotl(struct p9_fid *ofid, char *name, u32 flags, u32 mode,$/;"	f
+p9_client_destroy	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_destroy);$/;"	v
+p9_client_destroy	9p_net/client.c	/^void p9_client_destroy(struct p9_client *clnt)$/;"	f
+p9_client_disconnect	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_disconnect);$/;"	v
+p9_client_disconnect	9p_net/client.c	/^void p9_client_disconnect(struct p9_client *clnt)$/;"	f
+p9_client_fcreate	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_fcreate);$/;"	v
+p9_client_fcreate	9p_net/client.c	/^int p9_client_fcreate(struct p9_fid *fid, char *name, u32 perm, int mode,$/;"	f
+p9_client_flush	9p_net/client.c	/^static int p9_client_flush(struct p9_client *c, struct p9_req_t *oldreq)$/;"	f	file:
+p9_client_fsync	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_fsync);$/;"	v
+p9_client_fsync	9p_net/client.c	/^int p9_client_fsync(struct p9_fid *fid, int datasync)$/;"	f
+p9_client_getattr_dotl	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_getattr_dotl);$/;"	v
+p9_client_getattr_dotl	9p_net/client.c	/^struct p9_stat_dotl *p9_client_getattr_dotl(struct p9_fid *fid,$/;"	f
+p9_client_getlock_dotl	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_getlock_dotl);$/;"	v
+p9_client_getlock_dotl	9p_net/client.c	/^int p9_client_getlock_dotl(struct p9_fid *fid, struct p9_getlock *glock)$/;"	f
+p9_client_link	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_link);$/;"	v
+p9_client_link	9p_net/client.c	/^int p9_client_link(struct p9_fid *dfid, struct p9_fid *oldfid, char *newname)$/;"	f
+p9_client_lock_dotl	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_lock_dotl);$/;"	v
+p9_client_lock_dotl	9p_net/client.c	/^int p9_client_lock_dotl(struct p9_fid *fid, struct p9_flock *flock, u8 *status)$/;"	f
+p9_client_mkdir_dotl	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_mkdir_dotl);$/;"	v
+p9_client_mkdir_dotl	9p_net/client.c	/^int p9_client_mkdir_dotl(struct p9_fid *fid, char *name, int mode,$/;"	f
+p9_client_mknod_dotl	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_mknod_dotl);$/;"	v
+p9_client_mknod_dotl	9p_net/client.c	/^int p9_client_mknod_dotl(struct p9_fid *fid, char *name, int mode,$/;"	f
+p9_client_open	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_open);$/;"	v
+p9_client_open	9p_net/client.c	/^int p9_client_open(struct p9_fid *fid, int mode)$/;"	f
+p9_client_prepare_req	9p_net/client.c	/^static struct p9_req_t *p9_client_prepare_req(struct p9_client *c,$/;"	f	file:
+p9_client_read	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_read);$/;"	v
+p9_client_read	9p_net/client.c	/^p9_client_read(struct p9_fid *fid, u64 offset, struct iov_iter *to, int *err)$/;"	f
+p9_client_readdir	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_readdir);$/;"	v
+p9_client_readdir	9p_net/client.c	/^int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)$/;"	f
+p9_client_readlink	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_readlink);$/;"	v
+p9_client_readlink	9p_net/client.c	/^int p9_client_readlink(struct p9_fid *fid, char **target)$/;"	f
+p9_client_remove	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_remove);$/;"	v
+p9_client_remove	9p_net/client.c	/^int p9_client_remove(struct p9_fid *fid)$/;"	f
+p9_client_rename	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_rename);$/;"	v
+p9_client_rename	9p_net/client.c	/^int p9_client_rename(struct p9_fid *fid,$/;"	f
+p9_client_renameat	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_renameat);$/;"	v
+p9_client_renameat	9p_net/client.c	/^int p9_client_renameat(struct p9_fid *olddirfid, const char *old_name,$/;"	f
+p9_client_rpc	9p_net/client.c	/^p9_client_rpc(struct p9_client *c, int8_t type, const char *fmt, ...)$/;"	f	file:
+p9_client_setattr	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_setattr);$/;"	v
+p9_client_setattr	9p_net/client.c	/^int p9_client_setattr(struct p9_fid *fid, struct p9_iattr_dotl *p9attr)$/;"	f
+p9_client_stat	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_stat);$/;"	v
+p9_client_stat	9p_net/client.c	/^struct p9_wstat *p9_client_stat(struct p9_fid *fid)$/;"	f
+p9_client_statfs	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_statfs);$/;"	v
+p9_client_statfs	9p_net/client.c	/^int p9_client_statfs(struct p9_fid *fid, struct p9_rstatfs *sb)$/;"	f
+p9_client_statsize	9p_net/client.c	/^static int p9_client_statsize(struct p9_wstat *wst, int proto_version)$/;"	f	file:
+p9_client_symlink	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_symlink);$/;"	v
+p9_client_symlink	9p_net/client.c	/^int p9_client_symlink(struct p9_fid *dfid, char *name, char *symtgt, kgid_t gid,$/;"	f
+p9_client_unlinkat	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_unlinkat);$/;"	v
+p9_client_unlinkat	9p_net/client.c	/^int p9_client_unlinkat(struct p9_fid *dfid, const char *name, int flags)$/;"	f
+p9_client_version	9p_net/client.c	/^static int p9_client_version(struct p9_client *c)$/;"	f	file:
+p9_client_walk	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_walk);$/;"	v
+p9_client_walk	9p_net/client.c	/^struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,$/;"	f
+p9_client_write	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_write);$/;"	v
+p9_client_write	9p_net/client.c	/^p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)$/;"	f
+p9_client_wstat	9p_net/client.c	/^EXPORT_SYMBOL(p9_client_wstat);$/;"	v
+p9_client_wstat	9p_net/client.c	/^int p9_client_wstat(struct p9_fid *fid, struct p9_wstat *wst)$/;"	f
+p9_client_xattrcreate	9p_net/client.c	/^EXPORT_SYMBOL_GPL(p9_client_xattrcreate);$/;"	v
+p9_client_xattrcreate	9p_net/client.c	/^int p9_client_xattrcreate(struct p9_fid *fid, const char *name,$/;"	f
+p9_client_xattrwalk	9p_net/client.c	/^EXPORT_SYMBOL_GPL(p9_client_xattrwalk);$/;"	v
+p9_client_xattrwalk	9p_net/client.c	/^struct p9_fid *p9_client_xattrwalk(struct p9_fid *file_fid,$/;"	f
+p9_client_zc_rpc	9p_net/client.c	/^static struct p9_req_t *p9_client_zc_rpc(struct p9_client *c, int8_t type,$/;"	f	file:
+p9_conn	9p_net/trans_fd.c	/^struct p9_conn {$/;"	s	file:
+p9_conn_cancel	9p_net/trans_fd.c	/^static void p9_conn_cancel(struct p9_conn *m, int err)$/;"	f	file:
+p9_conn_create	9p_net/trans_fd.c	/^static void p9_conn_create(struct p9_client *client)$/;"	f	file:
+p9_conn_destroy	9p_net/trans_fd.c	/^static void p9_conn_destroy(struct p9_conn *m)$/;"	f	file:
+p9_debug	9p.h	69;"	d
+p9_debug	9p.h	72;"	d
+p9_debug_flags	9p.h	/^enum p9_debug_flags {$/;"	g
+p9_debug_level	9p_net/mod.c	/^unsigned int p9_debug_level = 0;	\/* feature-rific global debug level  *\/$/;"	v
+p9_debuglevel	9p_fs/p9fs.ko/p9fs_vfsops.c	/^	int p9_debuglevel;$/;"	m	struct:p9fsmount	file:
+p9_dirent	client.h	/^struct p9_dirent {$/;"	s
+p9_error_init	9p_net/error.c	/^EXPORT_SYMBOL(p9_error_init);$/;"	v
+p9_error_init	9p_net/error.c	/^int p9_error_init(void)$/;"	f
+p9_errstr2errno	9p_net/error.c	/^EXPORT_SYMBOL(p9_errstr2errno);$/;"	v
+p9_errstr2errno	9p_net/error.c	/^int p9_errstr2errno(char *errstr, int len)$/;"	f
+p9_fcall	9p.h	/^struct p9_fcall {$/;"	s
+p9_fcall_alloc	9p_net/client.c	/^static struct p9_fcall *p9_fcall_alloc(int alloc_msize)$/;"	f	file:
+p9_fd_cancel	9p_net/trans_fd.c	/^static int p9_fd_cancel(struct p9_client *client, struct p9_req_t *req)$/;"	f	file:
+p9_fd_cancelled	9p_net/trans_fd.c	/^static int p9_fd_cancelled(struct p9_client *client, struct p9_req_t *req)$/;"	f	file:
+p9_fd_close	9p_net/trans_fd.c	/^static void p9_fd_close(struct p9_client *client)$/;"	f	file:
+p9_fd_create	9p_net/trans_fd.c	/^p9_fd_create(struct p9_client *client, const char *addr, char *args)$/;"	f	file:
+p9_fd_create_tcp	9p_net/trans_fd.c	/^p9_fd_create_tcp(struct p9_client *client, const char *addr, char *args)$/;"	f	file:
+p9_fd_create_unix	9p_net/trans_fd.c	/^p9_fd_create_unix(struct p9_client *client, const char *addr, char *args)$/;"	f	file:
+p9_fd_open	9p_net/trans_fd.c	/^static int p9_fd_open(struct p9_client *client, int rfd, int wfd)$/;"	f	file:
+p9_fd_opts	9p_net/trans_fd.c	/^struct p9_fd_opts {$/;"	s	file:
+p9_fd_poll	9p_net/trans_fd.c	/^p9_fd_poll(struct p9_client *client, struct poll_table_struct *pt)$/;"	f	file:
+p9_fd_read	9p_net/trans_fd.c	/^static int p9_fd_read(struct p9_client *client, void *v, int len)$/;"	f	file:
+p9_fd_request	9p_net/trans_fd.c	/^static int p9_fd_request(struct p9_client *client, struct p9_req_t *req)$/;"	f	file:
+p9_fd_trans	9p_net/trans_fd.c	/^static struct p9_trans_module p9_fd_trans = {$/;"	v	typeref:struct:p9_trans_module	file:
+p9_fd_write	9p_net/trans_fd.c	/^static int p9_fd_write(struct p9_client *client, void *v, int len)$/;"	f	file:
+p9_fid	client.h	/^struct p9_fid {$/;"	s
+p9_fid_create	9p_net/client.c	/^static struct p9_fid *p9_fid_create(struct p9_client *clnt)$/;"	f	file:
+p9_fid_destroy	9p_net/client.c	/^static void p9_fid_destroy(struct p9_fid *fid)$/;"	f	file:
+p9_flock	9p.h	/^struct p9_flock {$/;"	s
+p9_free_req	9p_net/client.c	/^static void p9_free_req(struct p9_client *c, struct p9_req_t *r)$/;"	f	file:
+p9_get_mapped_pages	9p_net/trans_virtio.c	/^static int p9_get_mapped_pages(struct vchan_softc *chan,$/;"	f	file:
+p9_getlock	9p.h	/^struct p9_getlock {$/;"	s
+p9_hostname	9p_fs/p9fs.ko/p9fs_vfsops.c	/^	char p9_hostname[256];$/;"	m	struct:p9fsmount	file:
+p9_iattr_dotl	9p.h	/^struct p9_iattr_dotl {$/;"	s
+p9_idpool	9p_net/util.c	/^struct p9_idpool {$/;"	s	file:
+p9_idpool_check	9p_net/util.c	/^EXPORT_SYMBOL(p9_idpool_check);$/;"	v
+p9_idpool_check	9p_net/util.c	/^int p9_idpool_check(int id, struct p9_idpool *p)$/;"	f
+p9_idpool_create	9p_net/util.c	/^struct p9_idpool *p9_idpool_create(void)$/;"	f
+p9_idpool_destroy	9p_net/util.c	/^void p9_idpool_destroy(struct p9_idpool *p)$/;"	f
+p9_idpool_get	9p_net/util.c	/^EXPORT_SYMBOL(p9_idpool_get);$/;"	v
+p9_idpool_get	9p_net/util.c	/^int p9_idpool_get(struct p9_idpool *p)$/;"	f
+p9_idpool_put	9p_net/util.c	/^EXPORT_SYMBOL(p9_idpool_put);$/;"	v
+p9_idpool_put	9p_net/util.c	/^void p9_idpool_put(int id, struct p9_idpool *p)$/;"	f
+p9_ipport_resv_max	9p_net/trans_fd.c	/^static unsigned int p9_ipport_resv_max = P9_DEF_MAX_RESVPORT;$/;"	v	file:
+p9_ipport_resv_min	9p_net/trans_fd.c	/^static unsigned int p9_ipport_resv_min = P9_DEF_MIN_RESVPORT;$/;"	v	file:
+p9_is_proto_dotl	9p_net/client.c	/^inline int p9_is_proto_dotl(struct p9_client *clnt)$/;"	f
+p9_is_proto_dotu	9p_net/client.c	/^inline int p9_is_proto_dotu(struct p9_client *clnt)$/;"	f
+p9_max_pages	9p_net/trans_virtio.c	/^	unsigned long p9_max_pages;$/;"	m	struct:vchan_softc	file:
+p9_mount_tag_show	9p_net/trans_virtio.c	/^static ssize_t p9_mount_tag_show(struct device *dev,$/;"	f	file:
+p9_mountp	9p_fs/p9fs.ko/p9fs_vfsops.c	/^	struct mount *p9_mountp;$/;"	m	struct:p9fsmount	typeref:struct:p9fsmount::mount	file:
+p9_msg_t	9p.h	/^enum p9_msg_t {$/;"	g
+p9_mux_poll_stop	9p_net/trans_fd.c	/^static void p9_mux_poll_stop(struct p9_conn *m)$/;"	f	file:
+p9_open_mode_t	9p.h	/^enum p9_open_mode_t {$/;"	g
+p9_opts	9p_fs/p9fs.ko/p9fs_vfsops.c	/^static const char *p9_opts[] = {$/;"	v	file:
+p9_parse_header	9p_net/client.c	/^EXPORT_SYMBOL(p9_parse_header);$/;"	v
+p9_parse_header	9p_net/client.c	/^p9_parse_header(struct p9_fcall *pdu, int32_t *size, int8_t *type, int16_t *tag,$/;"	f
+p9_perm_t	9p.h	/^enum p9_perm_t {$/;"	g
+p9_poll_mux	9p_net/trans_fd.c	/^static void p9_poll_mux(struct p9_conn *m)$/;"	f	file:
+p9_poll_wait	9p_net/trans_fd.c	/^struct p9_poll_wait {$/;"	s	file:
+p9_poll_workfn	9p_net/trans_fd.c	/^static void p9_poll_workfn(struct work_struct *work)$/;"	f	file:
+p9_pollwait	9p_net/trans_fd.c	/^p9_pollwait(struct file *filp, wait_queue_head_t *wait_address, poll_table *p)$/;"	f	file:
+p9_pollwake	9p_net/trans_fd.c	/^static int p9_pollwake(wait_queue_t *wait, unsigned int mode, int sync, void *key)$/;"	f	file:
+p9_proto_2000L	client.h	/^	p9_proto_2000L,$/;"	e	enum:p9_proto_versions
+p9_proto_2000u	client.h	/^	p9_proto_2000u,$/;"	e	enum:p9_proto_versions
+p9_proto_legacy	client.h	/^	p9_proto_legacy,$/;"	e	enum:p9_proto_versions
+p9_proto_versions	client.h	/^enum p9_proto_versions{$/;"	g
+p9_qid	9p.h	/^struct p9_qid {$/;"	s
+p9_qid_t	9p.h	/^enum p9_qid_t {$/;"	g
+p9_read_work	9p_net/trans_fd.c	/^static void p9_read_work(struct work_struct *work)$/;"	f	file:
+p9_release_pages	9p_net/trans_common.c	/^EXPORT_SYMBOL(p9_release_pages);$/;"	v
+p9_release_pages	9p_net/trans_common.c	/^void p9_release_pages(struct page **pages, int nr_pages)$/;"	f
+p9_req_status_t	client.h	/^enum p9_req_status_t {$/;"	g
+p9_req_t	client.h	/^struct p9_req_t {$/;"	s
+p9_rstatfs	9p.h	/^struct p9_rstatfs {$/;"	s
+p9_session	9p_fs/p9fs.ko/p9fs_vfsops.c	/^	struct p9fs_session p9_session;$/;"	m	struct:p9fsmount	typeref:struct:p9fsmount::p9fs_session	file:
+p9_socket_open	9p_net/trans_fd.c	/^static int p9_socket_open(struct p9_client *client, struct socket *csocket)$/;"	f	file:
+p9_stat_dotl	9p.h	/^struct p9_stat_dotl {$/;"	s
+p9_tag_alloc	9p_net/client.c	/^p9_tag_alloc(struct p9_client *c, u16 tag, unsigned int max_size)$/;"	f	file:
+p9_tag_cleanup	9p_net/client.c	/^static void p9_tag_cleanup(struct p9_client *c)$/;"	f	file:
+p9_tag_init	9p_net/client.c	/^static int p9_tag_init(struct p9_client *c)$/;"	f	file:
+p9_tag_lookup	9p_net/client.c	/^EXPORT_SYMBOL(p9_tag_lookup);$/;"	v
+p9_tag_lookup	9p_net/client.c	/^struct p9_req_t *p9_tag_lookup(struct p9_client *c, u16 tag)$/;"	f
+p9_tcp_trans	9p_net/trans_fd.c	/^static struct p9_trans_module p9_tcp_trans = {$/;"	v	typeref:struct:p9_trans_module	file:
+p9_trans_fd	9p_net/trans_fd.c	/^struct p9_trans_fd {$/;"	s	file:
+p9_trans_fd_exit	9p_net/trans_fd.c	/^void p9_trans_fd_exit(void)$/;"	f
+p9_trans_fd_init	9p_net/trans_fd.c	/^int p9_trans_fd_init(void)$/;"	f
+p9_trans_module	transport.h	/^struct p9_trans_module {$/;"	s
+p9_trans_status	client.h	/^enum p9_trans_status {$/;"	g
+p9_unix_trans	9p_net/trans_fd.c	/^static struct p9_trans_module p9_unix_trans = {$/;"	v	typeref:struct:p9_trans_module	file:
+p9_virtio_attach	9p_net/trans_virtio.c	/^static int p9_virtio_attach(device_t dev)$/;"	f	file:
+p9_virtio_cancel	9p_net/trans_virtio.c	/^static int p9_virtio_cancel(struct p9_client *client, struct p9_req_t *req)$/;"	f	file:
+p9_virtio_close	9p_net/trans_virtio.c	/^static void p9_virtio_close(struct p9_client *client)$/;"	f	file:
+p9_virtio_create	9p_net/trans_virtio.c	/^p9_virtio_create(struct p9_client *client, const char *devname, char *args)$/;"	f	file:
+p9_virtio_drv	9p_net/trans_virtio.c	/^static driver_t p9_virtio_drv = {$/;"	v	file:
+p9_virtio_mthds	9p_net/trans_virtio.c	/^static device_method_t p9_virtio_mthds = {$/;"	v	file:
+p9_virtio_probe	9p_net/trans_virtio.c	/^static int p9_virtio_probe(device_t dev)$/;"	f	file:
+p9_virtio_remove	9p_net/trans_virtio.c	/^static void p9_virtio_remove(device_t vdev)$/;"	f	file:
+p9_virtio_request	9p_net/trans_virtio.c	/^p9_virtio_request(struct p9_client *client, struct p9_req_t *req)$/;"	f	file:
+p9_virtio_trans	9p_net/trans_virtio.c	/^static struct p9_trans_module p9_virtio_trans = {$/;"	v	typeref:struct:p9_trans_module	file:
+p9_virtio_zc_request	9p_net/trans_virtio.c	/^p9_virtio_zc_request(struct p9_client *client, struct p9_req_t *req,$/;"	f	file:
+p9_write_work	9p_net/trans_fd.c	/^static void p9_write_work(struct work_struct *work)$/;"	f	file:
+p9_wstat	9p.h	/^struct p9_wstat {$/;"	s
+p9dirent_read	9p_net/protocol.c	/^EXPORT_SYMBOL(p9dirent_read);$/;"	v
+p9dirent_read	9p_net/protocol.c	/^int p9dirent_read(struct p9_client *clnt, char *buf, int len,$/;"	f
+p9fs_access	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_access(struct vop_access_args *ap)$/;"	f	file:
+p9fs_client_auth	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_auth(struct p9fs_session *p9s)$/;"	f
+p9fs_client_clunk	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_clunk(struct p9fs_session *p9s, uint32_t fid)$/;"	f
+p9fs_client_create	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_create(void)$/;"	f
+p9fs_client_error	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_error(struct p9fs_session *p9s, void **mp,$/;"	f
+p9fs_client_flush	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_flush(void)$/;"	f
+p9fs_client_open	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_open(struct p9fs_session *p9s, uint32_t fid, int mode)$/;"	f
+p9fs_client_parse_std_stat	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_parse_std_stat(void *m, struct p9fs_stat_payload *pay, size_t *offp)$/;"	f
+p9fs_client_parse_u_stat	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_parse_u_stat(void *m, struct p9fs_stat_u_payload *pay, size_t *offp)$/;"	f
+p9fs_client_read	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_read(struct p9fs_session *p9s, uint32_t fid,$/;"	f
+p9fs_client_remove	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_remove(void)$/;"	f
+p9fs_client_stat	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_stat(struct p9fs_session *p9s, uint32_t fid, struct vattr *vap)$/;"	f
+p9fs_client_uio_callback	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_uio_callback(void *mp, uint32_t count, size_t *offp, struct uio *uio)$/;"	f
+p9fs_client_upcall	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_client_upcall(struct socket *so, void *arg, int waitflag __unused)$/;"	f	file:
+p9fs_client_version	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_version(struct p9fs_session *p9s)$/;"	f
+p9fs_client_walk	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_walk(struct p9fs_session *p9s, uint32_t fid, uint32_t *newfid,$/;"	f
+p9fs_client_write	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_write(struct p9fs_session *p9s, uint32_t fid,$/;"	f
+p9fs_client_wstat	9p_fs/p9fs.ko/p9fs_client_proto.c	/^p9fs_client_wstat(void)$/;"	f
+p9fs_close	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_close(struct vop_close_args *ap)$/;"	f	file:
+p9fs_close_session	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_close_session(struct p9fs_session *p9s)$/;"	f
+p9fs_connect	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_connect(struct mount *mp)$/;"	f	file:
+p9fs_create	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_create(struct vop_create_args *ap)$/;"	f	file:
+p9fs_fhtovp	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_fhtovp(struct mount *mp, struct fid *fhp, int flags, struct vnode **vpp)$/;"	f	file:
+p9fs_fsync	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_fsync(struct vop_fsync_args *ap)$/;"	f	file:
+p9fs_getattr	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_getattr(struct vop_getattr_args *ap)$/;"	f	file:
+p9fs_getfid	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_getfid(struct p9fs_session *p9s)$/;"	f
+p9fs_gettag	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_gettag(struct p9fs_session *p9s)$/;"	f
+p9fs_inactive	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_inactive(struct vop_inactive_args *ap)$/;"	f	file:
+p9fs_init_session	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_init_session(struct p9fs_session *p9s)$/;"	f
+p9fs_link	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_link(struct vop_link_args *ap)$/;"	f	file:
+p9fs_lookup	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_lookup(struct vop_cachedlookup_args *ap)$/;"	f	file:
+p9fs_mkdir	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_mkdir(struct vop_mkdir_args *ap)$/;"	f	file:
+p9fs_mknod	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_mknod(struct vop_mknod_args *ap)$/;"	f	file:
+p9fs_mode	9p_fs/p9fs.ko/p9fs_proto.h	/^enum p9fs_mode {$/;"	g
+p9fs_mount	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_mount(struct mount *mp)$/;"	f	file:
+p9fs_mount_parse_opts	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_mount_parse_opts(struct mount *mp)$/;"	f	file:
+p9fs_mountfs	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_mountfs(struct vnode *devp, struct mount *mp, struct thread *thread)$/;"	f
+p9fs_msg	9p_fs/p9fs.ko/p9fs_proto.h	/^union p9fs_msg {$/;"	u
+p9fs_msg_Rattach	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rattach {$/;"	s
+p9fs_msg_Rauth	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rauth {$/;"	s
+p9fs_msg_Rclunk	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rclunk {$/;"	s
+p9fs_msg_Rcreate	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rcreate {$/;"	s
+p9fs_msg_Rerror	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rerror {$/;"	s
+p9fs_msg_Rflush	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rflush {$/;"	s
+p9fs_msg_Ropen	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Ropen {$/;"	s
+p9fs_msg_Rread	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rread {$/;"	s
+p9fs_msg_Rremove	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rremove {$/;"	s
+p9fs_msg_Rstat	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rstat {$/;"	s
+p9fs_msg_Rversion	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rversion {$/;"	s
+p9fs_msg_Rwalk	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rwalk {$/;"	s
+p9fs_msg_Rwrite	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rwrite {$/;"	s
+p9fs_msg_Rwstat	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Rwstat {$/;"	s
+p9fs_msg_Tattach	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Tattach {$/;"	s
+p9fs_msg_Tauth	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Tauth {$/;"	s
+p9fs_msg_Tclunk	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Tclunk {$/;"	s
+p9fs_msg_Tcreate	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Tcreate {$/;"	s
+p9fs_msg_Tflush	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Tflush {$/;"	s
+p9fs_msg_Topen	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Topen {$/;"	s
+p9fs_msg_Tread	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Tread {$/;"	s
+p9fs_msg_Tremove	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Tremove {$/;"	s
+p9fs_msg_Tstat	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Tstat {$/;"	s
+p9fs_msg_Tversion	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Tversion {$/;"	s
+p9fs_msg_Twalk	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Twalk {$/;"	s
+p9fs_msg_Twrite	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Twrite {$/;"	s
+p9fs_msg_Twstat	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_Twstat {$/;"	s
+p9fs_msg_add	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_msg_add(void *mp, size_t len, void *cp)$/;"	f
+p9fs_msg_add_string	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_msg_add_string(void *mp, const char *str, uint16_t len)$/;"	f
+p9fs_msg_add_uio	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_msg_add_uio(void *mp, struct uio *uio, uint32_t count)$/;"	f
+p9fs_msg_create	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_msg_create(enum p9fs_msg_type p9_type, uint16_t tag)$/;"	f
+p9fs_msg_destroy	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_msg_destroy(struct p9fs_session *p9s, void *mp)$/;"	f
+p9fs_msg_get	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_msg_get(void *mp, size_t *offp, void **ptr, size_t data_sz)$/;"	f
+p9fs_msg_get_str	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_msg_get_str(void *mp, size_t *offp, struct p9fs_str *str)$/;"	f
+p9fs_msg_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_msg_hdr {$/;"	s
+p9fs_msg_payload_len	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_msg_payload_len(void *mp)$/;"	f
+p9fs_msg_recv	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_msg_recv(struct p9fs_session *p9s)$/;"	f
+p9fs_msg_send	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_msg_send(struct p9fs_session *p9s, void **mp)$/;"	f
+p9fs_msg_type	9p_fs/p9fs.ko/p9fs_proto.h	/^enum p9fs_msg_type {$/;"	g
+p9fs_nget	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_nget(struct p9fs_session *p9s, uint32_t fid, struct p9fs_qid *qid,$/;"	f
+p9fs_node	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_node {$/;"	s
+p9fs_node_user	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_node_user {$/;"	s
+p9fs_open	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_open(struct vop_open_args *ap)$/;"	f	file:
+p9fs_pathconf	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_pathconf(struct vop_pathconf_args *ap)$/;"	f	file:
+p9fs_print	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_print(struct vop_print_args *ap)$/;"	f	file:
+p9fs_qid	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_qid {$/;"	s
+p9fs_qid_type	9p_fs/p9fs.ko/p9fs_proto.h	/^enum p9fs_qid_type {$/;"	g
+p9fs_read	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_read(struct vop_read_args *ap)$/;"	f	file:
+p9fs_readdir	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_readdir(struct vop_readdir_args *ap)$/;"	f	file:
+p9fs_readdir_cb	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_readdir_cb(void *mp, uint32_t count, size_t *offp, struct uio *arg)$/;"	f	file:
+p9fs_readdir_state	9p_fs/p9fs.ko/p9fs_vnops.c	/^struct p9fs_readdir_state {$/;"	s	file:
+p9fs_readlink	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_readlink(struct vop_readlink_args *ap)$/;"	f	file:
+p9fs_reclaim	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_reclaim(struct vop_reclaim_args *ap)$/;"	f	file:
+p9fs_recv	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_recv {$/;"	s
+p9fs_relfid	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_relfid(struct p9fs_session *p9s, uint32_t fid)$/;"	f
+p9fs_reltag	9p_fs/p9fs.ko/p9fs_subr.c	/^p9fs_reltag(struct p9fs_session *p9s, uint16_t tag)$/;"	f
+p9fs_remove	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_remove(struct vop_remove_args *ap)$/;"	f	file:
+p9fs_rename	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_rename(struct vop_rename_args *ap)$/;"	f	file:
+p9fs_req	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_req {$/;"	s
+p9fs_rmdir	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_rmdir(struct vop_rmdir_args *ap)$/;"	f	file:
+p9fs_root	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_root(struct mount *mp, int lkflags, struct vnode **vpp)$/;"	f	file:
+p9fs_session	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_session {$/;"	s
+p9fs_setattr	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_setattr(struct vop_setattr_args *ap)$/;"	f	file:
+p9fs_setsockopt	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_setsockopt(struct socket *so, int sopt_name)$/;"	f	file:
+p9fs_stat	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_stat {$/;"	s
+p9fs_stat_payload	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_stat_payload {$/;"	s
+p9fs_stat_u	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_stat_u {$/;"	s
+p9fs_stat_u_footer	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_stat_u_footer {$/;"	s
+p9fs_stat_u_payload	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_stat_u_payload {$/;"	s
+p9fs_statfs	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_statfs(struct mount *mp, struct statfs *sbp)$/;"	f	file:
+p9fs_str	9p_fs/p9fs.ko/p9fs_proto.h	/^struct p9fs_str {$/;"	s
+p9fs_symlink	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_symlink(struct vop_symlink_args *ap)$/;"	f	file:
+p9fs_sync	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_sync(struct mount *mp, int waitfor)$/;"	f	file:
+p9fs_unmount	9p_fs/p9fs.ko/p9fs_vfsops.c	/^p9fs_unmount(struct mount *mp, int mntflags)$/;"	f	file:
+p9fs_vfsops	9p_fs/p9fs.ko/p9fs_vfsops.c	/^struct vfsops p9fs_vfsops = {$/;"	v	typeref:struct:vfsops
+p9fs_vnops	9p_fs/p9fs.ko/p9fs_vnops.c	/^struct vop_vector p9fs_vnops = {$/;"	v	typeref:struct:vop_vector
+p9fs_vnops	9p_fs/p9fs.ko/p9fs_vnops.c	/^struct vop_vector p9fs_vnops;$/;"	v	typeref:struct:vop_vector
+p9fs_vptofh	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_vptofh(struct vop_vptofh_args *ap)$/;"	f	file:
+p9fs_write	9p_fs/p9fs.ko/p9fs_vnops.c	/^p9fs_write(struct vop_write_args *ap)$/;"	f	file:
+p9fsmount	9p_fs/p9fs.ko/p9fs_vfsops.c	/^struct p9fsmount {$/;"	s	file:
+p9msg_Rattach	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rattach p9msg_Rattach;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rattach
+p9msg_Rauth	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rauth p9msg_Rauth;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rauth
+p9msg_Rclunk	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rclunk p9msg_Rclunk;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rclunk
+p9msg_Rcreate	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rcreate p9msg_Rcreate;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rcreate
+p9msg_Rerror	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rerror p9msg_Rerror;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rerror
+p9msg_Rflush	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rflush p9msg_Rflush;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rflush
+p9msg_Ropen	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Ropen p9msg_Ropen;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Ropen
+p9msg_Rread	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rread p9msg_Rread;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rread
+p9msg_Rremove	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rremove p9msg_Rremove;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rremove
+p9msg_Rstat	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rstat p9msg_Rstat;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rstat
+p9msg_Rversion	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rversion p9msg_Rversion;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rversion
+p9msg_Rwalk	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rwalk p9msg_Rwalk;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rwalk
+p9msg_Rwrite	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rwrite p9msg_Rwrite;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rwrite
+p9msg_Rwstat	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Rwstat p9msg_Rwstat;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Rwstat
+p9msg_Tattach	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Tattach p9msg_Tattach;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Tattach
+p9msg_Tauth	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Tauth p9msg_Tauth;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Tauth
+p9msg_Tclunk	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Tclunk p9msg_Tclunk;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Tclunk
+p9msg_Tcreate	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Tcreate p9msg_Tcreate;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Tcreate
+p9msg_Tflush	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Tflush p9msg_Tflush;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Tflush
+p9msg_Topen	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Topen p9msg_Topen;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Topen
+p9msg_Tread	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Tread p9msg_Tread;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Tread
+p9msg_Tremove	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Tremove p9msg_Tremove;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Tremove
+p9msg_Tstat	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Tstat p9msg_Tstat;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Tstat
+p9msg_Tversion	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Tversion p9msg_Tversion;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Tversion
+p9msg_Twalk	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Twalk p9msg_Twalk;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Twalk
+p9msg_Twrite	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Twrite p9msg_Twrite;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Twrite
+p9msg_Twstat	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_Twstat p9msg_Twstat;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_Twstat
+p9msg_hdr	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_msg_hdr p9msg_hdr;$/;"	m	union:p9fs_msg	typeref:struct:p9fs_msg::p9fs_msg_hdr
+p9n_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t p9n_fid;$/;"	m	struct:p9fs_node
+p9n_ofid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t p9n_ofid;$/;"	m	struct:p9fs_node
+p9n_opens	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t p9n_opens;$/;"	m	struct:p9fs_node
+p9n_qid	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_qid p9n_qid;$/;"	m	struct:p9fs_node	typeref:struct:p9fs_node::p9fs_qid
+p9n_session	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_session *p9n_session;$/;"	m	struct:p9fs_node	typeref:struct:p9fs_node::p9fs_session
+p9n_vnode	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct vnode *p9n_vnode;$/;"	m	struct:p9fs_node	typeref:struct:p9fs_node::vnode
+p9nu_append_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t p9nu_append_fid;$/;"	m	struct:p9fs_node_user
+p9nu_append_refs	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t p9nu_append_refs;$/;"	m	struct:p9fs_node_user
+p9nu_read_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t p9nu_read_fid;$/;"	m	struct:p9fs_node_user
+p9nu_read_refs	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t p9nu_read_refs;$/;"	m	struct:p9fs_node_user
+p9nu_write_fid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t p9nu_write_fid;$/;"	m	struct:p9fs_node_user
+p9nu_write_refs	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t p9nu_write_refs;$/;"	m	struct:p9fs_node_user
+p9pdu_finalize	9p_net/protocol.c	/^int p9pdu_finalize(struct p9_client *clnt, struct p9_fcall *pdu)$/;"	f
+p9pdu_prepare	9p_net/protocol.c	/^int p9pdu_prepare(struct p9_fcall *pdu, int16_t tag, int8_t type)$/;"	f
+p9pdu_readf	9p_net/protocol.c	/^int p9pdu_readf(struct p9_fcall *pdu, int proto_version, const char *fmt, ...)$/;"	f
+p9pdu_reset	9p_net/protocol.c	/^void p9pdu_reset(struct p9_fcall *pdu)$/;"	f
+p9pdu_vreadf	9p_net/protocol.c	/^p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,$/;"	f	file:
+p9pdu_vwritef	9p_net/protocol.c	/^p9pdu_vwritef(struct p9_fcall *pdu, int proto_version, const char *fmt,$/;"	f
+p9pdu_writef	9p_net/protocol.c	/^p9pdu_writef(struct p9_fcall *pdu, int proto_version, const char *fmt, ...)$/;"	f	file:
+p9r_error	9p_fs/p9fs.ko/p9fs_proto.h	/^	int p9r_error;$/;"	m	struct:p9fs_recv
+p9r_msg	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct mbuf *p9r_msg;$/;"	m	struct:p9fs_recv	typeref:struct:p9fs_recv::mbuf
+p9r_reqs	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_req_list p9r_reqs;$/;"	m	struct:p9fs_recv	typeref:struct:p9fs_recv::p9fs_req_list
+p9r_resid	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t p9r_resid;$/;"	m	struct:p9fs_recv
+p9r_size	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t p9r_size;$/;"	m	struct:p9fs_recv
+p9r_soupcalls	9p_fs/p9fs.ko/p9fs_proto.h	/^	int p9r_soupcalls;$/;"	m	struct:p9fs_recv
+p9s_lock	9p_fs/p9fs.ko/p9fs_proto.h	/^	 mtx_lock p9s_lock;$/;"	m	struct:p9fs_session
+p9s_mount	9p_fs/p9fs.ko/p9fs_proto.h	/^	 struct mount *p9s_mount;$/;"	m	struct:p9fs_session	typeref:struct:p9fs_session::mount
+p9s_rootnp	9p_fs/p9fs.ko/p9fs_proto.h	/^	 struct p9fs_node p9s_rootnp;$/;"	m	struct:p9fs_session	typeref:struct:p9fs_session::p9fs_node
+p9s_state	9p_fs/p9fs.ko/p9fs_proto.h	/^enum p9s_state {$/;"	g
+p9stat_free	9p_net/protocol.c	/^EXPORT_SYMBOL(p9stat_free);$/;"	v
+p9stat_free	9p_net/protocol.c	/^void p9stat_free(struct p9_wstat *stbuf)$/;"	f
+p9stat_read	9p_net/protocol.c	/^EXPORT_SYMBOL(p9stat_read);$/;"	v
+p9stat_read	9p_net/protocol.c	/^int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st)$/;"	f
+p9str_size	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t p9str_size;$/;"	m	struct:p9fs_str
+p9str_str	9p_fs/p9fs.ko/p9fs_proto.h	/^	char *p9str_str;$/;"	m	struct:p9fs_str
+pack_sg_list_p	9p_net/trans_virtio.c	/^pack_sg_list_p(struct scatterlist *sg, int start, int limit,$/;"	f	file:
+parse_opt_o	9p_fs/mount_p9fs/mount_p9fs.c	/^parse_opt_o(struct mnt_context *ctx)$/;"	f	file:
+parse_opts	9p_net/client.c	/^static int parse_opts(struct mount  *mp, struct p9_client *clnt)$/;"	f	file:
+parse_opts	9p_net/trans_fd.c	/^static int parse_opts(char *params, struct p9_fd_opts *opts)$/;"	f	file:
+parse_required_args	9p_fs/mount_p9fs/mount_p9fs.c	/^parse_required_args(struct mnt_context *ctx, char **argv)$/;"	f	file:
+path	9p.h	/^	u64 path;$/;"	m	struct:p9_qid
+path	9p_fs/mount_p9fs/mount_p9fs.c	/^	char *path;$/;"	m	struct:mnt_context	file:
+pay_gid	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_str pay_gid;$/;"	m	struct:p9fs_stat_payload	typeref:struct:p9fs_stat_payload::p9fs_str
+pay_muid	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_str pay_muid;$/;"	m	struct:p9fs_stat_payload	typeref:struct:p9fs_stat_payload::p9fs_str
+pay_name	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_str pay_name;$/;"	m	struct:p9fs_stat_payload	typeref:struct:p9fs_stat_payload::p9fs_str
+pay_stat	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_stat *pay_stat;$/;"	m	struct:p9fs_stat_payload	typeref:struct:p9fs_stat_payload::p9fs_stat
+pay_uid	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_str pay_uid;$/;"	m	struct:p9fs_stat_payload	typeref:struct:p9fs_stat_payload::p9fs_str
+pdu_read	9p_net/protocol.c	/^size_t pdu_read(struct p9_fcall *pdu, void *data, size_t size)$/;"	f
+pdu_write	9p_net/protocol.c	/^static size_t pdu_write(struct p9_fcall *pdu, const void *data, size_t size)$/;"	f	file:
+pdu_write_u	9p_net/protocol.c	/^pdu_write_u(struct p9_fcall *pdu, struct iov_iter *from, size_t size)$/;"	f	file:
+poll_pending_link	9p_net/trans_fd.c	/^	struct list_head poll_pending_link;$/;"	m	struct:p9_conn	typeref:struct:p9_conn::list_head	file:
+poll_wait	9p_net/trans_fd.c	/^	struct p9_poll_wait poll_wait[MAXPOLLWADDR];$/;"	m	struct:p9_conn	typeref:struct:p9_conn::p9_poll_wait	file:
+pool	9p_net/util.c	/^    struct idr pool;$/;"	m	struct:p9_idpool	typeref:struct:p9_idpool::idr	file:
+port	9p_net/trans_fd.c	/^	u16 port;$/;"	m	struct:p9_fd_opts	file:
+pr_fmt	9p_net/error.c	30;"	d	file:
+pr_fmt	9p_net/trans_fd.c	28;"	d	file:
+print_vattr	9p_fs/p9fs.ko/p9fs_client_proto.c	/^print_vattr(struct vattr *vap, uint32_t fid)$/;"	f	file:
+privport	9p_net/trans_fd.c	/^	int privport;$/;"	m	struct:p9_fd_opts	file:
+proc_id	9p.h	/^	u32 proc_id;$/;"	m	struct:p9_flock
+proc_id	9p.h	/^	u32 proc_id;$/;"	m	struct:p9_getlock
+proto_version	client.h	/^	unsigned char proto_version;$/;"	m	struct:p9_client
+pt	9p_net/trans_fd.c	/^	poll_table pt;$/;"	m	struct:p9_conn	file:
+qid	9p.h	/^	struct p9_qid qid;$/;"	m	struct:p9_stat_dotl	typeref:struct:p9_stat_dotl::p9_qid
+qid	9p.h	/^	struct p9_qid qid;$/;"	m	struct:p9_wstat	typeref:struct:p9_wstat::p9_qid
+qid	client.h	/^	struct p9_qid qid;$/;"	m	struct:p9_dirent	typeref:struct:p9_dirent::p9_qid
+qid	client.h	/^	struct p9_qid qid;$/;"	m	struct:p9_fid	typeref:struct:p9_fid::p9_qid
+qid_mode	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint8_t qid_mode;$/;"	m	struct:p9fs_qid
+qid_path	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint64_t qid_path;$/;"	m	struct:p9fs_qid
+qid_version	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t qid_version;$/;"	m	struct:p9fs_qid
+rc	9p_net/trans_fd.c	/^	struct p9_fcall rc;$/;"	m	struct:p9_conn	typeref:struct:p9_conn::p9_fcall	file:
+rc	client.h	/^	struct p9_fcall *rc;$/;"	m	struct:p9_req_t	typeref:struct:p9_req_t::p9_fcall
+rd	9p_net/trans_fd.c	/^	struct file *rd;$/;"	m	struct:p9_trans_fd	typeref:struct:p9_trans_fd::file	file:
+rd_ap	9p_fs/p9fs.ko/p9fs_vnops.c	/^	struct vop_readdir_args *rd_ap;$/;"	m	struct:p9fs_readdir_state	typeref:struct:p9fs_readdir_state::vop_readdir_args	file:
+rd_cookies	9p_fs/p9fs.ko/p9fs_vnops.c	/^	u_long *rd_cookies;$/;"	m	struct:p9fs_readdir_state	file:
+rd_count	9p_fs/p9fs.ko/p9fs_vnops.c	/^	int rd_count;$/;"	m	struct:p9fs_readdir_state	file:
+rd_eof	9p_fs/p9fs.ko/p9fs_vnops.c	/^	int rd_eof;$/;"	m	struct:p9fs_readdir_state	file:
+rd_eofp	9p_fs/p9fs.ko/p9fs_vnops.c	/^	int *rd_eofp;$/;"	m	struct:p9fs_readdir_state	file:
+rd_uio	9p_fs/p9fs.ko/p9fs_vnops.c	/^	struct uio rd_uio;$/;"	m	struct:p9fs_readdir_state	typeref:struct:p9fs_readdir_state::uio	file:
+rdir	client.h	/^	void *rdir;$/;"	m	struct:p9_fid
+req	9p_net/trans_fd.c	/^	struct p9_req_t *req;$/;"	m	struct:p9_conn	typeref:struct:p9_conn::p9_req_t	file:
+req_done	9p_net/trans_virtio.c	/^static void req_done(struct virtqueue *vq)$/;"	f	file:
+req_error	9p_fs/p9fs.ko/p9fs_proto.h	/^	int req_error;$/;"	m	struct:p9fs_req
+req_link	9p_fs/p9fs.ko/p9fs_proto.h	/^	TAILQ_ENTRY(p9fs_req) req_link;$/;"	m	struct:p9fs_req
+req_list	9p_net/trans_fd.c	/^	struct list_head req_list;$/;"	m	struct:p9_conn	typeref:struct:p9_conn::list_head	file:
+req_list	client.h	/^	struct list_head req_list;$/;"	m	struct:p9_req_t	typeref:struct:p9_req_t::list_head
+req_msg	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct mbuf *req_msg;$/;"	m	struct:p9fs_req	typeref:struct:p9fs_req::mbuf
+req_tag	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t req_tag;$/;"	m	struct:p9fs_req
+reqs	client.h	/^	struct p9_req_t *reqs[P9_ROW_MAXTAG];$/;"	m	struct:p9_client	typeref:struct:p9_client::p9_req_t
+request	transport.h	/^	int (*request) (struct p9_client *, struct p9_req_t *req);$/;"	m	struct:p9_trans_module
+rest_of_page	9p_net/trans_virtio.c	/^static unsigned int rest_of_page(void *data)$/;"	f	file:
+rfd	9p_net/trans_fd.c	/^	int rfd;$/;"	m	struct:p9_fd_opts	file:
+ring_bufs_avail	9p_net/trans_virtio.c	/^	int ring_bufs_avail;$/;"	m	struct:vchan_softc	file:
+rq	9p_net/trans_fd.c	/^	struct work_struct rq;$/;"	m	struct:p9_conn	typeref:struct:p9_conn::work_struct	file:
+saddr	9p_fs/mount_p9fs/mount_p9fs.c	/^	struct sockaddr saddr;$/;"	m	struct:mnt_context	typeref:struct:mnt_context::sockaddr	file:
+safe_errno	9p_net/client.c	/^static int safe_errno(int err)$/;"	f	file:
+sdata	9p.h	/^	u8 *sdata;$/;"	m	struct:p9_fcall
+sg	9p_net/trans_virtio.c	/^	struct sglist *sg;$/;"	m	struct:vchan_softc	typeref:struct:vchan_softc::sglist	file:
+size	9p.h	/^	u16 size;$/;"	m	struct:p9_wstat
+size	9p.h	/^	u32 size;$/;"	m	struct:p9_fcall
+size	9p.h	/^	u64 size;$/;"	m	struct:p9_iattr_dotl
+slist	9p_fs/p9fs.ko/p9fs_proto.h	/^     struct list_head slist; \/* list of sessions registered with v9fs *\/$/;"	m	struct:p9fs_session	typeref:struct:p9fs_session::list_head
+socktype	9p_fs/mount_p9fs/mount_p9fs.c	/^	int socktype;$/;"	m	struct:mnt_context	file:
+st_atime_nsec	9p.h	/^	u64 st_atime_nsec;$/;"	m	struct:p9_stat_dotl
+st_atime_sec	9p.h	/^	u64 st_atime_sec;$/;"	m	struct:p9_stat_dotl
+st_blksize	9p.h	/^	u64 st_blksize;$/;"	m	struct:p9_stat_dotl
+st_blocks	9p.h	/^	u64 st_blocks;$/;"	m	struct:p9_stat_dotl
+st_btime_nsec	9p.h	/^	u64 st_btime_nsec;$/;"	m	struct:p9_stat_dotl
+st_btime_sec	9p.h	/^	u64 st_btime_sec;$/;"	m	struct:p9_stat_dotl
+st_ctime_nsec	9p.h	/^	u64 st_ctime_nsec;$/;"	m	struct:p9_stat_dotl
+st_ctime_sec	9p.h	/^	u64 st_ctime_sec;$/;"	m	struct:p9_stat_dotl
+st_data_version	9p.h	/^	u64 st_data_version;$/;"	m	struct:p9_stat_dotl
+st_gen	9p.h	/^	u64 st_gen;$/;"	m	struct:p9_stat_dotl
+st_gid	9p.h	/^	kgid_t st_gid;$/;"	m	struct:p9_stat_dotl
+st_mode	9p.h	/^	u32 st_mode;$/;"	m	struct:p9_stat_dotl
+st_mtime_nsec	9p.h	/^	u64 st_mtime_nsec;$/;"	m	struct:p9_stat_dotl
+st_mtime_sec	9p.h	/^	u64 st_mtime_sec;$/;"	m	struct:p9_stat_dotl
+st_nlink	9p.h	/^	u64 st_nlink;$/;"	m	struct:p9_stat_dotl
+st_rdev	9p.h	/^	u64 st_rdev;$/;"	m	struct:p9_stat_dotl
+st_result_mask	9p.h	/^	u64 st_result_mask;$/;"	m	struct:p9_stat_dotl
+st_size	9p.h	/^	u64 st_size;$/;"	m	struct:p9_stat_dotl
+st_uid	9p.h	/^	kuid_t st_uid;$/;"	m	struct:p9_stat_dotl
+start	9p.h	/^	u64 start;$/;"	m	struct:p9_flock
+start	9p.h	/^	u64 start;$/;"	m	struct:p9_getlock
+stat_atime	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t stat_atime;$/;"	m	struct:p9fs_stat
+stat_dev	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t stat_dev;$/;"	m	struct:p9fs_stat
+stat_length	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint64_t stat_length;$/;"	m	struct:p9fs_stat
+stat_mode	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t stat_mode;$/;"	m	struct:p9fs_stat
+stat_mtime	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint32_t stat_mtime;$/;"	m	struct:p9fs_stat
+stat_qid	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_qid stat_qid;$/;"	m	struct:p9fs_stat	typeref:struct:p9fs_stat::p9fs_qid
+stat_size	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t stat_size;$/;"	m	struct:p9fs_stat
+stat_type	9p_fs/p9fs.ko/p9fs_proto.h	/^	uint16_t stat_type;$/;"	m	struct:p9fs_stat
+status	client.h	/^	enum p9_trans_status status;$/;"	m	struct:p9_client	typeref:enum:p9_client::p9_trans_status
+status	client.h	/^	int status;$/;"	m	struct:p9_req_t
+t_err	client.h	/^	int t_err;$/;"	m	struct:p9_req_t
+tag	9p.h	/^	u16 tag;$/;"	m	struct:p9_fcall
+tag	9p_net/trans_virtio.c	/^	char *tag;$/;"	m	struct:vchan_softc	file:
+tag_len	9p_net/trans_virtio.c	/^	int tag_len;$/;"	m	struct:vchan_softc	file:
+tagpool	client.h	/^	struct p9_idpool *tagpool;$/;"	m	struct:p9_client	typeref:struct:p9_client::p9_idpool
+tc	client.h	/^	struct p9_fcall *tc;$/;"	m	struct:p9_req_t	typeref:struct:p9_req_t::p9_fcall
+tmp_buf	9p_net/trans_fd.c	/^	char tmp_buf[7];$/;"	m	struct:p9_conn	file:
+tokens	9p_net/client.c	/^static const match_table_t tokens = {$/;"	v	file:
+tokens	9p_net/trans_fd.c	/^static const match_table_t tokens = {$/;"	v	file:
+trans	client.h	/^	void *trans;$/;"	m	struct:p9_client
+trans_mod	client.h	/^	struct p9_trans_module *trans_mod;$/;"	m	struct:p9_client	typeref:struct:p9_client::p9_trans_module
+try_addrinfo	9p_fs/mount_p9fs/mount_p9fs.c	/^try_addrinfo(struct mnt_context *ctx, struct addrinfo *ai)$/;"	f	file:
+type	9p.h	/^	u16 type;$/;"	m	struct:p9_wstat
+type	9p.h	/^	u32 type;$/;"	m	struct:p9_rstatfs
+type	9p.h	/^	u8 type;$/;"	m	struct:p9_flock
+type	9p.h	/^	u8 type;$/;"	m	struct:p9_getlock
+type	9p.h	/^	u8 type;$/;"	m	struct:p9_qid
+u_stat	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_stat u_stat;$/;"	m	struct:p9fs_stat_u	typeref:struct:p9fs_stat_u::p9fs_stat
+uid	9p.h	/^	char *uid;$/;"	m	struct:p9_wstat
+uid	9p.h	/^	kuid_t uid;$/;"	m	struct:p9_iattr_dotl
+uid	9p_fs/p9fs.ko/p9fs_proto.h	/^     kuid_t uid;     \/* if ACCESS_SINGLE, the uid that has access *\/$/;"	m	struct:p9fs_session
+uid	client.h	/^	kuid_t uid;$/;"	m	struct:p9_fid
+uname	9p_fs/p9fs.ko/p9fs_proto.h	/^     char *uname;        \/* user name to mount as *\/$/;"	m	struct:p9fs_session
+unsent_req_list	9p_net/trans_fd.c	/^	struct list_head unsent_req_list;$/;"	m	struct:p9_conn	typeref:struct:p9_conn::list_head	file:
+upay_extension	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_str upay_extension;$/;"	m	struct:p9fs_stat_u_payload	typeref:struct:p9fs_stat_u_payload::p9fs_str
+upay_footer	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_stat_u_footer *upay_footer;$/;"	m	struct:p9fs_stat_u_payload	typeref:struct:p9fs_stat_u_payload::p9fs_stat_u_footer
+upay_std	9p_fs/p9fs.ko/p9fs_proto.h	/^	struct p9fs_stat_payload upay_std;$/;"	m	struct:p9fs_stat_u_payload	typeref:struct:p9fs_stat_u_payload::p9fs_stat_payload
+usage	9p_fs/mount_p9fs/mount_p9fs.c	/^usage(int exitcode, const char *errfmt, ...)$/;"	f	file:
+v9fs_get_default_trans	9p_net/mod.c	/^struct p9_trans_module *v9fs_get_default_trans(void)$/;"	f
+v9fs_get_trans_by_name	9p_net/mod.c	/^struct p9_trans_module *v9fs_get_trans_by_name(char *s)$/;"	f
+v9fs_register_trans	9p_net/mod.c	/^void v9fs_register_trans(struct p9_trans_module *m)$/;"	f
+v9fs_unregister_trans	9p_net/mod.c	/^void v9fs_unregister_trans(struct p9_trans_module *m)$/;"	f
+val	9p_net/error.c	/^	int val;$/;"	m	struct:errormap	file:
+valid	9p.h	/^	u32 valid;$/;"	m	struct:p9_iattr_dotl
+valid_ipaddr4	9p_net/trans_fd.c	/^static inline int valid_ipaddr4(const char *buf)$/;"	f	file:
+vc_wq	9p_net/trans_virtio.c	/^	TAILQ_HEAD vc_wq;$/;"	m	struct:vchan_softc	file:
+vchan_softc	9p_net/trans_virtio.c	/^struct vchan_softc {$/;"	s	file:
+vdev	9p_net/trans_virtio.c	/^	device_t vdev;$/;"	m	struct:vchan_softc	file:
+version	9p.h	/^	u32 version;$/;"	m	struct:p9_qid
+virtio_9p_modevent	9p_net/trans_virtio.c	/^virtio_9p_modevent(module_t mod, int type, void *unused)$/;"	f	file:
+virtio_alloc_queue	9p_net/trans_virtio.c	/^static int virtio_alloc_queue(struct vchan_softc *sc)$/;"	f	file:
+vop_access	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_access_t	*vop_access;$/;"	m	struct:vop_vector
+vop_access_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_access_args {$/;"	s
+vop_access_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_access_t(struct vop_access_args *);$/;"	t
+vop_accessx	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_accessx_t	*vop_accessx;$/;"	m	struct:vop_vector
+vop_accessx_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_accessx_args {$/;"	s
+vop_accessx_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_accessx_t(struct vop_accessx_args *);$/;"	t
+vop_aclcheck	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_aclcheck_t	*vop_aclcheck;$/;"	m	struct:vop_vector
+vop_aclcheck_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_aclcheck_args {$/;"	s
+vop_aclcheck_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_aclcheck_t(struct vop_aclcheck_args *);$/;"	t
+vop_add_writecount	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_add_writecount_t	*vop_add_writecount;$/;"	m	struct:vop_vector
+vop_add_writecount_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_add_writecount_args {$/;"	s
+vop_add_writecount_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_add_writecount_t(struct vop_add_writecount_args *);$/;"	t
+vop_advise	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_advise_t	*vop_advise;$/;"	m	struct:vop_vector
+vop_advise_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_advise_args {$/;"	s
+vop_advise_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_advise_t(struct vop_advise_args *);$/;"	t
+vop_advlock	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_advlock_t	*vop_advlock;$/;"	m	struct:vop_vector
+vop_advlock_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_advlock_args {$/;"	s
+vop_advlock_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_advlock_t(struct vop_advlock_args *);$/;"	t
+vop_advlockasync	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_advlockasync_t	*vop_advlockasync;$/;"	m	struct:vop_vector
+vop_advlockasync_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_advlockasync_args {$/;"	s
+vop_advlockasync_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_advlockasync_t(struct vop_advlockasync_args *);$/;"	t
+vop_advlockpurge	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_advlockpurge_t	*vop_advlockpurge;$/;"	m	struct:vop_vector
+vop_advlockpurge_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_advlockpurge_args {$/;"	s
+vop_advlockpurge_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_advlockpurge_t(struct vop_advlockpurge_args *);$/;"	t
+vop_allocate	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_allocate_t	*vop_allocate;$/;"	m	struct:vop_vector
+vop_allocate_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_allocate_args {$/;"	s
+vop_allocate_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_allocate_t(struct vop_allocate_args *);$/;"	t
+vop_bmap	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_bmap_t	*vop_bmap;$/;"	m	struct:vop_vector
+vop_bmap_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_bmap_args {$/;"	s
+vop_bmap_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_bmap_t(struct vop_bmap_args *);$/;"	t
+vop_bypass	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_bypass_t	*vop_bypass;$/;"	m	struct:vop_vector
+vop_cachedlookup	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_cachedlookup_t	*vop_cachedlookup;$/;"	m	struct:vop_vector
+vop_cachedlookup_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_cachedlookup_args {$/;"	s
+vop_cachedlookup_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_cachedlookup_t(struct vop_cachedlookup_args *);$/;"	t
+vop_close	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_close_t	*vop_close;$/;"	m	struct:vop_vector
+vop_close_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_close_args {$/;"	s
+vop_close_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_close_t(struct vop_close_args *);$/;"	t
+vop_closeextattr	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_closeextattr_t	*vop_closeextattr;$/;"	m	struct:vop_vector
+vop_closeextattr_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_closeextattr_args {$/;"	s
+vop_closeextattr_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_closeextattr_t(struct vop_closeextattr_args *);$/;"	t
+vop_create	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_create_t	*vop_create;$/;"	m	struct:vop_vector
+vop_create_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_create_args {$/;"	s
+vop_create_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_create_t(struct vop_create_args *);$/;"	t
+vop_default	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	struct vop_vector	*vop_default;$/;"	m	struct:vop_vector	typeref:struct:vop_vector::vop_vector
+vop_deleteextattr	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_deleteextattr_t	*vop_deleteextattr;$/;"	m	struct:vop_vector
+vop_deleteextattr_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_deleteextattr_args {$/;"	s
+vop_deleteextattr_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_deleteextattr_t(struct vop_deleteextattr_args *);$/;"	t
+vop_fsync	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_fsync_t	*vop_fsync;$/;"	m	struct:vop_vector
+vop_fsync_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_fsync_args {$/;"	s
+vop_fsync_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_fsync_t(struct vop_fsync_args *);$/;"	t
+vop_get_writecount	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_get_writecount_t	*vop_get_writecount;$/;"	m	struct:vop_vector
+vop_get_writecount_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_get_writecount_args {$/;"	s
+vop_get_writecount_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_get_writecount_t(struct vop_get_writecount_args *);$/;"	t
+vop_getacl	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_getacl_t	*vop_getacl;$/;"	m	struct:vop_vector
+vop_getacl_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_getacl_args {$/;"	s
+vop_getacl_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_getacl_t(struct vop_getacl_args *);$/;"	t
+vop_getattr	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_getattr_t	*vop_getattr;$/;"	m	struct:vop_vector
+vop_getattr_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_getattr_args {$/;"	s
+vop_getattr_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_getattr_t(struct vop_getattr_args *);$/;"	t
+vop_getextattr	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_getextattr_t	*vop_getextattr;$/;"	m	struct:vop_vector
+vop_getextattr_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_getextattr_args {$/;"	s
+vop_getextattr_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_getextattr_t(struct vop_getextattr_args *);$/;"	t
+vop_getpages	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_getpages_t	*vop_getpages;$/;"	m	struct:vop_vector
+vop_getpages_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_getpages_args {$/;"	s
+vop_getpages_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_getpages_t(struct vop_getpages_args *);$/;"	t
+vop_getwritemount	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_getwritemount_t	*vop_getwritemount;$/;"	m	struct:vop_vector
+vop_getwritemount_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_getwritemount_args {$/;"	s
+vop_getwritemount_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_getwritemount_t(struct vop_getwritemount_args *);$/;"	t
+vop_inactive	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_inactive_t	*vop_inactive;$/;"	m	struct:vop_vector
+vop_inactive_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_inactive_args {$/;"	s
+vop_inactive_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_inactive_t(struct vop_inactive_args *);$/;"	t
+vop_ioctl	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_ioctl_t	*vop_ioctl;$/;"	m	struct:vop_vector
+vop_ioctl_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_ioctl_args {$/;"	s
+vop_ioctl_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_ioctl_t(struct vop_ioctl_args *);$/;"	t
+vop_is_text	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_is_text_t	*vop_is_text;$/;"	m	struct:vop_vector
+vop_is_text_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_is_text_args {$/;"	s
+vop_is_text_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_is_text_t(struct vop_is_text_args *);$/;"	t
+vop_islocked	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_islocked_t	*vop_islocked;$/;"	m	struct:vop_vector
+vop_islocked_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_islocked_args {$/;"	s
+vop_islocked_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_islocked_t(struct vop_islocked_args *);$/;"	t
+vop_kqfilter	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_kqfilter_t	*vop_kqfilter;$/;"	m	struct:vop_vector
+vop_kqfilter_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_kqfilter_args {$/;"	s
+vop_kqfilter_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_kqfilter_t(struct vop_kqfilter_args *);$/;"	t
+vop_link	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_link_t	*vop_link;$/;"	m	struct:vop_vector
+vop_link_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_link_args {$/;"	s
+vop_link_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_link_t(struct vop_link_args *);$/;"	t
+vop_listextattr	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_listextattr_t	*vop_listextattr;$/;"	m	struct:vop_vector
+vop_listextattr_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_listextattr_args {$/;"	s
+vop_listextattr_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_listextattr_t(struct vop_listextattr_args *);$/;"	t
+vop_lock1	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_lock1_t	*vop_lock1;$/;"	m	struct:vop_vector
+vop_lock1_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_lock1_args {$/;"	s
+vop_lock1_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_lock1_t(struct vop_lock1_args *);$/;"	t
+vop_lookup	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_lookup_t	*vop_lookup;$/;"	m	struct:vop_vector
+vop_lookup_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_lookup_args {$/;"	s
+vop_lookup_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_lookup_t(struct vop_lookup_args *);$/;"	t
+vop_markatime	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_markatime_t	*vop_markatime;$/;"	m	struct:vop_vector
+vop_markatime_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_markatime_args {$/;"	s
+vop_markatime_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_markatime_t(struct vop_markatime_args *);$/;"	t
+vop_mkdir	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_mkdir_t	*vop_mkdir;$/;"	m	struct:vop_vector
+vop_mkdir_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_mkdir_args {$/;"	s
+vop_mkdir_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_mkdir_t(struct vop_mkdir_args *);$/;"	t
+vop_mknod	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_mknod_t	*vop_mknod;$/;"	m	struct:vop_vector
+vop_mknod_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_mknod_args {$/;"	s
+vop_mknod_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_mknod_t(struct vop_mknod_args *);$/;"	t
+vop_open	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_open_t	*vop_open;$/;"	m	struct:vop_vector
+vop_open_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_open_args {$/;"	s
+vop_open_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_open_t(struct vop_open_args *);$/;"	t
+vop_openextattr	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_openextattr_t	*vop_openextattr;$/;"	m	struct:vop_vector
+vop_openextattr_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_openextattr_args {$/;"	s
+vop_openextattr_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_openextattr_t(struct vop_openextattr_args *);$/;"	t
+vop_pathconf	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_pathconf_t	*vop_pathconf;$/;"	m	struct:vop_vector
+vop_pathconf_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_pathconf_args {$/;"	s
+vop_pathconf_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_pathconf_t(struct vop_pathconf_args *);$/;"	t
+vop_poll	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_poll_t	*vop_poll;$/;"	m	struct:vop_vector
+vop_poll_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_poll_args {$/;"	s
+vop_poll_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_poll_t(struct vop_poll_args *);$/;"	t
+vop_print	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_print_t	*vop_print;$/;"	m	struct:vop_vector
+vop_print_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_print_args {$/;"	s
+vop_print_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_print_t(struct vop_print_args *);$/;"	t
+vop_putpages	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_putpages_t	*vop_putpages;$/;"	m	struct:vop_vector
+vop_putpages_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_putpages_args {$/;"	s
+vop_putpages_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_putpages_t(struct vop_putpages_args *);$/;"	t
+vop_read	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_read_t	*vop_read;$/;"	m	struct:vop_vector
+vop_read_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_read_args {$/;"	s
+vop_read_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_read_t(struct vop_read_args *);$/;"	t
+vop_readdir	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_readdir_t	*vop_readdir;$/;"	m	struct:vop_vector
+vop_readdir_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_readdir_args {$/;"	s
+vop_readdir_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_readdir_t(struct vop_readdir_args *);$/;"	t
+vop_readlink	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_readlink_t	*vop_readlink;$/;"	m	struct:vop_vector
+vop_readlink_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_readlink_args {$/;"	s
+vop_readlink_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_readlink_t(struct vop_readlink_args *);$/;"	t
+vop_reallocblks	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_reallocblks_t	*vop_reallocblks;$/;"	m	struct:vop_vector
+vop_reallocblks_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_reallocblks_args {$/;"	s
+vop_reallocblks_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_reallocblks_t(struct vop_reallocblks_args *);$/;"	t
+vop_reclaim	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_reclaim_t	*vop_reclaim;$/;"	m	struct:vop_vector
+vop_reclaim_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_reclaim_args {$/;"	s
+vop_reclaim_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_reclaim_t(struct vop_reclaim_args *);$/;"	t
+vop_remove	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_remove_t	*vop_remove;$/;"	m	struct:vop_vector
+vop_remove_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_remove_args {$/;"	s
+vop_remove_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_remove_t(struct vop_remove_args *);$/;"	t
+vop_rename	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_rename_t	*vop_rename;$/;"	m	struct:vop_vector
+vop_rename_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_rename_args {$/;"	s
+vop_rename_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_rename_t(struct vop_rename_args *);$/;"	t
+vop_revoke	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_revoke_t	*vop_revoke;$/;"	m	struct:vop_vector
+vop_revoke_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_revoke_args {$/;"	s
+vop_revoke_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_revoke_t(struct vop_revoke_args *);$/;"	t
+vop_rmdir	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_rmdir_t	*vop_rmdir;$/;"	m	struct:vop_vector
+vop_rmdir_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_rmdir_args {$/;"	s
+vop_rmdir_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_rmdir_t(struct vop_rmdir_args *);$/;"	t
+vop_set_text	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_set_text_t	*vop_set_text;$/;"	m	struct:vop_vector
+vop_set_text_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_set_text_args {$/;"	s
+vop_set_text_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_set_text_t(struct vop_set_text_args *);$/;"	t
+vop_setacl	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_setacl_t	*vop_setacl;$/;"	m	struct:vop_vector
+vop_setacl_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_setacl_args {$/;"	s
+vop_setacl_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_setacl_t(struct vop_setacl_args *);$/;"	t
+vop_setattr	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_setattr_t	*vop_setattr;$/;"	m	struct:vop_vector
+vop_setattr_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_setattr_args {$/;"	s
+vop_setattr_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_setattr_t(struct vop_setattr_args *);$/;"	t
+vop_setextattr	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_setextattr_t	*vop_setextattr;$/;"	m	struct:vop_vector
+vop_setextattr_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_setextattr_args {$/;"	s
+vop_setextattr_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_setextattr_t(struct vop_setextattr_args *);$/;"	t
+vop_setlabel	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_setlabel_t	*vop_setlabel;$/;"	m	struct:vop_vector
+vop_setlabel_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_setlabel_args {$/;"	s
+vop_setlabel_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_setlabel_t(struct vop_setlabel_args *);$/;"	t
+vop_spare1	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_spare1_t	*vop_spare1;$/;"	m	struct:vop_vector
+vop_spare1_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_spare1_args {$/;"	s
+vop_spare1_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_spare1_t(struct vop_spare1_args *);$/;"	t
+vop_spare2	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_spare2_t	*vop_spare2;$/;"	m	struct:vop_vector
+vop_spare2_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_spare2_args {$/;"	s
+vop_spare2_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_spare2_t(struct vop_spare2_args *);$/;"	t
+vop_spare3	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_spare3_t	*vop_spare3;$/;"	m	struct:vop_vector
+vop_spare3_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_spare3_args {$/;"	s
+vop_spare3_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_spare3_t(struct vop_spare3_args *);$/;"	t
+vop_spare4	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_spare4_t	*vop_spare4;$/;"	m	struct:vop_vector
+vop_spare4_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_spare4_args {$/;"	s
+vop_spare4_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_spare4_t(struct vop_spare4_args *);$/;"	t
+vop_spare5	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_spare5_t	*vop_spare5;$/;"	m	struct:vop_vector
+vop_spare5_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_spare5_args {$/;"	s
+vop_spare5_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_spare5_t(struct vop_spare5_args *);$/;"	t
+vop_strategy	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_strategy_t	*vop_strategy;$/;"	m	struct:vop_vector
+vop_strategy_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_strategy_args {$/;"	s
+vop_strategy_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_strategy_t(struct vop_strategy_args *);$/;"	t
+vop_symlink	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_symlink_t	*vop_symlink;$/;"	m	struct:vop_vector
+vop_symlink_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_symlink_args {$/;"	s
+vop_symlink_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_symlink_t(struct vop_symlink_args *);$/;"	t
+vop_unlock	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_unlock_t	*vop_unlock;$/;"	m	struct:vop_vector
+vop_unlock_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_unlock_args {$/;"	s
+vop_unlock_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_unlock_t(struct vop_unlock_args *);$/;"	t
+vop_unp_bind	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_unp_bind_t	*vop_unp_bind;$/;"	m	struct:vop_vector
+vop_unp_bind_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_unp_bind_args {$/;"	s
+vop_unp_bind_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_unp_bind_t(struct vop_unp_bind_args *);$/;"	t
+vop_unp_connect	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_unp_connect_t	*vop_unp_connect;$/;"	m	struct:vop_vector
+vop_unp_connect_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_unp_connect_args {$/;"	s
+vop_unp_connect_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_unp_connect_t(struct vop_unp_connect_args *);$/;"	t
+vop_unp_detach	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_unp_detach_t	*vop_unp_detach;$/;"	m	struct:vop_vector
+vop_unp_detach_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_unp_detach_args {$/;"	s
+vop_unp_detach_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_unp_detach_t(struct vop_unp_detach_args *);$/;"	t
+vop_unset_text	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_unset_text_t	*vop_unset_text;$/;"	m	struct:vop_vector
+vop_unset_text_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_unset_text_args {$/;"	s
+vop_unset_text_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_unset_text_t(struct vop_unset_text_args *);$/;"	t
+vop_vector	9p_fs/p9fs.ko/vnode_if_newproto.h	/^struct vop_vector {$/;"	s
+vop_vptocnp	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_vptocnp_t	*vop_vptocnp;$/;"	m	struct:vop_vector
+vop_vptocnp_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_vptocnp_args {$/;"	s
+vop_vptocnp_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_vptocnp_t(struct vop_vptocnp_args *);$/;"	t
+vop_vptofh	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_vptofh_t	*vop_vptofh;$/;"	m	struct:vop_vector
+vop_vptofh_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_vptofh_args {$/;"	s
+vop_vptofh_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_vptofh_t(struct vop_vptofh_args *);$/;"	t
+vop_whiteout	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_whiteout_t	*vop_whiteout;$/;"	m	struct:vop_vector
+vop_whiteout_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_whiteout_args {$/;"	s
+vop_whiteout_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_whiteout_t(struct vop_whiteout_args *);$/;"	t
+vop_write	9p_fs/p9fs.ko/vnode_if_newproto.h	/^	vop_write_t	*vop_write;$/;"	m	struct:vop_vector
+vop_write_args	9p_fs/p9fs.ko/vnode_if.h	/^struct vop_write_args {$/;"	s
+vop_write_t	9p_fs/p9fs.ko/vnode_if_typedef.h	/^typedef int vop_write_t(struct vop_write_args *);$/;"	t
+vp_pinned	9p_net/trans_virtio.c	/^static atomic_t vp_pinned = ATOMIC_INIT(0);$/;"	v	file:
+vq	9p_net/trans_virtio.c	/^	struct virtqueue *vq;$/;"	m	struct:vchan_softc	typeref:struct:vchan_softc::virtqueue	file:
+vtblk_devclass	9p_net/trans_virtio.c	/^static devclass_t vtblk_devclass;$/;"	v	file:
+vtblk_vq_intr	9p_net/trans_virtio.c	/^vtblk_vq_intr(void *xsc)$/;"	f	file:
+wait	9p_net/trans_fd.c	/^	wait_queue_t wait;$/;"	m	struct:p9_poll_wait	file:
+wait_addr	9p_net/trans_fd.c	/^	wait_queue_head_t *wait_addr;$/;"	m	struct:p9_poll_wait	file:
+wbuf	9p_net/trans_fd.c	/^	char *wbuf;$/;"	m	struct:p9_conn	file:
+wfd	9p_net/trans_fd.c	/^	int wfd;$/;"	m	struct:p9_fd_opts	file:
+wpos	9p_net/trans_fd.c	/^	int wpos;$/;"	m	struct:p9_conn	file:
+wq	9p_net/trans_fd.c	/^	struct work_struct wq;$/;"	m	struct:p9_conn	typeref:struct:p9_conn::work_struct	file:
+wq	client.h	/^	wait_queue_head_t *wq;$/;"	m	struct:p9_req_t
+wr	9p_net/trans_fd.c	/^	struct file *wr;$/;"	m	struct:p9_trans_fd	typeref:struct:p9_trans_fd::file	file:
+wsched	9p_net/trans_fd.c	/^	unsigned long wsched;$/;"	m	struct:p9_conn	file:
+wsize	9p_net/trans_fd.c	/^	int wsize;$/;"	m	struct:p9_conn	file:
+zc_request	transport.h	/^	int (*zc_request)(struct p9_client *, struct p9_req_t *,$/;"	m	struct:p9_trans_module

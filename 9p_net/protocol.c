@@ -51,7 +51,6 @@ void p9stat_free(struct p9_wstat *stbuf)
 	kfree(stbuf->muid);
 	kfree(stbuf->extension);
 }
-EXPORT_SYMBOL(p9stat_free);
 
 size_t pdu_read(struct p9_fcall *pdu, void *data, size_t size)
 {
@@ -154,20 +153,21 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				if (errcode)
 					break;
 
-				*sptr = kmalloc(len + 1, GFP_NOFS);
+				*sptr = malloc(len + 1);
 				if (*sptr == NULL) {
 					errcode = -EFAULT;
 					break;
 				}
 				if (pdu_read(pdu, *sptr, len)) {
 					errcode = -EFAULT;
-					kfree(*sptr);
+					free(*sptr);
 					*sptr = NULL;
 				} else
 					(*sptr)[len] = 0;
 			}
 			break;
 		case 'u': {
+#if 0
 				kuid_t *uid = va_arg(ap, kuid_t *);
 				__le32 le_val;
 				if (pdu_read(pdu, &le_val, sizeof(le_val))) {
@@ -176,8 +176,10 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				}
 				*uid = make_kuid(&init_user_ns,
 						 le32_to_cpu(le_val));
+#endif
 			} break;
 		case 'g': {
+#if 0
 				kgid_t *gid = va_arg(ap, kgid_t *);
 				__le32 le_val;
 				if (pdu_read(pdu, &le_val, sizeof(le_val))) {
@@ -186,6 +188,7 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				}
 				*gid = make_kgid(&init_user_ns,
 						 le32_to_cpu(le_val));
+#endif 
 			} break;
 		case 'Q':{
 				struct p9_qid *qid =
@@ -569,12 +572,11 @@ int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st)
 
 	return ret;
 }
-EXPORT_SYMBOL(p9stat_read);
 
-int p9pdu_prepare(struct p9_fcall *pdu, int16_t tag, int8_t type)
+int p9pdu_prepare(struct p9_fcall *pdu, int8_t type)
 {
 	pdu->id = type;
-	return p9pdu_writef(pdu, 0, "dbw", 0, type, tag);
+	return p9pdu_writef(pdu, 0, "dbw", 0, type);
 }
 
 int p9pdu_finalize(struct p9_client *clnt, struct p9_fcall *pdu)
@@ -586,7 +588,7 @@ int p9pdu_finalize(struct p9_client *clnt, struct p9_fcall *pdu)
 	err = p9pdu_writef(pdu, 0, "d", size);
 	pdu->size = size;
 
-	trace_9p_protocol_dump(clnt, pdu);
+//	trace_9p_protocol_dump(clnt, pdu);
 	p9_debug(P9_DEBUG_9P, ">>> size=%d type: %d tag: %d\n",
 		 pdu->size, pdu->id, pdu->tag);
 
@@ -625,4 +627,3 @@ int p9dirent_read(struct p9_client *clnt, char *buf, int len,
 out:
 	return fake_pdu.offset;
 }
-EXPORT_SYMBOL(p9dirent_read);

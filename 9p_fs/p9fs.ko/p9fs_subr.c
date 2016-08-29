@@ -341,23 +341,23 @@ p9fs_msg_destroy(struct p9fs_session *p9s, void *mp)
 }
 
 void
-p9fs_init_session(struct p9fs_session *p9s)
+p9fs_init_session(struct mount *mp)
 {
     struct p9_fid *fid;
     int rc = -ENOMEM;
+    struct p9fs_session *p9s;
 
+    p9mp = mp->mnt_data;
+    p9s = &p9mp->p9_session;
     p9s->uid = INVALID_UID;
     p9s->dfltuid = V9FS_DEFUID;
     p9s->dfltgid = V9FS_DEFGID;
     // Create the clnt, ada func pointers.
-    p9s->clnt = p9_client_create(dev_name, mp);
+    rc = p9_client_create(mp);
 
-    if (IS_ERR(p9s->clnt)) {
-
-        rc = PTR_ERR(p9s->clnt);
+    if (rc) {
         p9_debug(P9_DEBUG_ERROR, "problem initializing 9p client\n");
         goto err_bdi;
-
     }
     p9s->flags = V9FS_ACCESS_USER;
     if (p9_is_proto_dotl(p9s->clnt)) {

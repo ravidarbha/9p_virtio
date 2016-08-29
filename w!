@@ -315,14 +315,16 @@ static void p9_tag_cleanup(struct p9_client *c)
  *
  */
 
-#endif  ///// NO tag allocations being used,
-
-
-// call this from close_functions to free up all requests in the pool.
 static void p9_free_req(struct p9_client *c, struct p9_req_t *r)
 {
-	free(r ,sizeof(*r));
+	int tag = r->tc->tag;
+	p9_debug(P9_DEBUG_MUX, "clnt %p req %p tag: %d\n", c, r, tag);
+
+	r->status = REQ_STATUS_IDLE;
+	if (tag != P9_NOTAG && p9_idpool_check(tag, c->tagpool))
+		p9_idpool_put(tag, c->tagpool);
 }
+#endif  ///// NO tag allocations being used,
 
 /**
  * p9_client_cb - call back from transport to client
@@ -332,16 +334,20 @@ static void p9_free_req(struct p9_client *c, struct p9_req_t *r)
  */
 void p9_client_cb(struct p9_client *c, struct p9_req_t *req)
 {
-	// Finish the request to upper layers.
-	// Copy the information into buffers if needed (FS specific) 
-	// Add the request back into the list.
-	complete_upper(req);
-	bzero(req, sizeof(*req));
-	// add it back to the pool.
-	SLIST_ADD_TAIL(&c->reqlist, req);
 
-	// one new request added, Check if any threads are sleeping for requests.
-	condvar_wakeup(&c->req_cv);
+	/*
+	 * This barrier is needed to make sure any change made to req before
+	 * the other thread wakes up will indeed be seen by the waiting side.
+	 */
+	smp_wmb();
+	req->status = status;
+
+	// ADd the request back into the list.
+	SLIST_ADD_TAIL(&c->reqlist, req);
+	// wakeup for now.. check the design to see if we need 2 sleeps when low on resources. 
+	condvar_wakeup(alloc_var);
+	wakeup(&wc);
+	p9_debug(P9_DEBUG_MUX, "wakeup: %d\n", req->tc->tag);
 }
 
 /**
@@ -614,7 +620,6 @@ struct p9_client *request_allocator(struct p9_client *c)
 		// no more so sleep till someone wakes you up.
 		cv_wait(&c->req_cv, &cv->req_lock);
 	}
-	// unlink it from the list.
 	SLIST_REMOVE_HEAD(&c->reqlist, link);	
 	// Req shouldnt be NULL as we just woke up otherwise.
 	kassert(req != NULL);

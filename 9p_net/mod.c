@@ -81,12 +81,12 @@ struct p9_trans_module *v9fs_get_trans_by_name(char *s)
 
 	mtx_lock_spin(&v9fs_trans_lock);
 
-	 TAILQ_FOREACH(t, &v9fs_trans_list, list) {
+	TAILQ_FOREACH(t, &v9fs_trans_list, list) {
 		if (strcmp(t->name, s) == 0 ) {
 			found = t;
 			break;
 		}
-     }
+	}
 
 	mtx_unlock_spin(&v9fs_trans_lock);
 	return found;
@@ -119,9 +119,3 @@ struct p9_trans_module *v9fs_get_default_trans(void)
 	mtx_unlock_spin(&v9fs_trans_lock);
 	return found;
 }
-
-/**
- * v9fs_put_trans - put trans
- * @m: transport to put
- *
- */

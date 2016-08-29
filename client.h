@@ -151,6 +151,7 @@ struct p9_req_t {
 
 struct p9_client {
 	mtx_lock_spin lock; /* protect client structure */
+	struct cv req_cv;
 	unsigned int msize;
 	unsigned char proto_version;
 	struct p9_trans_module *trans_mod;
@@ -160,8 +161,8 @@ struct p9_client {
 	struct p9_idpool *fidpool;
 	TAILQ_HEAD fidlist;
 
-	struct p9_idpool *tagpool;
-	struct p9_req_t *reqs[P9_ROW_MAXTAG];
+	// malloc these requests and keep to use during fast path.
+	TAIL_HEAD (_,p9_req_t ) reqlist;
 	int max_tag;
 
 	char name[__NEW_UTS_LEN + 1];

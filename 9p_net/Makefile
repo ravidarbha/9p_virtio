@@ -1,18 +1,11 @@
-obj-$(CONFIG_NET_9P) := 9pnet.o
-obj-$(CONFIG_NET_9P_VIRTIO) += 9pnet_virtio.o
-obj-$(CONFIG_NET_9P_RDMA) += 9pnet_rdma.o
+# Note: It is important to make sure you include the <bsd.kmod.mk> makefile after declaring the KMOD and SRCS variables.
+# Declare Name of kernel module
+KMOD    =  9p_net_virtio
 
-9pnet-objs := \
-	mod.o \
-	client.o \
-	error.o \
-	util.o \
-	protocol.o \
-	trans_fd.o \
-	trans_common.o \
+# Enumerate Source files for kernel module
+SRCS    =  device_if.h bus_if.h opt_cam.h client.c util.c \ 
+	   protocol.c trans_virtio.c mod.c  
 
-9pnet_virtio-objs := \
-	trans_virtio.o \
-
-9pnet_rdma-objs := \
-	trans_rdma.o \
+#INC=-I/usr/share/mk/
+# Include kernel module makefile
+.include <bsd.kmod.mk>
