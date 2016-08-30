@@ -139,13 +139,6 @@ static void p9_free_req(struct p9_client *c, struct p9_req_t *r)
 	free(r ,sizeof(*r));
 }
 
-
-void complete_upper(req)
-{
-	// For compiling.
-	printf("completion to the upper layers. ");
-
-}
 /**
  * p9_client_cb - call back from transport to client
  * c: client state
@@ -154,7 +147,6 @@ void complete_upper(req)
  */
 void p9_client_cb(struct p9_client *c, struct p9_req_t *req)
 {
-	
 	// Finish the request to upper layers.
 	// Copy the information into buffers if needed (FS specific) 
 	// Add the request back into the list.

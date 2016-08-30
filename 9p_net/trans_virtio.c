@@ -10,7 +10,6 @@
 
 #include <sys/module.h>
 #include <sys/net.h>
-#include <sys/ipv6.h>
 #include <sys/errno.h>
 #include <sys/kernel.h>
 #include <sys/un.h>
