@@ -1597,8 +1597,8 @@ int p9_client_statfs(struct p9_fid *fid, struct p9_rstatfs *sb)
 	}
 
 	p9_debug(P9_DEBUG_9P, "<<< RSTATFS fid %d type 0x%lx bsize %ld "
-		"blocks %lu bfree %lu bavail %lu files %lu ffree %lu "
-		"fsid %lu namelen %ld\n",
+		"blocks %llu bfree %llu bavail %llu files %llu ffree %llu "
+		"fsid %llu namelen %ld\n",
 		fid->fid, (long unsigned int)sb->type, (long int)sb->bsize,
 		sb->blocks, sb->bfree, sb->bavail, sb->files,  sb->ffree,
 		sb->fsid, (long int)sb->namelen);

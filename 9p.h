@@ -27,6 +27,12 @@
  * verbosity and tracing which will be output to the system logs.
  */
 
+#define u8 uint8_t
+#define u16 uint16_t
+#define u32 uint32_t 
+#define u64 uint64_t
+
+
 enum p9_debug_flags {
 	P9_DEBUG_ERROR = 	(1<<0),
 	P9_DEBUG_9P = 		(1<<2),
@@ -51,7 +57,7 @@ void _p9_debug(enum p9_debug_flags level, const char *func,
 	_p9_debug(level, __func__, fmt, ##__VA_ARGS__)
 #else
 #define p9_debug(level, fmt, ...)			\
-	no_printk(fmt, ##__VA_ARGS__)
+	printf(fmt, ##__VA_ARGS__)
 #endif
 
 /**
@@ -388,17 +394,17 @@ struct p9_wstat {
 	char *gid;
 	char *muid;
 	char *extension;	/* 9p2000.u extensions */
-	kuid_t n_uid;		/* 9p2000.u extensions */
-	kgid_t n_gid;		/* 9p2000.u extensions */
-	kuid_t n_muid;		/* 9p2000.u extensions */
+	uid_t n_uid;		/* 9p2000.u extensions */
+	gid_t n_gid;		/* 9p2000.u extensions */
+	uid_t n_muid;		/* 9p2000.u extensions */
 };
 
 struct p9_stat_dotl {
 	u64 st_result_mask;
 	struct p9_qid qid;
 	u32 st_mode;
-	kuid_t st_uid;
-	kgid_t st_gid;
+	uid_t st_uid;
+	gid_t st_gid;
 	u64 st_nlink;
 	u64 st_rdev;
 	u64 st_size;
@@ -452,8 +458,8 @@ struct p9_stat_dotl {
 struct p9_iattr_dotl {
 	u32 valid;
 	u32 mode;
-	kuid_t uid;
-	kgid_t gid;
+	uid_t uid;
+	gid_t gid;
 	u64 size;
 	u64 atime_sec;
 	u64 atime_nsec;
@@ -542,7 +548,6 @@ struct p9_fcall {
 	u8 *sdata;
 };
 
-struct p9_idpool;
 
 int p9_errstr2errno(char *errstr, int len);
 

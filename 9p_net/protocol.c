@@ -25,13 +25,13 @@
 static int
 p9pdu_writef(struct p9_fcall *pdu, int proto_version, const char *fmt, ...);
 
-void p9stat_free(struct p9_wstat *stbuf)
+void p9stat_p9_free(struct p9_wstat *stbuf)
 {
-	free(stbuf->name, strlen(stbuf->name));
-	free(stbuf->uid, sizeof(stbuf->uid));
-	free(stbuf->gid, sizeof(stbuf->gid));
-	free(stbuf->muid, sizeof(stbuf->muid));
-	free(stbuf->extension, sizeof(stbuf->extension));
+	p9_free(stbuf->name, strlen(stbuf->name));
+	p9_free(stbuf->uid, sizeof(stbuf->uid));
+	p9_free(stbuf->gid, sizeof(stbuf->gid));
+	p9_free(stbuf->muid, sizeof(stbuf->muid));
+	p9_free(stbuf->extension, sizeof(stbuf->extension));
 }
 
 size_t pdu_read(struct p9_fcall *pdu, void *data, size_t size)
@@ -72,7 +72,7 @@ pdu_write_u(struct p9_fcall *pdu, struct iov_iter *from, size_t size)
 	g - numeric gid
 	S - stat
 	Q - qid
-	D - data blob (int32_t size followed by void *, results are not freed)
+	D - data blob (int32_t size followed by void *, results are not p9_freed)
 	T - array of strings (int16_t count, followed by strings)
 	R - array of qids (int16_t count, followed by qids)
 	A - stat for 9p2000.L (p9_stat_dotl)
@@ -135,14 +135,14 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				if (errcode)
 					break;
 
-				*sptr = malloc(len + 1);
+				*sptr = p9_malloc(len + 1);
 				if (*sptr == NULL) {
 					errcode = -EFAULT;
 					break;
 				}
 				if (pdu_read(pdu, *sptr, len)) {
 					errcode = -EFAULT;
-					free(*sptr, sizeof(*sptr));
+					p9_free(*sptr, sizeof(*sptr));
 					*sptr = NULL;
 				} else
 					(*sptr)[len] = 0;
@@ -202,7 +202,7 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 						&stbuf->n_uid, &stbuf->n_gid,
 						&stbuf->n_muid);
 				if (errcode)
-					p9stat_free(stbuf);
+					p9stat_p9_free(stbuf);
 			}
 			break;
 		case 'D':{
@@ -226,7 +226,7 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				errcode = p9pdu_readf(pdu, proto_version,
 								"w", nwname);
 				if (!errcode) {
-					*wnames = malloc(sizeof(char *) * *nwname);
+					*wnames = p9_malloc(sizeof(char *) * *nwname);
 					if (!*wnames)
 						errcode = -ENOMEM;
 				}
@@ -250,9 +250,9 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 						int i;
 
 						for (i = 0; i < *nwname; i++)
-							free((*wnames)[i], sizeof(*wnames[i]);
+							p9_free((*wnames)[i], sizeof(*wnames[i]);
 					}
-					free(*wnames, sizeof(*wnames));
+					p9_free(*wnames, sizeof(*wnames));
 					*wnames = NULL;
 				}
 			}
@@ -268,7 +268,7 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				    p9pdu_readf(pdu, proto_version, "w", nwqid);
 				if (!errcode) {
 					*wqids =
-					    malloc(*nwqid *
+					    p9_malloc(*nwqid *
 						    sizeof(struct p9_qid),
 						    );
 					if (*wqids == NULL)
@@ -290,7 +290,7 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				}
 
 				if (errcode) {
-					free(*wqids, sizeof(*wqids));
+					p9_free(*wqids, sizeof(*wqids));
 					*wqids = NULL;
 				}
 			}
@@ -600,7 +600,7 @@ int p9dirent_read(struct p9_client *clnt, char *buf, int len,
 	}
 
 	strcpy(dirent->d_name, nameptr);
-	free(nameptr, sizeof(*nameptr));
+	p9_free(nameptr, sizeof(*nameptr));
 
 out:
 	return fake_pdu.offset;

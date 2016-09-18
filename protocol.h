@@ -27,6 +27,7 @@
 
 ///The subsystem allocation used for allocation flags.
 #define p9_malloc(size) malloc(size, M_TEMP, M_NOWAIT) /// make this WAIT and NON_WAIT based on the call later.
+#define p9_free(ptr,size) free(ptr, M_TEMP) // Scam free for now.
 #define ERESTARTSYS 10
 #define NOCLIENT_ERROR 12
 
