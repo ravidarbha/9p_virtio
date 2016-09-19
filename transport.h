@@ -50,12 +50,12 @@
  */
 
 struct p9_trans_module {
-	struct list_head list;
+	SLIST_ENTRY(p9_trans_module) list;
 	char *name;		/* name of transport */
 	int maxsize;		/* max message size of transport */
 	int def;		/* this transport should be default */
 	struct module *owner;
-	int (*create)(struct p9_client *, const char *, char *);
+	int (*create)(struct p9_client *, const char *);
 	void (*close) (struct p9_client *);
 	int (*request) (struct p9_client *, struct p9_req_t *req);
 	int (*cancel) (struct p9_client *, struct p9_req_t *req);

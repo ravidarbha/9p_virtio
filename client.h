@@ -26,10 +26,26 @@
 #ifndef NET_9P_CLIENT_H
 #define NET_9P_CLIENT_H
 
-#include <linux/utsname.h>
-
 /* Number of requests per row */
 #define P9_ROW_MAXTAG 255
+#define MAX_ERRNO 30
+
+#include <sys/param.h>
+#include <sys/errno.h>
+#include <sys/types.h>
+#include <sys/lock.h>
+#include <sys/mutex.h>
+#include <sys/condvar.h>
+#include <sys/queue.h>
+#include <sys/systm.h>
+#include <sys/mount.h>
+#include <sys/param.h>
+#include <sys/malloc.h>
+#include <sys/kernel.h>
+#include <sys/proc.h>
+#include <machine/stdarg.h>
+
+#include "9p.h"
 
 /** enum p9_proto_versions - 9P protocol versions
  * @p9_proto_legacy: 9P Legacy mode, pre-9P2000.u
@@ -112,12 +128,12 @@ enum p9_req_status_t {
 struct p9_req_t {
 	int status;
 	int t_err;
-	wait_queue_head_t *wq;
+	//wait_queue_head_t *wq;
 	struct p9_fcall *tc;
 	struct p9_fcall *rc;
 	void *aux;
 
-	struct list_head req_list;
+	//struct list_head req_list;
 };
 
 /**
@@ -150,7 +166,7 @@ struct p9_req_t {
  */
 
 struct p9_client {
-	mtx_lock_spin lock; /* protect client structure */
+	struct mtx lock; /* protect client structure */
 	struct cv req_cv;
 	unsigned int msize;
 	unsigned char proto_version;
@@ -158,14 +174,14 @@ struct p9_client {
 	enum p9_trans_status status;
 	void *trans;
 
-	struct p9_idpool *fidpool;
-	TAILQ_HEAD fidlist;
+	struct unrhdr *fidpool;
+	//TAILQ_HEAD(,p9_fid)  fidlist;
 
 	// malloc these requests and keep to use during fast path.
-	TAIL_HEAD (_,p9_req_t ) reqlist;
+	//TAILQ_HEAD (_,p9_req_t ) reqlist;
 	int max_tag;
 
-	char name[__NEW_UTS_LEN + 1];
+	char name[32];
 };
 
 /**
@@ -189,12 +205,12 @@ struct p9_fid {
 	int mode;
 	struct p9_qid qid;
 	u32 iounit;
-	kuid_t uid;
+	uid_t uid;
 
 	void *rdir;
 
-	struct list_head flist;
-	struct hlist_node dlist;	/* list of all fids attached to a dentry */
+	SLIST_ENTRY (p9_fid) flist;
+	//struct hlist_node dlist;	/* list of all fids attached to a dentry */
 };
 
 /**
@@ -219,22 +235,22 @@ int p9_client_rename(struct p9_fid *fid, struct p9_fid *newdirfid,
 		     const char *name);
 int p9_client_renameat(struct p9_fid *olddirfid, const char *old_name,
 		       struct p9_fid *newdirfid, const char *new_name);
-struct p9_client *p9_client_create(const char *dev_name, char *options);
+int p9_client_create(const char *dev_name, struct mount *mp);
 void p9_client_destroy(struct p9_client *clnt);
 void p9_client_disconnect(struct p9_client *clnt);
 void p9_client_begin_disconnect(struct p9_client *clnt);
 struct p9_fid *p9_client_attach(struct p9_client *clnt, struct p9_fid *afid,
-				char *uname, kuid_t n_uname, char *aname);
+				char *uname, uid_t n_uname, char *aname);
 struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 		char **wnames, int clone);
 int p9_client_open(struct p9_fid *fid, int mode);
 int p9_client_fcreate(struct p9_fid *fid, char *name, u32 perm, int mode,
 							char *extension);
 int p9_client_link(struct p9_fid *fid, struct p9_fid *oldfid, char *newname);
-int p9_client_symlink(struct p9_fid *fid, char *name, char *symname, kgid_t gid,
+int p9_client_symlink(struct p9_fid *fid, char *name, char *symname, gid_t gid,
 							struct p9_qid *qid);
 int p9_client_create_dotl(struct p9_fid *ofid, char *name, u32 flags, u32 mode,
-		kgid_t gid, struct p9_qid *qid);
+		gid_t gid, struct p9_qid *qid);
 int p9_client_clunk(struct p9_fid *fid);
 int p9_client_fsync(struct p9_fid *fid, int datasync);
 int p9_client_remove(struct p9_fid *fid);
@@ -252,13 +268,13 @@ struct p9_stat_dotl *p9_client_getattr_dotl(struct p9_fid *fid,
 							u64 request_mask);
 
 int p9_client_mknod_dotl(struct p9_fid *oldfid, char *name, int mode,
-			dev_t rdev, kgid_t gid, struct p9_qid *);
+			dev_t rdev, gid_t gid, struct p9_qid *);
 int p9_client_mkdir_dotl(struct p9_fid *fid, char *name, int mode,
-				kgid_t gid, struct p9_qid *);
+				gid_t gid, struct p9_qid *);
 int p9_client_lock_dotl(struct p9_fid *fid, struct p9_flock *flock, u8 *status);
 int p9_client_getlock_dotl(struct p9_fid *fid, struct p9_getlock *fl);
 struct p9_req_t *p9_tag_lookup(struct p9_client *, u16);
-void p9_client_cb(struct p9_client *c, struct p9_req_t *req, int status);
+void p9_client_cb(struct p9_client *c, struct p9_req_t *req);
 
 int p9_parse_header(struct p9_fcall *, int32_t *, int8_t *, int16_t *, int);
 int p9stat_read(struct p9_client *, char *, int, struct p9_wstat *);
