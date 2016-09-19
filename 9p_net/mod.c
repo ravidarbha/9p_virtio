@@ -1,21 +1,9 @@
-#include <sys/module.h>
-#include <sys/errno.h>
-#include <sys/sched.h>
-#include <sys/moduleparam.h>
-#include <net/9p/9p.h>
-#include <sys/fs.h>
-#include <sys/parser.h>
-#include <net/9p/client.h>
-#include <net/9p/transport.h>
-#include <sys/list.h>
-#include <sys/spinlock.h>
+//// ADD the headers which are needed here. Not Just everything.
+#include "../../transport.h"
 
-#ifdef CONFIG_NET_9P_DEBUG
-unsigned int p9_debug_level = 0;	/* feature-rific global debug level  */
-module_param_named(debug, p9_debug_level, uint, 0);
-MODULE_PARM_DESC(debug, "9P debugging level");
+unsigned int p9_debug_level = 1;	/* feature-rific global debug level  */
 
-void _p9_debug(enum p9_debug_flags level, const char *func,
+void p9_debug(enum p9_debug_flags level, const char *func,
 		const char *fmt, ...)
 {
 	struct va_format vaf;
@@ -36,7 +24,6 @@ void _p9_debug(enum p9_debug_flags level, const char *func,
 
 	va_end(args);
 }
-#endif
 
 /*
  * Dynamic Transport Registration Routines
@@ -44,7 +31,7 @@ void _p9_debug(enum p9_debug_flags level, const char *func,
  */
 
 mtx_init(&v9fs_trans_lock, "v9fs_trans_lock", NULL, MTX_DEF);
-static TAILQ_HEAD(v9fs_trans_list);
+static SLIST_HEAD(,p9_trans_module) v9fs_trans_list;
 
 /**
  * v9fs_register_trans - register a new transport with 9p
@@ -54,7 +41,7 @@ static TAILQ_HEAD(v9fs_trans_list);
 void v9fs_register_trans(struct p9_trans_module *m)
 {
 	mtx_lock_spin(&v9fs_trans_lock);
-	TAILQ_INSERT_TAIL(&m->list, &v9fs_trans_list);
+	SLIST_TAILQ_INSERT(m, &v9fs_trans_list);
 	mtx_unlock_spin(&v9fs_trans_lock);
 }
 
@@ -66,7 +53,7 @@ void v9fs_register_trans(struct p9_trans_module *m)
 void v9fs_unregister_trans(struct p9_trans_module *m)
 {
 	mtx_lock_spin(&v9fs_trans_lock);
-	TAILQ_DEL(&m->list);
+	SLIST_REMOVE(&v9fs_trans_list, m, p9_trans_module, trans_mod);
 	mtx_unlock_spin(&v9fs_trans_lock);
 }
 
@@ -81,7 +68,7 @@ struct p9_trans_module *v9fs_get_trans_by_name(char *s)
 
 	mtx_lock_spin(&v9fs_trans_lock);
 
-	TAILQ_FOREACH(t, &v9fs_trans_list, list) {
+	STAILQ_FOREACH(t, &v9fs_trans_list, list) {
 		if (strcmp(t->name, s) == 0 ) {
 			found = t;
 			break;
@@ -97,6 +84,8 @@ struct p9_trans_module *v9fs_get_trans_by_name(char *s)
  *
  */
 
+
+#if 0
 struct p9_trans_module *v9fs_get_default_trans(void)
 {
 	struct p9_trans_module *t, *found = NULL;
@@ -119,3 +108,4 @@ struct p9_trans_module *v9fs_get_default_trans(void)
 	mtx_unlock_spin(&v9fs_trans_lock);
 	return found;
 }
+#endif // no default functions for now.

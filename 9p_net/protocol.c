@@ -2,54 +2,36 @@
  * net/9p/protocol.c
  *
  * 9P Protocol Support Code
- *
- *  Copyright (C) 2008 by Eric Van Hensbergen <ericvh@gmail.com>
- *
- *  Base on code from Anthony Liguori <aliguori@us.ibm.com>
- *  Copyright (C) 2008 by IBM, Corp.
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License version 2
- *  as published by the Free Software Foundation.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to:
- *  Free Software Foundation
- *  51 Franklin Street, Fifth Floor
- *  Boston, MA  02111-1301  USA
+ * This file provides the standard fot the FS interactions with the Qemu interface as it can understand
+ * only this protocol.
  *
  */
 
-#include <linux/module.h>
-#include <linux/errno.h>
-#include <linux/kernel.h>
-#include <linux/uaccess.h>
-#include <linux/slab.h>
-#include <linux/sched.h>
-#include <linux/stddef.h>
-#include <linux/types.h>
-#include <linux/uio.h>
-#include <net/9p/9p.h>
-#include <net/9p/client.h>
-#include "protocol.h"
+#include <sys/types.h>
+#include "../9p.h"
+#include "../client.h"
+#include "../protocol.h"
 
-#include <trace/events/9p.h>
+#define cpu_to_le16(x) htole16(x)
+#define cpu_to_le32(x) htole32(x)
+#define cpu_to_le64(x) htole64(x)
+#define le16_to_cpu(x) le16toh(x)
+#define le32_to_cpu(x) le32toh(x)
+#define le64_to_cpu(x) le64toh(x)
+
+
+
 
 static int
 p9pdu_writef(struct p9_fcall *pdu, int proto_version, const char *fmt, ...);
 
 void p9stat_free(struct p9_wstat *stbuf)
 {
-	kfree(stbuf->name);
-	kfree(stbuf->uid);
-	kfree(stbuf->gid);
-	kfree(stbuf->muid);
-	kfree(stbuf->extension);
+	free(stbuf->name, strlen(stbuf->name));
+	free(stbuf->uid, sizeof(stbuf->uid));
+	free(stbuf->gid, sizeof(stbuf->gid));
+	free(stbuf->muid, sizeof(stbuf->muid));
+	free(stbuf->extension, sizeof(stbuf->extension));
 }
 
 size_t pdu_read(struct p9_fcall *pdu, void *data, size_t size)
@@ -160,7 +142,7 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				}
 				if (pdu_read(pdu, *sptr, len)) {
 					errcode = -EFAULT;
-					free(*sptr);
+					free(*sptr, sizeof(*sptr));
 					*sptr = NULL;
 				} else
 					(*sptr)[len] = 0;
@@ -244,9 +226,7 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				errcode = p9pdu_readf(pdu, proto_version,
 								"w", nwname);
 				if (!errcode) {
-					*wnames =
-					    kmalloc(sizeof(char *) * *nwname,
-						    GFP_NOFS);
+					*wnames = malloc(sizeof(char *) * *nwname);
 					if (!*wnames)
 						errcode = -ENOMEM;
 				}
@@ -270,9 +250,9 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 						int i;
 
 						for (i = 0; i < *nwname; i++)
-							kfree((*wnames)[i]);
+							free((*wnames)[i], sizeof(*wnames[i]);
 					}
-					kfree(*wnames);
+					free(*wnames, sizeof(*wnames));
 					*wnames = NULL;
 				}
 			}
@@ -288,9 +268,9 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				    p9pdu_readf(pdu, proto_version, "w", nwqid);
 				if (!errcode) {
 					*wqids =
-					    kmalloc(*nwqid *
+					    malloc(*nwqid *
 						    sizeof(struct p9_qid),
-						    GFP_NOFS);
+						    );
 					if (*wqids == NULL)
 						errcode = -ENOMEM;
 				}
@@ -310,7 +290,7 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				}
 
 				if (errcode) {
-					kfree(*wqids);
+					free(*wqids, sizeof(*wqids));
 					*wqids = NULL;
 				}
 			}
@@ -348,7 +328,6 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				return 0;
 			break;
 		default:
-			BUG();
 			break;
 		}
 
@@ -518,7 +497,6 @@ p9pdu_vwritef(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				return 0;
 			break;
 		default:
-			BUG();
 			break;
 		}
 
@@ -622,7 +600,7 @@ int p9dirent_read(struct p9_client *clnt, char *buf, int len,
 	}
 
 	strcpy(dirent->d_name, nameptr);
-	kfree(nameptr);
+	free(nameptr, sizeof(*nameptr));
 
 out:
 	return fake_pdu.offset;
