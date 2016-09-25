@@ -1,5 +1,9 @@
 //// ADD the headers which are needed here. Not Just everything.
-#include "../../transport.h"
+#include "../transport.h"
+#include "../9p.h"
+#include "../protocol.h"
+#include "../client.h"
+
 
 unsigned int p9_debug_level = 1;	/* feature-rific global debug level  */
 
@@ -8,9 +12,6 @@ void p9_debug(enum p9_debug_flags level, const char *func,
 {
 	struct va_format vaf;
 	va_list args;
-
-	if ((p9_debug_level & level) != level)
-		return;
 
 	va_start(args, fmt);
 
@@ -68,13 +69,14 @@ struct p9_trans_module *v9fs_get_trans_by_name(char *s)
 
 	mtx_lock_spin(&v9fs_trans_lock);
 
-	STAILQ_FOREACH(t, &v9fs_trans_list, list) {
+	/*STAILQ_FOREACH(t, &v9fs_trans_list, list) {
 		if (strcmp(t->name, s) == 0 ) {
 			found = t;
 			break;
 		}
-	}
-
+	}*/
+	
+	return &p9_virtio_trans;
 	mtx_unlock_spin(&v9fs_trans_lock);
 	return found;
 }

@@ -28,7 +28,7 @@
 
 #define P9_DEF_MIN_RESVPORT	(665U)
 #define P9_DEF_MAX_RESVPORT	(1023U)
-
+#include "../client.h"
 /**
  * struct p9_trans_module - transport module interface
  * @list: used to maintain a list of currently available transports

@@ -12,10 +12,17 @@
 #include "../9p.h"
 #include "../client.h"
 #include "../transport.h"
+#include "../protocol.h"
 
 #include <sys/module.h>
 #include <sys/sglist.h>
-#include <dev/virtio.h>
+#include <sys/queue.h>
+#include <machine/bus.h>
+#include <sys/bus.h>
+#include "../../virtfs_bhyve/sys/dev/virtio/virtio.h"
+#include "../../virtfs_bhyve/sys/dev/virtio/virtqueue.h"
+
+
 #include <sys/condvar.h>
 
 #define VIRTQUEUE_NUM	128
@@ -67,22 +74,17 @@ struct vchan_softc {
 	char *chan_name;
 
 	// tail queue head for channel list.
-	SLIST_ENTRY (vchan_softc) chan_list;
+	//SLIST_ENTRY (vchan_softc) chan_list;
 };
 
-static SLIST_HEAD (,vchan_softc) vchan_softc_list;
+//static SLIST_HEAD (,vchan_softc) vchan_softc_list;
 
-/* How many bytes left in this page. */
-static unsigned int rest_of_page(void *data)
-{
-	return PAGE_SIZE - offset_in_page(data);
-}
 
 /**
  * p9_virtio_close - reclaim resources of a channel
  * @client: client instance
  *
- * This reclaims a channel by freeing its resources and
+ * This reclaims a channel by p9_freeing its resources and
  * reseting its inuse flag.
  *
  */
@@ -94,6 +96,7 @@ static void p9_virtio_close(struct p9_client *client)
 	mtx_lock(&virtio_9p_lock);
 	if (chan)
 		chan->inuse = false;
+
 	mtx_unlock(&virtio_9p_lock);
 }
 
@@ -113,8 +116,7 @@ static int p9_virtio_cancel(struct p9_client *client, struct p9_req_t *req)
 static int
 p9_virtio_request(struct p9_client *client, struct p9_req_t *req)
 {
-	int err;
-	unsigned long flags;
+	int err, out, in;
 	struct vchan_softc *chan = client->trans;
 
 	p9_debug(P9_DEBUG_TRANS, "9p debug: virtio request\n");
@@ -125,14 +127,10 @@ req_retry:
 
 	/* Handle out VirtIO ring buffers */
 	out = sglist_append(chan->sg, req->tc->sdata, req->tc->size);
-	if (out)
-		sgs[out_sgs++] = chan->sg;
 
 	in = sglist_append(chan->sg, req->rc->sdata, req->rc->capacity);
-	if (in)
-		sgs[out_sgs + in_sgs++] = chan->sg + out;
 
-	err = virtqueue_enqueue(chan->vq, req, sgs, in, out);
+	err = virtqueue_enqueue(chan->vq, req, chan->sg, in, out);
 
 	// Retry mechanism for the requeue. We could either
 	// do it this way - Where we sleep in this context and
@@ -155,6 +153,7 @@ req_retry:
 	}
 
 	p9_debug(P9_DEBUG_TRANS, "virtio request kicked\n");
+	// We return back to the client and wait there for the submission.
 	return 0;
 }
 
@@ -213,15 +212,15 @@ static int p9_get_mapped_pages(struct vchan_softc *chan,
 		nr_pages = DIV_ROUND_UP((unsigned long)p + len, PAGE_SIZE) -
 			   (unsigned long)p / PAGE_SIZE;
 
-		*pages = kmalloc(sizeof(struct page *) * nr_pages, GFP_NOFS);
+		*pages = kp9_malloc(sizeof(struct page *) * nr_pages, GFP_NOFS);
 		if (!*pages)
 			return -ENOMEM;
 
 		*need_drop = 0;
 		p -= (*offs = offset_in_page(p));
 		for (index = 0; index < nr_pages; index++) {
-			if (is_vmalloc_addr(p))
-				(*pages)[index] = vmalloc_to_page(p);
+			if (is_vp9_malloc_addr(p))
+				(*pages)[index] = vp9_malloc_to_page(p);
 			else
 				(*pages)[index] = kmap_to_page(p);
 			p += PAGE_SIZE;
@@ -360,8 +359,8 @@ err_out:
 		/* wakeup anybody waiting for slots to pin pages */
 		wake_up(&vp_wq);
 	}
-	kfree(in_pages);
-	kfree(out_pages);
+	kp9_free(in_pages);
+	kp9_free(out_pages);
 	return err;
 }
 #endif 
@@ -416,13 +415,30 @@ p9_intr_complete(void *xsc)
 {
 	struct vchan_softc *chan;
 	struct virtqueue *vq;
+	struct p9_req_t *req;
 	//struct req_queue queue;
 
-	//TAIL_INIT(&queue);
 	chan = (struct vchan_softc *)xsc;
 	vq = chan->vq;
-	mtx_lock_spin(&chan->lock);
-again:
+
+    	while (1) {
+		mtx_lock_spin(&chan->lock);
+		req = virtqueue_dequeue(chan->vq, NULL);
+		if (req == NULL) {
+			mtx_unlock_spin(&chan->lock);
+			break;
+		}
+	}
+	chan->ring_bufs_avail = 1;
+ 	mtx_unlock_spin(&chan->lock);
+	/* Wakeup if anyone waiting for VirtIO ring space. */
+	cv_signal(&chan->submit_cv);
+	p9_client_cb(chan->client, req);
+}
+
+
+#if 0
+gain:
 	//p9_queue_completed(chan, &queue);
 
 	p9_client_cb(chan, req); 
@@ -433,11 +449,10 @@ again:
 	}
 
 	// Signal for submit queue.
-	cv_signal(&chan->submit_cv);
 //out:
- 	mtx_unlock_spin(&chan->lock);
 	//p9_done_completed(chan, &queue);
 }
+#endif 
 
 static int virtio_alloc_queue(struct vchan_softc *sc)
 {
@@ -461,16 +476,17 @@ static int virtio_alloc_queue(struct vchan_softc *sc)
 
 static int p9_virtio_probe(device_t dev)
 {
-    if (virtio_get_device_type(dev) != VIRTIO_P9FS)
+    if (virtio_get_device_type(dev) != 0x09) // This is the VIRTIO_9p dev
         return (ENXIO);
     device_set_desc(dev, "VirtIO Trans FS ");
 
     return (BUS_PROBE_DEFAULT); 
 }
 
+struct vchan_softc *global_ctx; // For now.. we ll
 static int p9_virtio_attach(device_t dev)
 {
-	__u16 name_len;
+	uint16_t name_len;
 	int err;
 	struct vchan_softc *chan;
 
@@ -478,56 +494,58 @@ static int p9_virtio_attach(device_t dev)
 	chan->vdev = dev;
 
 	/* We expect one virtqueue, for requests. */
-	chan->vq = virtio_alloc_queue(chan);
-	if (IS_ERR(chan->vq)) {
-		err = PTR_ERR(chan->vq);
-		goto out_free_vq;
+	err = virtio_alloc_queue(chan);
+
+	if (err < 0) {
+		goto out_p9_free_vq;
 	}
-	mtx_lock_init(&chan->lock);
+
+	mtx_init(&chan->lock, "chan_lock", NULL, MTX_SPIN);
 
 	chan->sg = sglist_alloc(VIRTQUEUE_NUM, M_NOWAIT);
 
 	if (chan->sg == NULL) {
-		error = ENOMEM;
-		device_printf(dev, "cannot allocate sglist\n");
-		goto fail;
+		err = ENOMEM;
+		printf("cannot allocate sglist\n");
+		goto out_p9_free_vq;
 	}
 
 	chan->inuse = false;
+	name_len = strlen("ravi");
     	// Name of the transport being used.
-	chan->chan_name = malloc(name_len);
+	chan->chan_name = p9_malloc(name_len);
 	if (!chan->chan_name) {
 		err = -ENOMEM;
-		goto out_free_vq;
+		goto out_p9_free_vq;
 	}
 
-	chan->name_len = name_len;
+	chan->chan_name_len = name_len;
+	chan->chan_name ="ravi"; // This will be replaced with the trans from mount
 
 	// Add to this wait queue which will later be woken up.
 	///TAILQ_INIT(&chan->vc_wq);
 	chan->ring_bufs_avail = 1;
 	/* Ceiling limit to avoid denial of service attacks */
-	//chan->p9_max_pages = nr_free_buffer_pages()/4;
+	//chan->p9_max_pages = nr_p9_free_buffer_pages()/4;
 
 	// Add all of them to the channel list so that we can create(mount) only to one.
 	mtx_lock(&virtio_9p_lock);
-	SLIST_INSERT_TAIL(&chan->chan_list, &vchan_softc_list);
+	//SLIST_INSERT_TAIL(&chan->chan_list, &vchan_softc_list);
 	mtx_unlock(&virtio_9p_lock);
 
-	error = virtio_setup_intr(dev, INTR_ENTROPY);
-	if (error) {
-		device_printf(dev, "cannot setup virtqueue interrupt\n");
-		goto fail;
+	err = virtio_setup_intr(dev, INTR_ENTROPY);
+	if (err) {
+		printf("cannot setup virtqueue interrupt\n");
+		goto out_p9_free_vq;
 	}
 	virtqueue_enable_intr(chan->vq);
+	global_ctx = chan;
 	return 0;
 
-out_free_tag:
-	free(chan->chan_name, name_len);
-out_free_vq:
+out_p9_free_vq:
+	p9_free(chan->chan_name, name_len);
 	/// Free the vq here otherwise it might leak.
-	free(chan, sizeof(*chan));
-fail:
+	p9_free(chan, sizeof(*chan));
 	return err;
 }
 
@@ -554,9 +572,9 @@ p9_virtio_create(struct p9_client *client, const char *devname)
 	int found = 0;
 
 	mtx_lock(&virtio_9p_lock);
-	STAILQ_FOREACH(chan, &vchan_softc_list, chan_list) {
-		if (!strncmp(devname, chan->name, chan->name_len) &&
-		    strlen(devname) == chan->name_len) {
+	/*STAILQ_FOREACH(chan, &vchan_softc_list, chan_list) {
+		if (!strncmp(devname, chan->chan_name, chan->chan_name_len) &&
+		    strlen(devname) == chan->chan_name_len) {
 			if (!chan->inuse) {
 				chan->inuse = true;
 				found = 1;
@@ -564,11 +582,15 @@ p9_virtio_create(struct p9_client *client, const char *devname)
 			}
 			ret = -EBUSY;
 		}
-	}
+	}*/
+	// This hack will be cleaned up after POC with SLISTs.
+	if (global_ctx)
+	chan = global_ctx; 
+	
 	mtx_unlock(&virtio_9p_lock);
 
 	if (!found) {
-		pr_err("no channels available for device %s\n", devname);
+		printf("no channels available for device %s\n", devname);
 		return ret;
 	}
 
@@ -585,33 +607,29 @@ p9_virtio_create(struct p9_client *client, const char *devname)
  *
  */
 
-static void p9_virtio_remove(device_t vdev)
+static int p9_virtio_remove(device_t vdev)
 {
-	struct vchan_softc *chan = vdev->priv;
-	unsigned long warning_time;
+	struct vchan_softc *chan = device_get_softc(vdev);
 
 	mtx_lock(&virtio_9p_lock);
 
 	/* Remove self from list so we don't get new users. */
-	SLIST_REMOVE(&vchan_softc_list, chan, vchan_softc, chan_list);
-	warning_time = jiffies;
+	//SLIST_REMOVE(&vchan_softc_list, chan, vchan_softc, chan_list);
 
-	/* Wait for existing users to close. */
+	/* Wait for existing users to close. 
 	while (chan->inuse) {
 		mtx_unlock(&virtio_9p_lock);
 		msleep(250);
-		if (time_after(jiffies, warning_time + 10 * HZ)) {
-			printf("p9_virtio_remove: waiting for device in use.\n");
-			warning_time = jiffies;
-		}
 		mtx_lock(&virtio_9p_lock);
 	}
-
+	*/
+	chan->inuse = false; 
 	mtx_unlock(&virtio_9p_lock);
 
 	// AGain call the vq deletion here otherwise it might leak.
 
-	free(chan->name, strlen(chan->name));
+	p9_free(chan->chan_name, strlen(chan->chan_name));
+	return 0;
 }
 
 #if 0 // No unnecessary stuff.
@@ -640,22 +658,41 @@ static struct p9_trans_module p9_virtio_trans = {
 	 */
 ///	.maxsize = PAGE_SIZE * (VIRTQUEUE_NUM - 3),
 	.def = 1,
-	.owner = THIS_MODULE,
 };
 
-static device_method_t p9_virtio_mthds = {
+// move it to mod.c after POC and then get the list setting right later.
+struct p9_trans_module *v9fs_get_trans_by_name(char *s)
+{
+	//struct p9_trans_module *t, *found = NULL;
+
+	//mtx_lock_spin(&v9fs_trans_lock);
+	(void)s;
+
+	/*STAILQ_FOREACH(t, &v9fs_trans_list, list) {
+		if (strcmp(t->name, s) == 0 ) {
+			found = t;
+			break;
+		}
+	}*/
+	
+	//mtx_unlock_spin(&v9fs_trans_lock);
+	return &p9_virtio_trans;
+	//return found;
+}
+
+static device_method_t p9_virtio_mthds[] = {
     /* Device methods. */
     DEVMETHOD(device_probe,     p9_virtio_probe),
     DEVMETHOD(device_attach,    p9_virtio_attach),
+    DEVMETHOD(device_detach,    p9_virtio_remove),
 #if 0
-    DEVMETHOD(device_detach,    vtblk_detach),
     DEVMETHOD(device_suspend,   vtblk_suspend),
     DEVMETHOD(device_resume,    vtblk_resume),
     DEVMETHOD(device_shutdown,  vtblk_shutdown),
     /* VirtIO methods. */
     DEVMETHOD(virtio_config_change, vtblk_config_change),
-    DEVMETHOD_END
 #endif
+    DEVMETHOD_END
 };
 
 static driver_t p9_virtio_drv = {
@@ -663,9 +700,7 @@ static driver_t p9_virtio_drv = {
     p9_virtio_mthds,
     sizeof(struct vchan_softc)
 };
-
-MODULE_VERSION(p9_virtio, 1);
-MODULE_DEPEND(p9_virtio, virtio, 1, 1, 1);
+static devclass_t p9_virtio_class;
 
 static int
 virtio_9p_modevent(module_t mod, int type, void *unused)
@@ -676,12 +711,12 @@ virtio_9p_modevent(module_t mod, int type, void *unused)
 
     switch (type) {
         case MOD_LOAD: {
-            INIT_LIST_HEAD(&vchan_softc_list);
-	        v9fs_register_trans(&p9_virtio_trans);
+            //INIT_LIST_HEAD(&vchan_softc_list);
+	       //v9fs_register_trans(&p9_virtio_trans);
             break;
         }
         case MOD_UNLOAD: { 
-	        v9fs_unregister_trans(&p9_virtio_trans);
+	       //v9fs_unregister_trans(&p9_virtio_trans);
             break;
         }
         case MOD_SHUTDOWN:
@@ -693,5 +728,7 @@ virtio_9p_modevent(module_t mod, int type, void *unused)
     return (error);
 }
 
-MODULE_AUTHOR("Raviprakash Darbha <raviprakash.darbha@gmail.com>");
-MODULE_DESCRIPTION("Virtio 9p Transport");
+DRIVER_MODULE(virtio_blk, virtio_pci, p9_virtio_drv, p9_virtio_class, 
+	virtio_9p_modevent, 0);
+MODULE_VERSION(p9_virtio, 1);
+MODULE_DEPEND(p9_virtio, virtio, 1, 1, 1);
