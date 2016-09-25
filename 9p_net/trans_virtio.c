@@ -8,15 +8,12 @@
  *
  */
 
-#include <sys/module.h>
 #include <sys/errno.h>
-#include <sys/kernel.h>
-#include <sys/uaccess.h>
-#include <sys/file.h>
 #include "../9p.h"
 #include "../client.h"
 #include "../transport.h"
 
+#include <sys/module.h>
 #include <sys/sglist.h>
 #include <dev/virtio.h>
 #include <sys/condvar.h>

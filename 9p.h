@@ -26,8 +26,10 @@
  * These flags are passed at mount time to turn on various levels of
  * verbosity and tracing which will be output to the system logs.
  */
+#include <sys/types.h>
 
 #define u8 uint8_t
+#define u_int uint32_t
 #define u16 uint16_t
 #define u32 uint32_t 
 #define u64 uint64_t
