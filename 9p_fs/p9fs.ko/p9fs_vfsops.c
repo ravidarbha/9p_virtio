@@ -156,85 +156,6 @@ out:
 	return (error);
 }
 
-static void
-p9fs_setsockopt(struct socket *so, int sopt_name)
-{
-	struct sockopt sopt = { 0 };
-	int one = 1;
-
-	sopt.sopt_dir = SOPT_SET;
-	sopt.sopt_level = SOL_SOCKET;
-	sopt.sopt_name = sopt_name;
-	sopt.sopt_val = &one;
-	sopt.sopt_valsize = sizeof(one);
-	sosetopt(so, &sopt);
-}
-
-static int
-p9fs_client_upcall(struct socket *so, void *arg, int waitflag __unused)
-{
-	struct p9fsmount *p9mp = arg;
-
-	p9fs_msg_recv(&p9mp->p9_session);
-	return (SU_OK);
-}
-
-/*
- * XXX Need to implement reconnecting as necessary.  If that were to be
- *     needed, most likely all current vnodes would have to be renegotiated
- *     or otherwise invalidated (a la NFS "stale file handle").
- */
-static int
-p9fs_connect(struct mount *mp)
-{
-	struct p9fsmount *p9mp = VFSTOP9(mp);
-	struct p9fs_session *p9s = &p9mp->p9_session;
-	struct socket *so;
-	int error;
-
-	error = socreate(p9s->p9s_sockaddr.sa_family, &p9s->p9s_sock,
-	    p9s->p9s_socktype, p9s->p9s_proto, curthread->td_ucred, curthread);
-	if (error != 0) {
-		vfs_mount_error(mp, "socreate");
-		goto out;
-	}
-
-	so = p9s->p9s_sock;
-	error = soconnect(so, &p9s->p9s_sockaddr, curthread);
-	SOCK_LOCK(so);
-	while ((so->so_state & SS_ISCONNECTING) && so->so_error == 0) {
-		error = msleep(&so->so_timeo, SOCK_MTX(so), PSOCK | PCATCH,
-		    "connec", 0);
-		if (error)
-			break;
-	}
-	if (error == 0) {
-		error = so->so_error;
-		so->so_error = 0;
-	}
-	SOCK_UNLOCK(so);
-	if (error) {
-		vfs_mount_error(mp, "soconnect");
-		if (error == EINTR)
-			so->so_state &= ~SS_ISCONNECTING;
-		goto out;
-	}
-
-	if (so->so_proto->pr_flags & PR_CONNREQUIRED)
-		p9fs_setsockopt(so, SO_KEEPALIVE);
-	if (so->so_proto->pr_protocol == IPPROTO_TCP)
-		p9fs_setsockopt(so, TCP_NODELAY);
-
-	SOCKBUF_LOCK(&so->so_rcv);
-	soupcall_set(so, SO_RCV, p9fs_client_upcall, p9mp);
-	SOCKBUF_UNLOCK(&so->so_rcv);
-
-	error = 0;
-
-out:
-	return (error);
-}
-
 static int
 p9fs_unmount(struct mount *mp, int mntflags)
 {
@@ -273,71 +194,128 @@ out:
 /* For the root vnode's vnops. */
 extern struct vop_vector p9fs_vnops;
 
-int 
-p9fs_mountfs(struct vnode *devp, struct mount *mp, struct thread *thread)
-{
+static const char *p9_opts[] = { "acls", "async", "noatime", "noclusterr",
+    "noclusterw", "noexec", "export", "force", "from", "groupquota",
+    "multilabel", "nfsv4acls", "fsckpid", "snapshot", "nosuid", "suiddir",
+    "nosymfollow", "sync", "union", "userquota", NULL };
 
+#if 0 
+/* A Plan9 node. */
+struct p9fs_node {
+        uint32_t p9n_fid;
+        uint32_t p9n_ofid;
+        uint32_t p9n_opens;
+        struct p9fs_qid p9n_qid;
+        struct vnode *p9n_vnode;
+        struct p9fs_session *p9n_session;
+};
 
-}
+#define MAXUNAMELEN     32
+struct p9fs_session {
+
+     unsigned char flags;
+     unsigned char nodev;
+     unsigned short debug;
+     unsigned int afid;
+     unsigned int cache;
+     // These look important .
+     struct mount *p9s_mount;
+     struct p9fs_node p9s_rootnp;
+     char *uname;        /* user name to mount as */
+     char *aname;        /* name of remote hierarchy being mounted */
+     unsigned int maxdata;   /* max data for client interface */
+     kuid_t dfltuid;     /* default uid/muid for legacy support */
+     kgid_t dfltgid;     /* default gid for legacy support */
+     kuid_t uid;     /* if ACCESS_SINGLE, the uid that has access */
+     struct p9_client *clnt; /* 9p client */
+     struct list_head slist; /* list of sessions registered with v9fs */
+     mtx_lock p9s_lock;
+
+#endif 
 
 static int
 p9fs_mount(struct mount *mp)
 {
 	struct p9fsmount *p9mp;
 	struct p9fs_session *p9s;
+	struct p9_fid *fid; // This typically has everything needed.
+	struct p9_wstat st;
 	int error;
 
-	error = EINVAL;
+	/* No support for UPDATe for now */
+	if (mp->mnt_flag & MNT_UPDATE)
+		return EOPNOTSUPP;
+
 	if (vfs_filteropt(mp->mnt_optnew, p9_opts))
 		goto out;
 
-    td = curthread;
+	fspec = vfs_getopts(mp->mnt_optnew, "from", &error);
+        if (error)
+                return (error);
+
+	td = curthread;
 
 	/* Allocate and initialize the private mount structure. */
 	p9mp = malloc(sizeof (struct p9fsmount), M_P9MNT, M_WAITOK | M_ZERO);
 	mp->mnt_data = p9mp;
 	p9mp->p9_mountp = mp;
-    // This is creating the client instance along with the session pointer.
-	p9fs_init_session(mp);
+    	// This is creating the client instance along with the session pointer.
+	fid = p9fs_init_session(mp);
 	p9s = &p9mp->p9_session;
 	p9s->p9s_mount = mp;
 
 
-    // Get fspec from this
+    	// Get fspec from this
 	error = p9fs_mount_parse_opts(mp);
 	if (error != 0)
 		goto out;
 
-    /*
-     ** Not an update, or updating the name: look up the name
-     ** and verify that it refers to a sensible disk device.
-     **/
-    NDINIT(&ndp, LOOKUP, FOLLOW | LOCKLEAF, UIO_SYSSPACE, fspec, td);
-    if ((error = namei(&ndp)) != 0)
-        return (error);
-    NDFREE(&ndp, NDF_ONLY_PNBUF);
-    devvp = ndp.ni_vp;
-    if (!vn_isdisk(devvp, &error)) {
-        vput(devvp);
-        return (error);
-    }
+    	/*
+     	** Not an update, or updating the name: look up the name
+     	** and verify that it refers to a sensible disk device.
+     	**/
+    	NDINIT(&ndp, LOOKUP, FOLLOW | LOCKLEAF, UIO_SYSSPACE, fspec, td);
+    	if ((error = namei(&ndp)) != 0)
+        	return (error);
+    	NDFREE(&ndp, NDF_ONLY_PNBUF);
+    	devvp = ndp.ni_vp;
+    	if (!vn_isdisk(devvp, &error)) {
+        	vput(devvp);
+        	return (error);
+    	}
 
-    /*
-     ** If mount by non-root, then verify that user has necessary
-     ** permissions on the device.
-     **/
-    accmode = VREAD;
-    if ((mp->mnt_flag & MNT_RDONLY) == 0)
-         accmode |= VWRITE;
-         error = VOP_ACCESS(devvp, accmode, td->td_ucred, td);
-         if (error)
-            error = priv_check(td, PRIV_VFS_MOUNT_PERM);
-         if (error) {
-              vput(devvp);
-             return (error);
-    }
+	/* Determine if type of source file is supported (VREG or VCHR) */
+    	/*
+     	** If mount by non-root, then verify that user has necessary
+     	** permissions on the device.
+     	**/
 
-    9pfs_mountfs(devpp, mp, td);
+	if (devvp->v_type == VREG) {
+		DROP_GIANT();
+		error = vn_open_vnode(devvp, flags, td->td_ucred, td, NULL);
+		PICKUP_GIANT();
+	} else if (vn_isdisk(devvp, &error) == 0) {
+		error = VOP_ACCESS(devvp, VREAD, td->td_ucred, td);
+		if (error != 0)
+			error = priv_check(td, PRIV_VFS_MOUNT_PERM);
+	}
+	if (error != 0) {
+		vput(devvp);
+		return error;
+	}
+
+	
+	// Done with the Pre mount phase. Do the actual mount.
+	// fid is the fid for the root.
+	// Init the structures of rootnp.
+	p9s->p9s_rootnp.p9_vnode = devvp;
+	p9s->p9s_rootnp.p9n_fid = fid;
+
+	// Send a statfs on the fid to retreive the qid.
+	p9_client_wstat(fid, &st);	
+	p9s->p9s_rootnp.p9n_qid = st.qid;
+	
+	return 0;
 out:
 	if (error != 0)
 		(void) p9fs_unmount(mp, MNT_FORCE);

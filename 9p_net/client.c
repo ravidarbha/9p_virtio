@@ -640,6 +640,7 @@ static struct p9_fid *p9_fid_create(struct p9_client *clnt)
 
 	p9_debug(P9_DEBUG_FID, "clnt %p\n", clnt);
 	fid = p9_malloc(sizeof(struct p9_fid));
+
 	if (!fid)
 		return NULL;
 
@@ -667,7 +668,7 @@ static void p9_fid_destroy(struct p9_fid *fid)
 
 	p9_debug(P9_DEBUG_FID, "fid %d\n", fid->fid);
 	clnt = fid->clnt;
-	delete_unrhdr(clnt->fidpool);
+	///delete_unrhdr(clnt->fidpool);
 	mtx_lock_spin(&clnt->lock);
 	//SLIST_REMOVE(&fid->flist);
 	mtx_unlock_spin(&clnt->lock);
@@ -871,7 +872,7 @@ struct p9_fid *p9_client_attach(struct p9_client *clnt, struct p9_fid *afid,
 
 	memmove(&fid->qid, &qid, sizeof(struct p9_qid));
 
-	p9_free_req( req);
+	p9_free_req(req);
 	return fid;
 
 error:
@@ -1422,7 +1423,7 @@ struct p9_wstat *p9_client_stat(struct p9_fid *fid)
 	return ret;
 
 error:
-	free(ret, M_TEMP);
+	free(req, M_TEMP);
 	return NULL;
 }
 

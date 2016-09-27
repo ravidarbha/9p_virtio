@@ -631,8 +631,8 @@ struct p9fs_session {
      unsigned int afid;
      unsigned int cache;
      // These look important .
-	 struct mount *p9s_mount;
-	 struct p9fs_node p9s_rootnp;
+     struct mount *p9s_mount;
+     struct p9fs_node p9s_rootnp;
      char *uname;        /* user name to mount as */
      char *aname;        /* name of remote hierarchy being mounted */
      unsigned int maxdata;   /* max data for client interface */
@@ -642,7 +642,7 @@ struct p9fs_session {
      struct p9_client *clnt; /* 9p client */
      struct list_head slist; /* list of sessions registered with v9fs */
      // use the below lock for protection.
-	 mtx_lock p9s_lock;
+     mtx_lock p9s_lock;
 };
 
 
