@@ -1,31 +1,3 @@
-/*-
- * Copyright (c) 2015 Will Andrews.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS        
- * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED   
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR       
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS        
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR           
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF             
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS         
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN          
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)          
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       
- * POSSIBILITY OF SUCH DAMAGE.                                                      
- */
-
-/*
- * Plan9 filesystem (9P2000.u) node operations implementation.
  */
 
 #include <sys/cdefs.h>
@@ -48,6 +20,7 @@ __FBSDID("$FreeBSD$");
 struct vop_vector p9fs_vnops;
 static MALLOC_DEFINE(M_P9NODE, "p9fs_node", "p9fs node structures");
 
+#if 0 // Onnly supported file ops wil be present for now.
 /*
  * Get a p9node.  Nodes are represented by (fid, qid) tuples in 9P2000.
  * Fids are assigned by the client, while qids are assigned by the server.
@@ -187,13 +160,15 @@ p9fs_mknod(struct vop_mknod_args *ap)
 	VNOP_UNIMPLEMENTED;
 }
 
+#endif 
+
 static int
 p9fs_open(struct vop_open_args *ap)
 {
 	int error;
 	struct p9fs_node *np = ap->a_vp->v_data;
-	struct vattr vattr;
 	uint32_t fid = np->p9n_fid;
+	struct wstat *stat;
 
 	printf("%s(fid %u)\n", __func__, np->p9n_fid);
 
@@ -255,7 +230,7 @@ p9fs_open(struct vop_open_args *ap)
 	}
 
 	/* XXX Can this be cached in some reasonable fashion? */
-	error = p9fs_client_stat(np->p9n_session, np->p9n_fid, &vattr);
+	stat  = p9_client_stat(np->p9n_fid);
 	if (error != 0)
 		return (error);
 
@@ -270,19 +245,19 @@ p9fs_open(struct vop_open_args *ap)
 	 */
 	if (ap->a_vp->v_type == VDIR) {
 		if (np->p9n_ofid == 0) {
-			np->p9n_ofid = p9fs_getfid(np->p9n_session);
+			np->p9n_ofid = p9_fid_create(clnt);
 
-			error = p9fs_client_walk(np->p9n_session, np->p9n_fid,
-			    &np->p9n_ofid, 0, NULL, &np->p9n_qid);
+			/*ofid is the open fid for this file.*/
+			np->p9n_ofid = p9_client_walk(np->p9n_fid,
+			     0, NULL, 1); /* CLone the fid here.*/
 			if (error != 0) {
 				np->p9n_ofid = 0;
 				return (error);
 			}
 		}
-		fid = np->p9n_ofid;
 	}
 
-	error = p9fs_client_open(np->p9n_session, fid, ap->a_mode);
+	error = p9_client_open(fid, ap->a_mode);
 	if (error == 0) {
 		np->p9n_opens = 1;
 		vnode_create_vobject(ap->a_vp, vattr.va_bytes, ap->a_td);

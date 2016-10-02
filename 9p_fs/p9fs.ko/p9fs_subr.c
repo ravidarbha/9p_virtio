@@ -60,7 +60,7 @@ static MALLOC_DEFINE(M_P9REQ, "p9fsreq", "Request structures for p9fs");
  *
  */
 
-void
+struct p9_fid *
 p9fs_init_session(struct mount *mp)
 {
     struct p9_fid *fid;
@@ -72,12 +72,12 @@ p9fs_init_session(struct mount *mp)
     p9s->uid = INVALID_UID;
     p9s->dfltuid = V9FS_DEFUID;
     p9s->dfltgid = V9FS_DEFGID;
-    // Create the clnt, ada func pointers.
+
     rc = p9_client_create(mp);
 
     if (rc) {
         p9_debug(P9_DEBUG_ERROR, "problem initializing 9p client\n");
-        goto err_bdi;
+        goto fail;
     }
     p9s->flags = V9FS_ACCESS_USER;
     if (p9_is_proto_dotl(p9s->clnt)) {
@@ -88,42 +88,17 @@ p9fs_init_session(struct mount *mp)
         p9s->flags |= V9FS_PROTO_2000U;
     }
 
-    if (rc < 0)
-        goto err_clnt;
-
     p9s->maxdata = p9s->clnt->msize - P9_IOHDRSZ;
-
-    if (!v9fs_proto_dotl(p9s) &&
-            ((p9s->flags & V9FS_ACCESS_MASK) == V9FS_ACCESS_CLIENT)) {
-
-        /*
-         *          * We support ACCESS_CLIENT only for dotl.
-         *                   * Fall back to ACCESS_USER
-         *                            */
-        p9s->flags &= ~V9FS_ACCESS_MASK;
-        p9s->flags |= V9FS_ACCESS_USER;
-    }
-
-    /*FIXME !! */
-    /* for legacy mode, fall back to V9FS_ACCESS_ANY */
-    if (!(v9fs_proto_dotu(p9s) || v9fs_proto_dotl(p9s)) &&
-            ((p9s->flags&V9FS_ACCESS_MASK) == V9FS_ACCESS_USER)) {
-
-        p9s->flags &= ~V9FS_ACCESS_MASK;
-        p9s->flags |= V9FS_ACCESS_ANY;
-        p9s->uid = INVALID_UID;
-    }
 
     fid = p9_client_attach(p9s->clnt, NULL, p9s->uname, INVALID_UID,
 	p9s->aname);
 
-    if (IS_ERR(fid)) {
+    if (fid == NULL) {
 
-        rc = PTR_ERR(fid);
-
+        rc = -ENOMEM;
         p9_debug(P9_DEBUG_ERROR, "cannot attach\n");
 
-        goto err_clnt;
+        goto fail;
 
     }
     if ((p9s->flags & V9FS_ACCESS_MASK) == V9FS_ACCESS_SINGLE)
@@ -131,63 +106,40 @@ p9fs_init_session(struct mount *mp)
     else
         fid->uid = INVALID_UID;
 
-#ifdef CONFIG_9P_FSCACHE
-
-    /* register the session for caching */
-    v9fs_cache_session_get_cookie(p9s);
-#endif
-    mtx_lock_spin(&v9fs_sessionlist_lock);
-    list_add(&p9s->slist, &v9fs_sessionlist);
-    mtx_unlock_spin(&v9fs_sessionlist_lock);
-
     return fid;
 
-err_clnt:
+fail:
 
-   p9_client_destroy(p9s->clnt);
-err_names:
-   
+   if (p9s->clnt) /* go aheaad and destroy it */
+	p9_client_destroy(p9s->clnt);
+
    free(p9s->uname);
 
    free(p9s->aname);
 
-   return ERR_PTR(rc);
+   return NULL;
 }
 
 void
-p9fs_close_session(struct p9fs_session *p9s)
+p9fs_close_session(struct mount *mp)
 {
-	mtx_lock(&p9s->p9s_lock);
-	if (p9s->p9s_sock != NULL) {
-		struct p9fs_recv *p9r = &p9s->p9s_recv;
-		struct sockbuf *rcv = &p9s->p9s_sock->so_rcv;
+	struct p9fs_session *p9s;
+	struct p9mount *p9mp;
 
-		p9s->p9s_state = P9S_CLOSING;
-		mtx_unlock(&p9s->p9s_lock);
-
-		SOCKBUF_LOCK(rcv);
-		soupcall_clear(p9s->p9s_sock, SO_RCV);
-		while (p9r->p9r_soupcalls > 0)
-			(void) msleep(&p9r->p9r_soupcalls, SOCKBUF_MTX(rcv),
-			    0, "p9rcvup", 0);
-		SOCKBUF_UNLOCK(rcv);
-		(void) soclose(p9s->p9s_sock);
-
-		/*
-		 * XXX Can there really be any such threads?  If vflush()
-		 *     has completed, there shouldn't be.  See if we can
-		 *     remove this and related code later.
-		 */
-		mtx_lock(&p9s->p9s_lock);
-		while (p9s->p9s_threads > 0)
-			msleep(p9s, &p9s->p9s_lock, 0, "p9sclose", 0);
-		p9s->p9s_state = P9S_CLOSED;
-	}
-	mtx_unlock(&p9s->p9s_lock);
+  	p9mp = mp->mnt_data;
+    	p9s = &p9mp->p9_session;
 
 	/* Would like to explicitly clunk ROOTFID here, but soupcall gone. */
-	delete_unrhdr(p9s->p9s_fids);
-	delete_unrhdr(p9s->p9s_tags);
+
+	/* do the reverse order of the init sessin  */
+	/* Detach the root fid.*/
+	p9_client_detach(p9s->p9s_rootnp.p9_fid);
+	/* clean up the clnt structure. */
+	p9_client_destroy(p9s->clnt);
+	/* Clean up the sesssion pointer.*/
+	free(p9s, sizeof(*p9s));
+	/* CLeanup the mount structure. */
+	free(p9mp, sizeof(*p9mp));
 }
 
 /* FID & tag management.  Makes use of subr_unit, since it's the best fit. */

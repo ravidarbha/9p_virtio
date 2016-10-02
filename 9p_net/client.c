@@ -766,7 +766,7 @@ p9_client_create(const char *dev_name, struct mount *mp)
 			 "No transport defined or default transport\n");
 		goto bail_out;
 	}
-	
+
 	// Init the request_pool .
 	//allocator_pool_init(clnt);
 
@@ -881,7 +881,34 @@ error:
 	return NULL;
 }
 
-#if 0 
+/* This is client_detach. */
+int p9_client_detach(struct p9_fid *fid)
+{
+	int err;
+	struct p9_client *clnt;
+	struct p9_req_t *req;
+
+	p9_debug(P9_DEBUG_9P, ">>> TREMOVE fid %d\n", fid->fid);
+	err = 0;
+	clnt = fid->clnt;
+
+	req = p9_client_rpc(clnt, P9_TREMOVE, "d", fid->fid);
+	if (req == NULL) {
+		err = -ENOMEM;
+		goto error;
+	}
+
+	p9_debug(P9_DEBUG_9P, "<<< RREMOVE fid %d\n", fid->fid);
+
+	p9_free_req(clnt, req);
+error:
+	if (err == -ERESTARTSYS)
+		p9_client_clunk(fid);
+	else
+		p9_fid_destroy(fid);
+	return err;
+}
+
 struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 		char **wnames, int clone)
 {
@@ -897,8 +924,8 @@ struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 	clnt = oldfid->clnt;
 	if (clone) {
 		fid = p9_fid_create(clnt);
-		if (IS_ERR(fid)) {
-			err = PTR_ERR(fid);
+		if (fid == NULL) {
+			err = -ENOMEM;
 			fid = NULL;
 			goto error;
 		}
@@ -907,20 +934,18 @@ struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 	} else
 		fid = oldfid;
 
-
 	p9_debug(P9_DEBUG_9P, ">>> TWALK fids %d,%d nwname %ud wname[0] %s\n",
 		 oldfid->fid, fid->fid, nwname, wnames ? wnames[0] : NULL);
 
 	req = p9_client_rpc(clnt, P9_TWALK, "ddT", oldfid->fid, fid->fid,
 								nwname, wnames);
-	if (IS_ERR(req)) {
-		err = PTR_ERR(req);
+	if (req == NULL) {
+		err = -ENOMEM;
 		goto error;
 	}
 
 	err = p9pdu_readf(req->rc, clnt->proto_version, "R", &nwqids, &wqids);
 	if (err) {
-		trace_9p_protocol_dump(clnt, req->rc);
 		p9_free_req(clnt, req);
 		goto clunk_fid;
 	}
@@ -956,53 +981,11 @@ error:
 	if (fid && (fid != oldfid))
 		p9_fid_destroy(fid);
 
-	return ERR_PTR(err);
+	return NULL;
 }
 
-int p9_client_open(struct p9_fid *fid, int mode)
-{
-	int err;
-	struct p9_client *clnt;
-	struct p9_req_t *req;
-	struct p9_qid qid;
-	int iounit;
 
-	clnt = fid->clnt;
-	p9_debug(P9_DEBUG_9P, ">>> %s fid %d mode %d\n",
-		p9_is_proto_dotl(clnt) ? "TLOPEN" : "TOPEN", fid->fid, mode);
-	err = 0;
-
-	if (fid->mode != -1)
-		return -EINVAL;
-
-	if (p9_is_proto_dotl(clnt))
-		req = p9_client_rpc(clnt, P9_TLOPEN, "dd", fid->fid, mode);
-	else
-		req = p9_client_rpc(clnt, P9_TOPEN, "db", fid->fid, mode);
-	if (IS_ERR(req)) {
-		err = PTR_ERR(req);
-		goto error;
-	}
-
-	err = p9pdu_readf(req->rc, clnt->proto_version, "Qd", &qid, &iounit);
-	if (err) {
-		trace_9p_protocol_dump(clnt, req->rc);
-		goto free_and_error;
-	}
-
-	p9_debug(P9_DEBUG_9P, "<<< %s qid %x.%llx.%x iounit %x\n",
-		p9_is_proto_dotl(clnt) ? "RLOPEN" : "ROPEN",  qid.type,
-		(unsigned long long)qid.path, qid.version, iounit);
-
-	fid->mode = mode;
-	fid->iounit = iounit;
-
-free_and_error:
-	p9_free_req(clnt, req);
-error:
-	return err;
-}
-
+#if 0 
 int p9_client_create_dotl(struct p9_fid *ofid, char *name, u32 flags, u32 mode,
 		kgid_t gid, struct p9_qid *qid)
 {
@@ -1210,32 +1193,7 @@ error:
 	return err;
 }
 
-int p9_client_remove(struct p9_fid *fid)
-{
-	int err;
-	struct p9_client *clnt;
-	struct p9_req_t *req;
 
-	p9_debug(P9_DEBUG_9P, ">>> TREMOVE fid %d\n", fid->fid);
-	err = 0;
-	clnt = fid->clnt;
-
-	req = p9_client_rpc(clnt, P9_TREMOVE, "d", fid->fid);
-	if (IS_ERR(req)) {
-		err = PTR_ERR(req);
-		goto error;
-	}
-
-	p9_debug(P9_DEBUG_9P, "<<< RREMOVE fid %d\n", fid->fid);
-
-	p9_free_req(clnt, req);
-error:
-	if (err == -ERESTARTSYS)
-		p9_client_clunk(fid);
-	else
-		p9_fid_destroy(fid);
-	return err;
-}
 
 int p9_client_unlinkat(struct p9_fid *dfid, const char *name, int flags)
 {
@@ -1395,6 +1353,50 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
 }
 
 #endif //// 
+int p9_client_open(struct p9_fid *fid, int mode)
+{
+	int err;
+	struct p9_client *clnt;
+	struct p9_req_t *req;
+	struct p9_qid qid;
+	int iounit;
+
+	clnt = fid->clnt;
+	p9_debug(P9_DEBUG_9P, ">>> %s fid %d mode %d\n",
+		p9_is_proto_dotl(clnt) ? "TLOPEN" : "TOPEN", fid->fid, mode);
+	err = 0;
+
+	if (fid->mode != -1)
+		return -EINVAL;
+
+	if (p9_is_proto_dotl(clnt))
+		req = p9_client_rpc(clnt, P9_TLOPEN, "dd", fid->fid, mode);
+	else
+		req = p9_client_rpc(clnt, P9_TOPEN, "db", fid->fid, mode);
+	if (IS_ERR(req)) {
+		err = PTR_ERR(req);
+		goto error;
+	}
+
+	err = p9pdu_readf(req->rc, clnt->proto_version, "Qd", &qid, &iounit);
+	if (err) {
+		trace_9p_protocol_dump(clnt, req->rc);
+		goto free_and_error;
+	}
+
+	p9_debug(P9_DEBUG_9P, "<<< %s qid %x.%llx.%x iounit %x\n",
+		p9_is_proto_dotl(clnt) ? "RLOPEN" : "ROPEN",  qid.type,
+		(unsigned long long)qid.path, qid.version, iounit);
+
+	fid->mode = mode;
+	fid->iounit = iounit;
+
+free_and_error:
+	p9_free_req(clnt, req);
+error:
+	return err;
+}
+
 struct p9_wstat *p9_client_stat(struct p9_fid *fid)
 {
 	int err;

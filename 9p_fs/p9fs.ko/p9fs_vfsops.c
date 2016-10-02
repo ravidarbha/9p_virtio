@@ -1,30 +1,5 @@
 /*-
- * Copyright (c) 2015 Will Andrews.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS        
- * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED   
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR       
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS        
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR           
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF             
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS         
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN          
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)          
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       
- * POSSIBILITY OF SUCH DAMAGE.                                                      
- */
-
-/*
+*
  * Plan9 filesystem (9P2000.u) implementation.
  */
 
@@ -95,61 +70,6 @@ p9fs_mount_parse_opts(struct mount *mp)
 	if (mp->mnt_flag & MNT_UPDATE)
 		return (0);
 
-	ret = vfs_getopt(mp->mnt_optnew, "addr", (void **)&saddr,
-	    &p9s->p9s_sockaddr_len);
-	if (ret != 0 || saddr == NULL) {
-		vfs_mount_error(mp, "No server address");
-		goto out;
-	}
-	if (p9s->p9s_sockaddr_len > SOCK_MAXADDRLEN) {
-		error = ENAMETOOLONG;
-		goto out;
-	}
-	bcopy(saddr, &p9s->p9s_sockaddr, p9s->p9s_sockaddr_len);
-
-	ret = vfs_getopt(mp->mnt_optnew, "hostname", (void **)&opt, NULL);
-	if (ret != 0) {
-		vfs_mount_error(mp, "No remote host");
-		goto out;
-	}
-	ret = strlcpy(p9mp->p9_hostname, opt, sizeof (p9mp->p9_hostname));
-	if (ret >= sizeof (p9mp->p9_hostname)) {
-		error = ENAMETOOLONG;
-		goto out;
-	}
-
-	ret = vfs_getopt(mp->mnt_optnew, "path", (void **)&opt, NULL);
-	if (ret != 0) {
-		vfs_mount_error(mp, "No remote path");
-		goto out;
-	}
-	ret = strlcpy(p9s->p9s_path, opt, sizeof (p9s->p9s_path));
-	if (ret >= sizeof (p9s->p9s_path)) {
-		error = ENAMETOOLONG;
-		goto out;
-	}
-
-	fromnamelen = sizeof (mp->mnt_stat.f_mntfromname);
-	ret = snprintf(mp->mnt_stat.f_mntfromname, fromnamelen,
-	    "%s:%s", p9mp->p9_hostname, p9s->p9s_path);
-	if (ret >= fromnamelen) {
-		error = ENAMETOOLONG;
-		goto out;
-	}
-
-	if (vfs_getopt(mp->mnt_optnew, "proto", (void **)&opt, NULL) == 0) {
-		if (strcasecmp(opt, "tcp") == 0) {
-			p9s->p9s_socktype = SOCK_STREAM;
-			p9s->p9s_proto = IPPROTO_TCP;
-		} else if (strcasecmp(opt, "udp") == 0) {
-			p9s->p9s_socktype = SOCK_DGRAM;
-			p9s->p9s_proto = IPPROTO_UDP;
-		} else {
-			vfs_mount_error(mp, "illegal proto: %s", opt);
-			goto out;
-		}
-	}
-
 	error = 0;
 
 out:
@@ -183,7 +103,7 @@ p9fs_unmount(struct mount *mp, int mntflags)
 	if (error != 0)
 		goto out;
 
-	p9fs_close_session(&p9mp->p9_session);
+	p9fs_close_session(mp);
 	free(p9mp, M_P9MNT);
 	mp->mnt_data = NULL;
 
@@ -264,12 +184,6 @@ p9fs_mount(struct mount *mp)
 	p9s = &p9mp->p9_session;
 	p9s->p9s_mount = mp;
 
-
-    	// Get fspec from this
-	error = p9fs_mount_parse_opts(mp);
-	if (error != 0)
-		goto out;
-
     	/*
      	** Not an update, or updating the name: look up the name
      	** and verify that it refers to a sensible disk device.
@@ -314,6 +228,7 @@ p9fs_mount(struct mount *mp)
 	// Send a statfs on the fid to retreive the qid.
 	p9_client_wstat(fid, &st);	
 	p9s->p9s_rootnp.p9n_qid = st.qid;
+	p9s->p9s_rootnp.p9n_session = p9s; /*session ptr structure .*/
 	
 	return 0;
 out:
