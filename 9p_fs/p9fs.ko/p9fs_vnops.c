@@ -1,4 +1,3 @@
- */
 
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
@@ -255,6 +254,7 @@ p9fs_open(struct vop_open_args *ap)
 				return (error);
 			}
 		}
+		fid = np->p9n_ofid;
 	}
 
 	error = p9_client_open(fid, ap->a_mode);
@@ -288,6 +288,8 @@ p9fs_close(struct vop_close_args *ap)
 	return (0);
 }
 
+
+#if 0
 static int
 p9fs_access(struct vop_access_args *ap)
 {
@@ -335,14 +337,16 @@ out:
 	return (error);
 }
 
+#endif 
+
 static int
 p9fs_getattr(struct vop_getattr_args *ap)
 {
 	struct p9fs_node *np = ap->a_vp->v_data;
-	int error = p9fs_client_stat(np->p9n_session, np->p9n_fid, ap->a_vap);
+	ap->a_vap = p9_client_stat(np->p9n_fid, ap->a_vap);
 
 	printf("%s(fid %d) ret %d\n", __func__, np->p9n_fid, error);
-	return (error);
+	return 0;
 }
 
 static int
@@ -405,6 +409,7 @@ p9fs_symlink(struct vop_symlink_args *ap)
 	VNOP_UNIMPLEMENTED;
 }
 
+#if 0
 struct p9fs_readdir_state {
 	/*
 	 * The uio for use by p9fs_client_read(); local to p9fs_readdir().
@@ -422,35 +427,14 @@ struct p9fs_readdir_state {
 	int *rd_eofp;
 };
 
+
 static int
-p9fs_readdir_cb(void *mp, uint32_t count, size_t *offp, struct uio *arg)
+parse_cb(struct vop_readdir_args *ap, char *data)
 {
-	struct p9fs_readdir_state *rd = (struct p9fs_readdir_state *)arg;
-	struct vop_readdir_args *ap = rd->rd_ap;
 	struct p9fs_stat *p9stat;
 	struct dirent entry;
-	struct p9fs_str *str;
-	struct p9fs_stat_u_payload upay;
 	int error;
 	size_t end_off;
-
-	if (count == 0) {
-		*rd->rd_eofp = 1;
-		return (EJUSTRETURN);
-	}
-
-	/*
-	 * If this is the first run, pop off the stat[n] total byte header.
-	 * XXX See comments in p9fs_client_stat() about compliance of this.
-	 */
-#if 0
-	if (ap->a_uio->uio_offset == 0) {
-		uint16_t *totsz;
-
-		p9fs_msg_get(mp, offp, (void *)&totsz, sizeof (*totsz));
-		printf("%s: got totsz %d\n", __func__, *totsz);
-	}
-#endif
 
 	/*
 	 * Parse p9fs_stat structures out of the message until there is no
@@ -460,8 +444,6 @@ p9fs_readdir_cb(void *mp, uint32_t count, size_t *offp, struct uio *arg)
 	printf("%s: got count %d off %zu end_off %zd uio off %ld\n",
 	    __func__, count, *offp, end_off, ap->a_uio->uio_offset);
 	while (*offp < end_off && ap->a_uio->uio_resid > 0) {
-		p9fs_client_parse_u_stat(mp, &upay, offp);
-		p9stat = upay.upay_std.pay_stat;
 
 		entry.d_fileno = (uint32_t)(p9stat->stat_qid.qid_path >> 32);
 		entry.d_reclen = offsetof(struct dirent, d_name);
@@ -500,7 +482,6 @@ p9fs_readdir_cb(void *mp, uint32_t count, size_t *offp, struct uio *arg)
 			break;
 		}
 
-		/* Copy the entry name, ensuring the entry will fit. */
 		str = &upay.upay_std.pay_name;
 		entry.d_namlen = str->p9str_size;
 		if (entry.d_namlen > MAXNAMLEN) {
@@ -519,22 +500,15 @@ p9fs_readdir_cb(void *mp, uint32_t count, size_t *offp, struct uio *arg)
 		error = uiomove((void *)&entry, entry.d_reclen, ap->a_uio);
 		if (error != 0)
 			break;
-		rd->rd_count++;
-		rd->rd_uio.uio_offset += count;
-		/* Adjust caller's offset to match, due to smaller payloads. */
-		ap->a_uio->uio_offset = rd->rd_uio.uio_offset;
-		if (rd->rd_cookies != NULL) {
-			KASSERT(rd->rd_count <= *ap->a_ncookies,
-			    ("p9fs_readdir: cookies buffer too small"));
-			*rd->rd_cookies++ = ap->a_uio->uio_offset;
-		}
 		printf("%s loop iter end off %zu\n", __func__, *offp);
 	}
 	printf("%s end of loop\n", __func__);
 
 	return (error);
 }
+#endif //
 
+///readdir will be made synchronous.
 /*
  * Minimum length for a directory entry: size of fixed size section of
  * struct dirent plus a 1 byte C string for the name.
@@ -545,19 +519,17 @@ static int
 p9fs_readdir(struct vop_readdir_args *ap)
 {
 	struct p9fs_node *np = ap->a_vp->v_data;
-	struct p9fs_readdir_state rd = {};
+	struct p9_dirent curdirent;
 	struct iovec iov;
 	int error = 0;
 
 	if (ap->a_uio->uio_iov->iov_len <= 0)
 		return (EINVAL);
 
-	rd.rd_eofp = ap->a_eofflag != NULL ? ap->a_eofflag : &rd.rd_eof;
 	if (ap->a_ncookies != NULL) {
 		u_long ncookies = ap->a_uio->uio_resid / DIRENT_MIN_LEN + 1;
 		*ap->a_cookies = malloc(ncookies * sizeof (*ap->a_cookies),
 		    M_TEMP, M_WAITOK);
-		rd.rd_cookies = *ap->a_cookies;
 	}
 
 	/*
@@ -568,52 +540,29 @@ p9fs_readdir(struct vop_readdir_args *ap)
 	 * list completely fulfilled.  Set up the local uio before starting.
 	 * This local uio tracks the offset from the server's point of view.
 	 */
-	iov.iov_base = malloc(P9_MSG_MAX, M_TEMP, M_WAITOK);
-	rd.rd_uio.uio_iov = &iov;
-	rd.rd_uio.uio_segflg = UIO_SYSSPACE;
-	rd.rd_uio.uio_rw = UIO_READ;
-	rd.rd_uio.uio_iovcnt = 1;
-	rd.rd_uio.uio_td = curthread;
-	rd.rd_ap = ap;
 
-	for (;;) {
-		ssize_t resid = ap->a_uio->uio_resid;
-
-		rd.rd_uio.uio_resid = iov.iov_len = P9_MSG_MAX;
-		/*
-		 * XXX How to translate caller offset to internal offset?
-		 *     VOP_READDIR() will get called again until no more
-		 *     entries are found.  However, the caller's uio uses a
-		 *     different scale.
-		 *
-		 *     In ZFS, offset is merely the object count.  In UFS,
-		 *     it's the byte count; in that filesystem the entry
-		 *     size is a fixed quantity, so it's effectively also an
-		 *     object count.
-		 *
-		 *     However, on the plus side, what this means is that
-		 *     the caller's uio_offset is internal state only.
-		 *     Therefore, we can set it to whatever we want.
-		 */
-		rd.rd_uio.uio_offset = ap->a_uio->uio_offset;
-		error = p9fs_client_read(np->p9n_session, np->p9n_ofid,
-		    p9fs_readdir_cb, (struct uio *)&rd);
-		/* Stop on error or if no more entries can be sent to caller. */
-		if (error != 0 || ap->a_uio->uio_resid < DIRENT_MIN_LEN ||
-		    ap->a_uio->uio_resid == resid)
-			break;
-	}
-
-	/* See whether any entries made it into the return at all. */
-	if (error == EJUSTRETURN)
-		error = 0;
-	if (error == 0 && rd.rd_count == 0)
-		error = EINVAL;
-	if (error == 0) {
-		if (ap->a_ncookies != NULL)
-			*ap->a_ncookies = rd.rd_count;
-		ap->a_uio->uio_offset = rd.rd_uio.uio_offset;
-	}
+	/*
+	 * XXX How to translate caller offset to internal offset?
+	 *     VOP_READDIR() will get called again until no more
+	 *     entries are found.  However, the caller's uio uses a
+	 *     different scale.
+	 *
+	 *     In ZFS, offset is merely the object count.  In UFS,
+	 *     it's the byte count; in that filesystem the entry
+	 *     size is a fixed quantity, so it's effectively also an
+	 *     object count.
+	 *
+	 *     However, on the plus side, what this means is that
+	 *     the caller's uio_offset is internal state only.
+	 *     Therefore, we can set it to whatever we want.
+	 */
+	// do the client based readdir using the ofid for the file.
+	error = p9_client_readdir(np->p9n_ofid, (char *)data,
+		DIRENTRY_SIZE, 0);
+	/* Stop on error or if no more entries can be sent to caller. */
+	if (error != 0 || ap->a_uio->uio_resid < DIRENT_MIN_LEN ||
+	    ap->a_uio->uio_resid == resid)
+		return error;
 
 	/* Clean up as needed. */
 	if (error != 0 && ap->a_ncookies != NULL) {
@@ -621,6 +570,27 @@ p9fs_readdir(struct vop_readdir_args *ap)
 		*ap->a_ncookies = 0;
 		*ap->a_cookies = NULL;
 	}
+	/* Now run the loop in the buffer for the entry and give it back to the user.
+	 * in the uio.*/
+	//parse_cb(data, ap);
+	/// Call the dirent structure to read with buf directly.
+	while (1)
+	{
+		err = p9dirent_read(fid->clnt, data + offset,
+				    sizeof(curdirent), &curdirent);
+		if (err < 0) {
+			p9_debug(P9_DEBUG_VFS, "returned %d\n", err);
+			return -EIO;
+		}
+
+		/* All good, now send it to the caller. */
+		error = uiomove((void *)&curdirent, curdirent.d_reclen, ap->a_uio);
+		if (error != 0)
+			break;
+		printf("%s loop iter end off %zu\n", __func__, *offp);
+		offset += sizeof(curdirent);
+	}
+
 	free(iov.iov_base, M_TEMP);
 
 	printf("%s(fid %d) ret %d\n", __func__, np->p9n_ofid, error);
@@ -639,6 +609,7 @@ p9fs_inactive(struct vop_inactive_args *ap)
 	return (0);
 }
 
+#if 0 // close all the other functions.
 static int
 p9fs_reclaim(struct vop_reclaim_args *ap)
 {
@@ -689,6 +660,7 @@ p9fs_vptofh(struct vop_vptofh_args *ap)
 	VNOP_UNIMPLEMENTED;
 }
 
+#endif // 
 
 struct vop_vector p9fs_vnops = {
 	.vop_default =		&default_vnodeops,

@@ -900,7 +900,7 @@ int p9_client_detach(struct p9_fid *fid)
 
 	p9_debug(P9_DEBUG_9P, "<<< RREMOVE fid %d\n", fid->fid);
 
-	p9_free_req(clnt, req);
+	p9_free_req(req);
 error:
 	if (err == -ERESTARTSYS)
 		p9_client_clunk(fid);
@@ -946,10 +946,10 @@ struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 
 	err = p9pdu_readf(req->rc, clnt->proto_version, "R", &nwqids, &wqids);
 	if (err) {
-		p9_free_req(clnt, req);
+		p9_free_req(req);
 		goto clunk_fid;
 	}
-	p9_free_req(clnt, req);
+	p9_free_req(req);
 
 	p9_debug(P9_DEBUG_9P, "<<< RWALK nwqid %d:\n", nwqids);
 
@@ -969,11 +969,11 @@ struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 	else
 		fid->qid = oldfid->qid;
 
-	free(wqids, strlen(wqids));
+	p9_free(wqids, nwqids * sizeof(struct p9_qid));
 	return fid;
 
 clunk_fid:
-	free(wqids, strlen(wqids));
+	p9_free(wqids, strlen(wqids));
 	p9_client_clunk(fid);
 	fid = NULL;
 
@@ -1373,14 +1373,13 @@ int p9_client_open(struct p9_fid *fid, int mode)
 		req = p9_client_rpc(clnt, P9_TLOPEN, "dd", fid->fid, mode);
 	else
 		req = p9_client_rpc(clnt, P9_TOPEN, "db", fid->fid, mode);
-	if (IS_ERR(req)) {
-		err = PTR_ERR(req);
-		goto error;
+	if (req == NULL) {
+		return -ENOMEM;
 	}
 
 	err = p9pdu_readf(req->rc, clnt->proto_version, "Qd", &qid, &iounit);
 	if (err) {
-		trace_9p_protocol_dump(clnt, req->rc);
+		err = -EINVAL;
 		goto free_and_error;
 	}
 
@@ -1392,8 +1391,7 @@ int p9_client_open(struct p9_fid *fid, int mode)
 	fid->iounit = iounit;
 
 free_and_error:
-	p9_free_req(clnt, req);
-error:
+	p9_free_req(req);
 	return err;
 }
 
