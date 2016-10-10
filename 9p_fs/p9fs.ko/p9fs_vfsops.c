@@ -28,27 +28,26 @@ __FBSDID("$FreeBSD$");
 #include "p9fs_subr.h"
 
 static const char *p9_opts[] = {
-	"addr",
 	"debug",
-	"hostname",
-	"path",
+	"from", /* This is the imp parameter for now . */
 	"proto",
+	"noatime",
+	NULL
 };
 
-struct p9fsmount {
+struct p9fs_mount {
 	int p9_debuglevel;
 	struct p9fs_session p9_session;
 	struct mount *p9_mountp;
-	char p9_hostname[256];
 };
 #define	VFSTOP9(mp) ((mp)->mnt_data)
 
-static MALLOC_DEFINE(M_P9MNT, "p9fsmount", "Mount structures for p9fs");
+static MALLOC_DEFINE(M_P9MNT, "p9fs_mount", "Mount structures for p9fs");
 
 static int
 p9fs_mount_parse_opts(struct mount *mp)
 {
-	struct p9fsmount *p9mp = VFSTOP9(mp);
+	struct p9fs_mount *p9mp = VFSTOP9(mp);
 	struct p9fs_session *p9s = &p9mp->p9_session;
 	char *opt;
 	int error = EINVAL;
@@ -79,7 +78,7 @@ out:
 static int
 p9fs_unmount(struct mount *mp, int mntflags)
 {
-	struct p9fsmount *p9mp = VFSTOP9(mp);
+	struct p9fs_mount *p9mp = VFSTOP9(mp);
 	int error, flags, i;
 
 	error = 0;
@@ -114,11 +113,249 @@ out:
 /* For the root vnode's vnops. */
 extern struct vop_vector p9fs_vnops;
 
-static const char *p9_opts[] = { "acls", "async", "noatime", "noclusterr",
-    "noclusterw", "noexec", "export", "force", "from", "groupquota",
-    "multilabel", "nfsv4acls", "fsckpid", "snapshot", "nosuid", "suiddir",
-    "nosymfollow", "sync", "union", "userquota", NULL };
+#if 0 
+struct p9fs_mount {
+	int p9_debuglevel;
+	struct p9fs_session p9_session;
+	struct mount *p9_mountp;
+	char p9_hostname[256];
+}
+/* A Plan9 node. */
+struct p9fs_node {
+        uint32_t p9n_fid;
+        uint32_t p9n_ofid;
+        uint32_t p9n_opens;
+        struct p9fs_qid p9n_qid;
+        struct vnode *p9n_vnode;
+        struct p9fs_session *p9n_session;
+};
 
+#define MAXUNAMELEN     32
+struct p9fs_session {
+
+     unsigned char flags;
+     unsigned char nodev;
+     unsigned short debug;
+     unsigned int afid;
+     unsigned int cache;
+     // These look important .
+     struct mount *p9s_mount;
+     struct p9fs_node p9s_rootnp;
+     char *uname;        /* user name to mount as */
+     char *aname;        /* name of remote hierarchy being mounted */
+     unsigned int maxdata;   /* max data for client interface */
+     kuid_t dfltuid;     /* default uid/muid for legacy support */
+     kgid_t dfltgid;     /* default gid for legacy support */
+     kuid_t uid;     /* if ACCESS_SINGLE, the uid that has access */
+     struct p9_client *clnt; /* 9p client */
+     struct list_head slist; /* list of sessions registered with v9fs */
+     mtx_lock p9s_lock;
+
+#endif
+
+/* This will be a hlper for p9fs_vget. vget does all the steps to get the new fid for the new file
+. Then Instantiate a new vnode, read vakues from the disk( from virt here) fill it in and create the 
+map. This will hence be used for that file, This is similar to the read_inode functions we usually 
+have in linux kernel, reading from the disk and creating the map.  
+*/
+
+static int p9fs_vget(mp, ino, flags, vpp)
+        struct mount *mp;
+        ino_t ino;
+        int flags;
+        struct vnode **vpp;
+{
+	struct p9fs_mount *imp;
+	struct p9fs_node *ip;
+	struct vnode *vp;
+	struct cdev *dev;
+	int error;
+	struct thread *td;
+	struct p9_stat_dotl *st = NULL;
+
+	td = curthread;
+	error = vfs_hash_get(mp, ino, flags, td, vpp, NULL, NULL);
+	if (error || *vpp != NULL)
+		return (error);
+
+	/*
+	 * We must promote to an exclusive lock for vnode creation.  This
+	 * can happen if lookup is passed LOCKSHARED.
+ 	 */
+	if ((flags & LK_TYPE_MASK) == LK_SHARED) {
+		flags &= ~LK_TYPE_MASK;
+		flags |= LK_EXCLUSIVE;
+	}
+
+	/*
+	 * We do not lock vnode creation as it is believed to be too
+	 * expensive for such rare case as simultaneous creation of vnode
+	 * for same ino by different processes. We just allow them to race
+	 * and check later to decide who wins. Let the race begin!
+	 */
+
+	imp = VFSTOISOFS(mp);
+
+	/* Allocate a new vnode. */
+	if ((error = getnewvnode("virtfs", mp, &p9fs_vnodeops, &vp)) != 0) {
+		*vpp = NULLVP;
+		return (error);
+	}
+
+	p9_node = malloc(sizeof(struct p9fs_node), M_TEMP,
+	    M_WAITOK | M_ZERO);
+	vp->v_data = p9_node;
+	p9_node->p9n_fid = fid;  /* Nodes fid*/
+	p9_node->p9n_vnode = vp; /* map the vnode to ondisk*/
+	p9_node->p9n_session = p9s; /* Map the current session */
+
+	lockmgr(vp->v_vnlock, LK_EXCLUSIVE, NULL);
+	error = insmntque(vp, mp);
+	if (error != 0) {
+		free(p9_node, M_ISOFSNODE);
+		*vpp = NULLVP;
+		return (error);
+	}
+	error = vfs_hash_insert(vp, ino, flags, td, vpp, NULL, NULL);
+	if (error || *vpp != NULL)
+		return (error);
+
+	/* The common code for vfs mount is done. Now we do the 9pfs 
+	 * specifc mount code. */
+
+	if (v9fs_proto_dotl(v9ses)) {
+		st = p9_client_getattr_dotl(fid, P9_STATS_BASIC);
+        	if (st == NULL) {
+			retval = -ENOMEM;
+			goto release_sb;
+		}
+		vp->v_type = st->va_type;
+
+		/* copy back the qid inot ht ep9node also,.*/
+		memcpy(p9_node->p9n_qid, st->qid, sizeof(st->qid));
+
+		/* Init the vnode with the disk info*/
+                v9fs_stat2inode_dotl(st, vp);
+                p9_free(st, sizeof(*st));
+
+        } else {
+                struct p9_wstat *st = NULL;
+                st = p9_client_stat(fid);
+                if (st == NULL) {
+                        retval = -ENOMEM;
+                        goto release_sb;
+                }
+
+		vp->v_type = st->va_type;
+		memcpy(p9_node->p9n_qid, st->qid, sizeof(st->qid));
+
+
+		/* Init the vnode with the disk info*/
+                v9fs_stat2inode_dotl(st, vp);
+                p9_free(st, sizeof(*st));
+	}
+
+	*vpp = vp;
+	return (0);
+}
+
+/* Main mount function for 9pfs*/
+static int
+9p_mount(struct vnode *devvp, struct mount *mp)
+{
+	struct p9_fid *fid;
+	struct p9fs_mount *p9mp;
+	struct p9fs_session *p9s;
+	struct cdev *dev;
+	struct p9fs_node *root;
+	int error = EINVAL;
+	struct g_consumer *cp;
+
+	dev = devvp->v_rdev;
+	dev_ref(dev);
+	g_topology_lock();
+	error = g_vfs_open(devvp, &cp, "virtfs", 0);
+	g_topology_unlock();
+	VOP_UNLOCK(devvp, 0);
+
+	if (error)
+		goto out;
+	if (devvp->v_rdev->si_iosize_max != 0)
+		mp->mnt_iosize_max = devvp->v_rdev->si_iosize_max;
+	if (mp->mnt_iosize_max > MAXPHYS)
+		mp->mnt_iosize_max = MAXPHYS;
+
+	/* Allocate and initialize the private mount structure. */
+	p9mp = malloc(sizeof (struct p9fs_mount), M_TEMP, M_WAITOK | M_ZERO);
+	mp->mnt_data = p9mp;
+	p9mp->p9_mountp = mp;
+	p9s = &p9mp->p9_session;
+	p9s->p9s_mount = mp;
+	root = &p9s->p9s_rootnp;
+
+	fid = p9fs_init_session(mp);
+	root->p9_vnode = devvp;
+	root->p9n_fid = fid;
+	root->p9n_session = p9s; /*session ptr structure .*/
+
+	struct p9_stat_dotl *st = NULL;
+
+	/* Create the stat structure to init the vnode */
+	if (p9fs_proto_dotl(v9ses)) {
+		st = p9_client_getattr_dotl(fid, P9_STATS_BASIC);
+        	if (st == NULL) {
+			retval = -ENOMEM;
+			goto release_sb;
+		}
+		memcpy(root->p9n_qid, st->qid, sizeof(st->qid));
+		/* Init the vnode with the disk info*/
+                v9fs_stat2inode_dotl(st, root);
+                p9_free(st, sizeof(*st));
+        } else {
+                struct p9_wstat *st = NULL;
+                st = p9_client_stat(fid);
+                if (st == NULL) {
+                        retval = -ENOMEM;
+                        goto release_sb;
+                }
+
+		memcpy(root->p9n_qid, st->qid, sizeof(st->qid));
+		/* Init the vnode with the disk info*/
+                v9fs_stat2inode_dotl(st, root);
+                p9_free(st, sizeof(*st));
+	}
+
+	mp->mnt_stat.f_fsid.val[0] = dev2udev(dev);
+	mp->mnt_stat.f_fsid.val[1] = mp->mnt_vfc->vfc_typenum;
+	mp->mnt_maxsymlinklen = 0;
+	MNT_ILOCK(mp);
+	mp->mnt_flag |= MNT_LOCAL;
+	mp->mnt_kern_flag |= MNTK_LOOKUP_SHARED | MNTK_EXTENDED_SHARED;
+	MNT_IUNLOCK(mp);
+	/* Mount structures created. */
+
+	return 0;
+out:
+	if (cp != NULL) {
+		g_topology_lock();
+		g_vfs_close(cp);
+		g_topology_unlock();
+	}
+	if (p9mp) {
+		free(p9mp, M_TEMP);
+		mp->mnt_data = NULL;
+	}
+	dev_rel(dev);
+	return error;
+}
+
+#if 0
+struct p9fs_mount {
+	int p9_debuglevel;
+	struct p9fs_session p9_session;
+	struct mount *p9_mountp;
+	char p9_hostname[256];
+};
 #if 0 
 /* A Plan9 node. */
 struct p9fs_node {
@@ -151,16 +388,22 @@ struct p9fs_session {
      struct list_head slist; /* list of sessions registered with v9fs */
      mtx_lock p9s_lock;
 
-#endif 
+#endif
+
+#endif
+
+/* Mount entry point. Note: This is going be just an etry to setup things and later ,
+we call into the commonf code as the freebsd mount happens. But instead of sending 
+direct block reads on bh, send the vitio rpc commands. */
 
 static int
 p9fs_mount(struct mount *mp)
 {
-	struct p9fsmount *p9mp;
-	struct p9fs_session *p9s;
-	struct p9_fid *fid; // This typically has everything needed.
-	struct p9_wstat st;
 	int error;
+	struct vnode *devvp;
+	struct thread *td;
+	char *fspec;
+	struct nameidata ndp;
 
 	/* No support for UPDATe for now */
 	if (mp->mnt_flag & MNT_UPDATE)
@@ -175,16 +418,7 @@ p9fs_mount(struct mount *mp)
 
 	td = curthread;
 
-	/* Allocate and initialize the private mount structure. */
-	p9mp = malloc(sizeof (struct p9fsmount), M_P9MNT, M_WAITOK | M_ZERO);
-	mp->mnt_data = p9mp;
-	p9mp->p9_mountp = mp;
-    	// This is creating the client instance along with the session pointer.
-	fid = p9fs_init_session(mp);
-	p9s = &p9mp->p9_session;
-	p9s->p9s_mount = mp;
-
-    	/*
+	/*
      	** Not an update, or updating the name: look up the name
      	** and verify that it refers to a sensible disk device.
      	**/
@@ -218,18 +452,12 @@ p9fs_mount(struct mount *mp)
 		return error;
 	}
 
-	
-	// Done with the Pre mount phase. Do the actual mount.
-	// fid is the fid for the root.
-	// Init the structures of rootnp.
-	p9s->p9s_rootnp.p9_vnode = devvp;
-	p9s->p9s_rootnp.p9n_fid = fid;
+	if ((error = 9p_mount(devvp, mp)))
+	{
+		vrele(devvp);
+		return error;
+	}
 
-	// Send a statfs on the fid to retreive the qid.
-	p9_client_wstat(fid, &st);	
-	p9s->p9s_rootnp.p9n_qid = st.qid;
-	p9s->p9s_rootnp.p9n_session = p9s; /*session ptr structure .*/
-	
 	return 0;
 out:
 	if (error != 0)
@@ -240,7 +468,7 @@ out:
 static int
 p9fs_root(struct mount *mp, int lkflags, struct vnode **vpp)
 {
-	struct p9fsmount *p9mp = VFSTOP9(mp);
+	struct p9fs_mount *p9mp = VFSTOP9(mp);
 	struct p9fs_node *np = &p9mp->p9_session.p9s_rootnp;
 
 	*vpp = np->p9n_vnode;
@@ -285,5 +513,6 @@ struct vfsops p9fs_vfsops = {
 	.vfs_statfs =	p9fs_statfs,
 	.vfs_fhtovp =	p9fs_fhtovp,
 	.vfs_sync =	p9fs_sync,
+	.vfs_vget =     p9fs_vget,      /* Most imp vnode_get function.*/
 };
 VFS_SET(p9fs_vfsops, p9fs, VFCF_JAIL);

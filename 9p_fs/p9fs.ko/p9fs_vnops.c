@@ -19,81 +19,6 @@ __FBSDID("$FreeBSD$");
 struct vop_vector p9fs_vnops;
 static MALLOC_DEFINE(M_P9NODE, "p9fs_node", "p9fs node structures");
 
-#if 0 // Onnly supported file ops wil be present for now.
-/*
- * Get a p9node.  Nodes are represented by (fid, qid) tuples in 9P2000.
- * Fids are assigned by the client, while qids are assigned by the server.
- *
- * The caller is expected to have generated the FID via p9fs_getfid() and
- * obtained the QID from the server via p9fs_client_walk() and friends.
- */
-int
-p9fs_nget(struct p9fs_session *p9s, uint32_t fid, struct p9fs_qid *qid,
-    int lkflags, struct p9fs_node **npp)
-{
-	int error = 0;
-	struct p9fs_node *np;
-	struct vnode *vp, *nvp;
-	struct vattr vattr = {};
-	struct thread *td = curthread;
-
-	*npp = NULL;
-	error = vfs_hash_get(p9s->p9s_mount, fid, lkflags, td, &vp, NULL, NULL);
-	if (error != 0)
-		return (error);
-	if (vp != NULL) {
-		*npp = vp->v_data;
-		return (0);
-	}
-
-	np = malloc(sizeof (struct p9fs_node), M_P9NODE, M_WAITOK | M_ZERO);
-	getnewvnode_reserve(1);
-
-	error = getnewvnode("p9fs", p9s->p9s_mount, &p9fs_vnops, &nvp);
-	if (error != 0) {
-		getnewvnode_drop_reserve();
-		free(np, M_P9NODE);
-		return (error);
-	}
-	vp = nvp;
-	vn_lock(vp, LK_EXCLUSIVE);
-
-	error = insmntque(nvp, p9s->p9s_mount);
-	if (error != 0) {
-		/* vp was vput()'d by insmntque() */
-		free(np, M_P9NODE);
-		return (error);
-	}
-	error = vfs_hash_insert(nvp, fid, lkflags, td, &nvp, NULL, NULL);
-	if (error != 0) {
-		free(np, M_P9NODE);
-		return (error);
-	}
-	if (nvp != NULL) {
-		free(np, M_P9NODE);
-		*npp = nvp->v_data;
-		/* vp was vput()'d by vfs_hash_insert() */
-		return (0);
-	}
-
-	error = p9fs_client_stat(p9s, fid, &vattr);
-	if (error != 0) {
-		free(np, M_P9NODE);
-		return (error);
-	}
-
-	/* Our vnode is the winner.  Set up the new p9node for it. */
-	vp->v_type = vattr.va_type;
-	vp->v_data = np;
-	np->p9n_fid = fid;
-	np->p9n_session = p9s;
-	np->p9n_vnode = vp;
-	bcopy(qid, &np->p9n_qid, sizeof (*qid));
-	*npp = np;
-
-	return (error);
-}
-
 static int
 p9fs_lookup(struct vop_cachedlookup_args *ap)
 {
@@ -118,9 +43,9 @@ p9fs_lookup(struct vop_cachedlookup_args *ap)
 		return (0);
 	}
 
-	newfid = p9fs_getfid(p9s);
-	error = p9fs_client_walk(p9s, dnp->p9n_fid, &newfid,
-	    cnp->cn_namelen, cnp->cn_nameptr, &qid);
+	/* The clone has to be set to get a new fid */
+	error = p9_client_walk(dnp->p9n_fid,
+	    cnp->cn_namelen, cnp->cn_nameptr, 1);
 	if (error == 0) {
 		int ltype = 0;
 
@@ -128,14 +53,13 @@ p9fs_lookup(struct vop_cachedlookup_args *ap)
 			ltype = VOP_ISLOCKED(dvp);
 			VOP_UNLOCK(dvp, 0);
 		}
-		error = p9fs_nget(p9s, newfid, &qid,
-		    cnp->cn_lkflags, &np);
+		/* Vget gets the vp for the newly created vnode. Stick it to the p9fs_node too*/
+		error = p9fs_vget(ap->mp, newfid, cnp->cn_lkflags, &vp);
 		if (cnp->cn_flags & ISDOTDOT)
 			vn_lock(dvp, ltype | LK_RETRY);
-
 	}
 	if (error == 0) {
-		*vpp = np->p9n_vnode;
+		*vpp = vp;
 		vref(*vpp);
 	} else
 		p9fs_relfid(p9s, newfid);
@@ -147,6 +71,7 @@ p9fs_lookup(struct vop_cachedlookup_args *ap)
 	printf("%s: not implemented yet\n", __func__);	\
 	return (EINVAL)
 
+/* We ll implement thi once mount works fine .*/
 static int
 p9fs_create(struct vop_create_args *ap)
 {
@@ -409,106 +334,6 @@ p9fs_symlink(struct vop_symlink_args *ap)
 	VNOP_UNIMPLEMENTED;
 }
 
-#if 0
-struct p9fs_readdir_state {
-	/*
-	 * The uio for use by p9fs_client_read(); local to p9fs_readdir().
-	 * Must be first entry so p9fs_client_read() can access it.
-	 */
-	struct uio rd_uio;
-
-	/* readdir's caller metadata */
-	struct vop_readdir_args *rd_ap;
-
-	/* metadata used by p9fs_readdir_cb */
-	u_long *rd_cookies;
-	int rd_count;
-	int rd_eof;
-	int *rd_eofp;
-};
-
-
-static int
-parse_cb(struct vop_readdir_args *ap, char *data)
-{
-	struct p9fs_stat *p9stat;
-	struct dirent entry;
-	int error;
-	size_t end_off;
-
-	/*
-	 * Parse p9fs_stat structures out of the message until there is no
-	 * space left in the message or until our client's uio runs out.
-	 */
-	end_off = count + sizeof (struct p9fs_msg_hdr);
-	printf("%s: got count %d off %zu end_off %zd uio off %ld\n",
-	    __func__, count, *offp, end_off, ap->a_uio->uio_offset);
-	while (*offp < end_off && ap->a_uio->uio_resid > 0) {
-
-		entry.d_fileno = (uint32_t)(p9stat->stat_qid.qid_path >> 32);
-		entry.d_reclen = offsetof(struct dirent, d_name);
-
-		/* Determine the entry type from extension[s] if special. */
-		switch (p9stat->stat_qid.qid_mode) {
-		case QTDIR:
-			entry.d_type = DT_DIR;
-			break;
-		case QTLINK:
-			entry.d_type = DT_LNK;
-			break;
-		case QTFILE:
-			entry.d_type = DT_REG;
-			break;
-		default:
-			/* Try again from stat_mode's upper bits. */
-			switch (p9stat->stat_mode & P9MODEUPPER) {
-			case DMDEVICE:
-				entry.d_type = DT_BLK;
-				break;
-			case DMSYMLINK:
-				entry.d_type = DT_LNK;
-				break;
-			case DMSOCKET:
-				entry.d_type = DT_SOCK;
-				break;
-			case DMNAMEDPIPE:
-				entry.d_type = DT_FIFO;
-				break;
-			default:
-				/* XXX What should be done with other types? */
-				entry.d_type = DT_UNKNOWN;
-				break;
-			}
-			break;
-		}
-
-		str = &upay.upay_std.pay_name;
-		entry.d_namlen = str->p9str_size;
-		if (entry.d_namlen > MAXNAMLEN) {
-			error = ENAMETOOLONG;
-			break;
-		}
-		entry.d_reclen += entry.d_namlen;
-		if (entry.d_reclen > ap->a_uio->uio_resid) {
-			error = EJUSTRETURN;
-			break;
-		}
-		bcopy(str->p9str_str, entry.d_name, entry.d_namlen);
-		entry.d_name[entry.d_namlen] = '\0';
-
-		/* All good, now send it to the caller. */
-		error = uiomove((void *)&entry, entry.d_reclen, ap->a_uio);
-		if (error != 0)
-			break;
-		printf("%s loop iter end off %zu\n", __func__, *offp);
-	}
-	printf("%s end of loop\n", __func__);
-
-	return (error);
-}
-#endif //
-
-///readdir will be made synchronous.
 /*
  * Minimum length for a directory entry: size of fixed size section of
  * struct dirent plus a 1 byte C string for the name.
@@ -685,54 +510,9 @@ struct vop_vector p9fs_vnops = {
 	.vop_readdir =		p9fs_readdir,
 	.vop_readlink =		p9fs_readlink,
 	.vop_inactive =		p9fs_inactive,
-	.vop_reclaim =		p9fs_reclaim,
-	.vop_print =		p9fs_print,
-	.vop_pathconf =		p9fs_pathconf,
-	.vop_vptofh =		p9fs_vptofh,
-#ifdef NOT_NEEDED
-	.vop_bmap =		p9fs_bmap,
-	.vop_bypass =		p9fs_bypass,
-	.vop_islocked =		p9fs_islocked,
-	.vop_whiteout =		p9fs_whiteout,
-	.vop_accessx =		p9fs_accessx,
-	.vop_markatime =	p9fs_markatime,
-	.vop_poll =		p9fs_poll,
-	.vop_kqfilter =		p9fs_kqfilter,
-	.vop_revoke =		p9fs_revoke,
-	.vop_lock1 =		p9fs_lock1,
-	.vop_unlock =		p9fs_unlock,
-	.vop_strategy =		p9fs_strategy,
-	.vop_getwritemount =	p9fs_getwritemount,
-	.vop_advlock =		p9fs_advlock,
-	.vop_advlockasync =	p9fs_advlockasync,
-	.vop_advlockpurge =	p9fs_advlockpurge,
-	.vop_reallocblks =	p9fs_reallocblks,
-	.vop_getpages =		p9fs_getpages,
-	.vop_putpages =		p9fs_putpages,
-	.vop_getacl =		p9fs_getacl,
-	.vop_setacl =		p9fs_setacl,
-	.vop_aclcheck =		p9fs_aclcheck,
-	/*
-	 * 9P2000.u specifically doesn't support extended attributes,
-	 * although they could be as an extension.
-	 */
-	.vop_closeextattr =	p9fs_closeextattr,
-	.vop_getextattr =	p9fs_getextattr,
-	.vop_listextattr =	p9fs_listextattr,
-	.vop_openextattr =	p9fs_openextattr,
-	.vop_deleteextattr =	p9fs_deleteextattr,
-	.vop_setextattr =	p9fs_setextattr,
-	.vop_setlabel =		p9fs_setlabel,
-	.vop_vptocnp =		p9fs_vptocnp,
-	.vop_allocate =		p9fs_allocate,
-	.vop_advise =		p9fs_advise,
-	.vop_unp_bind =		p9fs_unp_bind,
-	.vop_unp_connect =	p9fs_unp_connect,
-	.vop_unp_detach =	p9fs_unp_detach,
-	.vop_is_text =		p9fs_is_text,
-	.vop_set_text =		p9fs_set_text,
-	.vop_unset_text =	p9fs_unset_text,
-	.vop_get_writecount =	p9fs_get_writecount,
-	.vop_add_writecount =	p9fs_add_writecount,
-#endif
+	/* First build commenting it out */
+//	.vop_reclaim =		p9fs_reclaim,
+//	.vop_print =		p9fs_print,
+//	.vop_pathconf =		p9fs_pathconf,
+//	.vop_vptofh =		p9fs_vptofh,
 };

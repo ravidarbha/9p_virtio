@@ -1428,7 +1428,7 @@ error:
 }
 
 
-#if 0 ///
+/* THis gets the disk info fron the host for the fid mentioned. */
 struct p9_stat_dotl *p9_client_getattr_dotl(struct p9_fid *fid,
 							u64 request_mask)
 {
@@ -1439,23 +1439,21 @@ struct p9_stat_dotl *p9_client_getattr_dotl(struct p9_fid *fid,
 
 	p9_debug(P9_DEBUG_9P, ">>> TGETATTR fid %d, request_mask %lld\n",
 							fid->fid, request_mask);
-
 	if (!ret)
-		return ERR_PTR(-ENOMEM);
+		return NULL;
 
 	err = 0;
 	clnt = fid->clnt;
 
 	req = p9_client_rpc(clnt, P9_TGETATTR, "dq", fid->fid, request_mask);
-	if (IS_ERR(req)) {
-		err = PTR_ERR(req);
+	if (req ==  NULL) {
+		err =-ENOMEM;
 		goto error;
 	}
 
 	err = p9pdu_readf(req->rc, clnt->proto_version, "A", ret);
 	if (err) {
-		trace_9p_protocol_dump(clnt, req->rc);
-		p9_free_req(clnt, req);
+		p9_free_req(req);
 		goto error;
 	}
 
@@ -1463,7 +1461,6 @@ struct p9_stat_dotl *p9_client_getattr_dotl(struct p9_fid *fid,
 		"<<< RGETATTR st_result_mask=%lld\n"
 		"<<< qid=%x.%llx.%x\n"
 		"<<< st_mode=%8.8x st_nlink=%llu\n"
-		"<<< st_uid=%d st_gid=%d\n"
 		"<<< st_rdev=%llx st_size=%llx st_blksize=%llu st_blocks=%llu\n"
 		"<<< st_atime_sec=%lld st_atime_nsec=%lld\n"
 		"<<< st_mtime_sec=%lld st_mtime_nsec=%lld\n"
@@ -1472,22 +1469,19 @@ struct p9_stat_dotl *p9_client_getattr_dotl(struct p9_fid *fid,
 		"<<< st_gen=%lld st_data_version=%lld",
 		ret->st_result_mask, ret->qid.type, ret->qid.path,
 		ret->qid.version, ret->st_mode, ret->st_nlink,
-		from_kuid(&init_user_ns, ret->st_uid),
-		from_kgid(&init_user_ns, ret->st_gid),
 		ret->st_rdev, ret->st_size, ret->st_blksize,
 		ret->st_blocks, ret->st_atime_sec, ret->st_atime_nsec,
 		ret->st_mtime_sec, ret->st_mtime_nsec, ret->st_ctime_sec,
 		ret->st_ctime_nsec, ret->st_btime_sec, ret->st_btime_nsec,
 		ret->st_gen, ret->st_data_version);
 
-	p9_free_req(clnt, req);
+	p9_free_req(req);
 	return ret;
 
 error:
-	free(ret, sizeof(*ret));
-	return ERR_PTR(err);
+	p9_free(ret, sizeof(*ret));
+	return NULL;
 }
-#endif //
 
 static int p9_client_statsize(struct p9_wstat *wst, int proto_version)
 {
@@ -1539,7 +1533,6 @@ error:
 	return err;
 }
 
-#if 0
 int p9_client_setattr(struct p9_fid *fid, struct p9_iattr_dotl *p9attr)
 {
 	int err;
@@ -1561,16 +1554,15 @@ int p9_client_setattr(struct p9_fid *fid, struct p9_iattr_dotl *p9attr)
 
 	req = p9_client_rpc(clnt, P9_TSETATTR, "dI", fid->fid, p9attr);
 
-	if (IS_ERR(req)) {
+	if (req == NULL) {
 		err = PTR_ERR(req);
 		goto error;
 	}
 	p9_debug(P9_DEBUG_9P, "<<< RSETATTR fid %d\n", fid->fid);
-	p9_free_req(clnt, req);
+	p9_free_req(req);
 error:
 	return err;
 }
-#endif //
 
 int p9_client_statfs(struct p9_fid *fid, struct p9_rstatfs *sb)
 {
