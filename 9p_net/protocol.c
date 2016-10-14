@@ -1,5 +1,5 @@
 /*
- * net/9p/protocol.c
+ * net/protocol.c
  *
  * 9P Protocol Support Code
  * This file provides the standard fot the FS interactions with the Qemu interface as it can understand
@@ -18,9 +18,6 @@
 #define le16_to_cpu(x) ntohs(x)
 #define le32_to_cpu(x) ntohl(x)
 #define le64_to_cpu(x) (x)
-
-
-
 
 static int
 p9pdu_writef(struct p9_fcall *pdu, int proto_version, const char *fmt, ...);
@@ -51,30 +48,6 @@ static size_t pdu_write(struct p9_fcall *pdu, const void *data, size_t size)
 	return size - len;
 }
 
-          
-
-
-static size_t
-pdu_write_u(struct p9_fcall *pdu, struct iovec *from, size_t size)
-{
-#if 0
-	size_t len = min(pdu->capacity - pdu->size, size);
-	struct iov_iter i = *from;
-
-	for (i = 0, cur_offset = 0; i < data->sg_count; i++) {
-                        bcopy(data->iovec[i].iov_base,
-                            &file_dev->tmp_buf[cur_offset],
-                            data->iovec[i].iov_len);
-                        cur_offset += data->iovec[i].iov_len;
-   
-	if (copy_from_iter(&pdu->sdata[pdu->size], len, &i) != len)
-		len = 0;
-
-	pdu->size += len;
-	return size - len;
-#endif
-	return 0;
-}
 
 /*
 	b - int8_t
@@ -162,30 +135,6 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 					(*sptr)[len] = 0;
 			}
 			break;
-		case 'u': {
-#if 0
-				kuid_t *uid = va_arg(ap, kuid_t *);
-				__le32 le_val;
-				if (pdu_read(pdu, &le_val, sizeof(le_val))) {
-					errcode = -EFAULT;
-					break;
-				}
-				*uid = make_kuid(&init_user_ns,
-						 le32_to_cpu(le_val));
-#endif
-			} break;
-		case 'g': {
-#if 0
-				kgid_t *gid = va_arg(ap, kgid_t *);
-				__le32 le_val;
-				if (pdu_read(pdu, &le_val, sizeof(le_val))) {
-					errcode = -EFAULT;
-					break;
-				}
-				*gid = make_kgid(&init_user_ns,
-						 le32_to_cpu(le_val));
-#endif 
-			} break;
 		case 'Q':{
 				struct p9_qid *qid =
 				    va_arg(ap, struct p9_qid *);
@@ -200,8 +149,8 @@ p9pdu_vreadf(struct p9_fcall *pdu, int proto_version, const char *fmt,
 				    va_arg(ap, struct p9_wstat *);
 
 				memset(stbuf, 0, sizeof(struct p9_wstat));
-				stbuf->n_uid = stbuf->n_muid = 0; //INVALID_UID;
-				stbuf->n_gid = 0;//INVALID_GID;
+				stbuf->n_uid = stbuf->n_muid = 0;
+				stbuf->n_gid = 0;
 
 				errcode =
 				    p9pdu_readf(pdu, proto_version,
@@ -395,25 +344,6 @@ p9pdu_vwritef(struct p9_fcall *pdu, int proto_version, const char *fmt,
 					errcode = -EFAULT;
 			}
 			break;
-		case 'u': {
-				uid_t uid = va_arg(ap, uid_t);
-				# if 0
-				int32_t val = cpu_to_le32(from_uid(&init_user_ns, uid));
-				if (pdu_write(pdu, &val, sizeof(val)))
-				#endif // No support for the u flag here/
-				(void)uid;
-				errcode = -EFAULT;
-			} break;
-		case 'g': {
-				gid_t gid = va_arg(ap, gid_t);
-				#if 0
-				__le32 val = cpu_to_le32(
-						from_kgid(&init_user_ns, gid));
-				if (pdu_write(pdu, &val, sizeof(val)))
-				#endif //
-				(void)gid;
-				errcode = -EFAULT;
-			} break;
 		case 'Q':{
 				const struct p9_qid *qid =
 				    va_arg(ap, const struct p9_qid *);
@@ -437,18 +367,6 @@ p9pdu_vwritef(struct p9_fcall *pdu, int proto_version, const char *fmt,
 						 stbuf->extension, stbuf->n_uid,
 						 stbuf->n_gid, stbuf->n_muid);
 			} break;
-		case 'V':{
-				// Get the count first and then do the loop.	
-				uint32_t count = va_arg(ap, uint32_t);
-				struct iovec *from =
-						va_arg(ap, struct iovec *);
-				errcode = p9pdu_writef(pdu, proto_version, "d",
-									count);
-				// FOr now avoid the vector operations.
-				if (!errcode && pdu_write_u(pdu, from, count))
-					errcode = -EFAULT;
-			}
-			break;
 		case 'T':{
 				uint16_t nwname = va_arg(ap, int);
 				const char **wnames = va_arg(ap, const char **);
@@ -563,7 +481,6 @@ int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st)
 	ret = p9pdu_readf(&fake_pdu, clnt->proto_version, "S", st);
 	if (ret) {
 		p9_debug(P9_DEBUG_9P, "<<< p9stat_read failed: %d\n", ret);
-		//trace_9p_protocol_dump(clnt, &fake_pdu);
 	}
 
 	return ret;
@@ -584,7 +501,6 @@ int p9pdu_finalize(struct p9_client *clnt, struct p9_fcall *pdu)
 	err = p9pdu_writef(pdu, 0, "d", size);
 	pdu->size = size;
 
-//	trace_9p_protocol_dump(clnt, pdu);
 	p9_debug(P9_DEBUG_9P, ">>> size=%d type: %d tag: %d\n",
 		 pdu->size, pdu->id, pdu->tag);
 
@@ -597,6 +513,8 @@ void p9pdu_reset(struct p9_fcall *pdu)
 	pdu->size = 0;
 }
 
+/* Directory entry read with the buf we have. Call this once we have the 
+ * buf to parse .*/
 int p9dirent_read(struct p9_client *clnt, char *buf, int len,
 		  struct p9_dirent *dirent)
 {
@@ -613,7 +531,6 @@ int p9dirent_read(struct p9_client *clnt, char *buf, int len,
 			  &dirent->d_off, &dirent->d_type, &nameptr);
 	if (ret) {
 		p9_debug(P9_DEBUG_9P, "<<< p9dirent_read failed: %d\n", ret);
-		//trace_9p_protocol_dump(clnt, &fake_pdu);
 		goto out;
 	}
 

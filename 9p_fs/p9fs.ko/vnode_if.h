@@ -2,7 +2,7 @@
  * This file is produced automatically.
  * Do not modify anything in here by hand.
  *
- * Created from $FreeBSD: releng/10.3/sys/tools/vnode_if.awk 289798 2015-10-23 07:40:43Z avg $
+ * Created from $FreeBSD: stable/10/sys/tools/vnode_if.awk 289798 2015-10-23 07:40:43Z avg $
  */
 
 extern struct vnodeop_desc vop_default_desc;

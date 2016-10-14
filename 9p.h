@@ -31,8 +31,8 @@
 #define u8 uint8_t
 #define u_int uint32_t
 #define u16 uint16_t
-#define u32 uint32_t 
-#define u64 uint64_t
+#define uint32_t uint32_t 
+#define uint64_t uint64_t
 
 
 enum p9_debug_flags {
@@ -322,7 +322,7 @@ enum p9_qid_t {
 
 /* 9P Magic Numbers */
 #define P9_NOTAG	(u16)(~0)
-#define P9_NOFID	(u32)(~0)
+#define P9_NOFID	(uint32_t)(~0)
 #define P9_MAXWELEM	16
 
 /* ample room for Twrite/Rread header */
@@ -356,8 +356,8 @@ enum p9_qid_t {
 
 struct p9_qid {
 	u8 type;
-	u32 version;
-	u64 path;
+	uint32_t version;
+	uint64_t path;
 };
 
 /**
@@ -385,12 +385,12 @@ struct p9_qid {
 struct p9_wstat {
 	u16 size;
 	u16 type;
-	u32 dev;
+	uint32_t dev;
 	struct p9_qid qid;
-	u32 mode;
-	u32 atime;
-	u32 mtime;
-	u64 length;
+	uint32_t mode;
+	uint32_t atime;
+	uint32_t mtime;
+	uint64_t length;
 	char *name;
 	char *uid;
 	char *gid;
@@ -402,26 +402,26 @@ struct p9_wstat {
 };
 
 struct p9_stat_dotl {
-	u64 st_result_mask;
+	uint64_t st_result_mask;
 	struct p9_qid qid;
-	u32 st_mode;
+	uint32_t st_mode;
 	uid_t st_uid;
 	gid_t st_gid;
-	u64 st_nlink;
-	u64 st_rdev;
-	u64 st_size;
-	u64 st_blksize;
-	u64 st_blocks;
-	u64 st_atime_sec;
-	u64 st_atime_nsec;
-	u64 st_mtime_sec;
-	u64 st_mtime_nsec;
-	u64 st_ctime_sec;
-	u64 st_ctime_nsec;
-	u64 st_btime_sec;
-	u64 st_btime_nsec;
-	u64 st_gen;
-	u64 st_data_version;
+	uint64_t st_nlink;
+	uint64_t st_rdev;
+	uint64_t st_size;
+	uint64_t st_blksize;
+	uint64_t st_blocks;
+	uint64_t st_atime_sec;
+	uint64_t st_atime_nsec;
+	uint64_t st_mtime_sec;
+	uint64_t st_mtime_nsec;
+	uint64_t st_ctime_sec;
+	uint64_t st_ctime_nsec;
+	uint64_t st_btime_sec;
+	uint64_t st_btime_nsec;
+	uint64_t st_gen;
+	uint64_t st_data_version;
 };
 
 #define P9_STATS_MODE		0x00000001ULL
@@ -458,15 +458,15 @@ struct p9_stat_dotl {
  */
 
 struct p9_iattr_dotl {
-	u32 valid;
-	u32 mode;
+	uint32_t valid;
+	uint32_t mode;
 	uid_t uid;
 	gid_t gid;
-	u64 size;
-	u64 atime_sec;
-	u64 atime_nsec;
-	u64 mtime_sec;
-	u64 mtime_nsec;
+	uint64_t size;
+	uint64_t atime_sec;
+	uint64_t atime_nsec;
+	uint64_t mtime_sec;
+	uint64_t mtime_nsec;
 };
 
 #define P9_LOCK_SUCCESS 0
@@ -488,10 +488,10 @@ struct p9_iattr_dotl {
 
 struct p9_flock {
 	u8 type;
-	u32 flags;
-	u64 start;
-	u64 length;
-	u32 proc_id;
+	uint32_t flags;
+	uint64_t start;
+	uint64_t length;
+	uint32_t proc_id;
 	char *client_id;
 };
 
@@ -505,22 +505,22 @@ struct p9_flock {
 
 struct p9_getlock {
 	u8 type;
-	u64 start;
-	u64 length;
-	u32 proc_id;
+	uint64_t start;
+	uint64_t length;
+	uint32_t proc_id;
 	char *client_id;
 };
 
 struct p9_rstatfs {
-	u32 type;
-	u32 bsize;
-	u64 blocks;
-	u64 bfree;
-	u64 bavail;
-	u64 files;
-	u64 ffree;
-	u64 fsid;
-	u32 namelen;
+	uint32_t type;
+	uint32_t bsize;
+	uint64_t blocks;
+	uint64_t bfree;
+	uint64_t bavail;
+	uint64_t files;
+	uint64_t ffree;
+	uint64_t fsid;
+	uint32_t namelen;
 };
 
 /**
@@ -540,7 +540,7 @@ struct p9_rstatfs {
  */
 
 struct p9_fcall {
-	u32 size;
+	uint32_t size;
 	u8 id;
 	u16 tag;
 

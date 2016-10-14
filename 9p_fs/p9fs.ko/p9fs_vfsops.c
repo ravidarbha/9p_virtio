@@ -1,6 +1,7 @@
 /*-
 *
  * Plan9 filesystem (9P2000.u) implementation.
+ * This file consists of all the VFS interactions.
  */
 
 #include <sys/cdefs.h>
@@ -25,7 +26,9 @@ __FBSDID("$FreeBSD$");
 #include <sys/fnv_hash.h>
 
 #include "p9fs_proto.h"
-#include "p9fs_subr.h"
+#inclue "../../client.h"
+#include "../../protocol.h"
+#include "../../9p.h"
 
 static const char *p9_opts[] = {
 	"debug",
@@ -40,7 +43,6 @@ struct p9fs_mount {
 	struct p9fs_session p9_session;
 	struct mount *p9_mountp;
 };
-#define	VFSTOP9(mp) ((mp)->mnt_data)
 
 static MALLOC_DEFINE(M_P9MNT, "p9fs_mount", "Mount structures for p9fs");
 
@@ -90,6 +92,8 @@ p9fs_unmount(struct mount *mp, int mntflags)
 		flags |= FORCECLOSE;
 
 	for (i = 0; i < 10; i++) {
+		/* Flush everything on this mount point.
+		 * This anyways doesnt do anything now.*/
 		error = vflush(mp, 0, flags, curthread);
 		if (error == 0 || (mntflags & MNT_FORCE) == 0)
 			break;
@@ -153,25 +157,24 @@ struct p9fs_session {
 
 #endif
 
-/* This will be a hlper for p9fs_vget. vget does all the steps to get the new fid for the new file
-. Then Instantiate a new vnode, read vakues from the disk( from virt here) fill it in and create the 
-map. This will hence be used for that file, This is similar to the read_inode functions we usually 
-have in linux kernel, reading from the disk and creating the map.  
-*/
-
+/* This is a vfs ops routiune so defining it here instead of vnops. This 
+   needs some fixing(a wrapper moslty when we need create to work. Ideally
+   it should call this, initialize the p9fs_node and create the fids and qids
+   for interactions*/
 static int p9fs_vget(mp, ino, flags, vpp)
         struct mount *mp;
         ino_t ino;
         int flags;
         struct vnode **vpp;
 {
-	struct p9fs_mount *imp;
-	struct p9fs_node *ip;
+	struct p9fs_mount *p9mp;
+	struct p9fs_node *p9_node;
 	struct vnode *vp;
 	struct cdev *dev;
 	int error;
 	struct thread *td;
 	struct p9_stat_dotl *st = NULL;
+	struct p9_fid *fid;
 
 	td = curthread;
 	error = vfs_hash_get(mp, ino, flags, td, vpp, NULL, NULL);
@@ -187,14 +190,7 @@ static int p9fs_vget(mp, ino, flags, vpp)
 		flags |= LK_EXCLUSIVE;
 	}
 
-	/*
-	 * We do not lock vnode creation as it is believed to be too
-	 * expensive for such rare case as simultaneous creation of vnode
-	 * for same ino by different processes. We just allow them to race
-	 * and check later to decide who wins. Let the race begin!
-	 */
-
-	imp = VFSTOISOFS(mp);
+	p9mp = VFSTOP9(mp);
 
 	/* Allocate a new vnode. */
 	if ((error = getnewvnode("virtfs", mp, &p9fs_vnodeops, &vp)) != 0) {
@@ -205,14 +201,15 @@ static int p9fs_vget(mp, ino, flags, vpp)
 	p9_node = malloc(sizeof(struct p9fs_node), M_TEMP,
 	    M_WAITOK | M_ZERO);
 	vp->v_data = p9_node;
-	p9_node->p9n_fid = fid;  /* Nodes fid*/
+	/* This should be initalized in the caller of this routine */
+	//p9_node->p9n_fid = fid;  /* Nodes fid*/
 	p9_node->p9n_vnode = vp; /* map the vnode to ondisk*/
 	p9_node->p9n_session = p9s; /* Map the current session */
 
 	lockmgr(vp->v_vnlock, LK_EXCLUSIVE, NULL);
 	error = insmntque(vp, mp);
 	if (error != 0) {
-		free(p9_node, M_ISOFSNODE);
+		free(p9_nod, M_TEMP);
 		*vpp = NULLVP;
 		return (error);
 	}
@@ -223,19 +220,19 @@ static int p9fs_vget(mp, ino, flags, vpp)
 	/* The common code for vfs mount is done. Now we do the 9pfs 
 	 * specifc mount code. */
 
-	if (v9fs_proto_dotl(v9ses)) {
+	if (p9fs_proto_dotl(p9s)) {
 		st = p9_client_getattr_dotl(fid, P9_STATS_BASIC);
         	if (st == NULL) {
 			retval = -ENOMEM;
-			goto release_sb;
+			goto out;
 		}
 		vp->v_type = st->va_type;
 
-		/* copy back the qid inot ht ep9node also,.*/
+		/* copy back the qid into the p9node also,.*/
 		memcpy(p9_node->p9n_qid, st->qid, sizeof(st->qid));
 
 		/* Init the vnode with the disk info*/
-                v9fs_stat2inode_dotl(st, vp);
+                p9fs_stat_vnode_dotl(st, vp);
                 p9_free(st, sizeof(*st));
 
         } else {
@@ -243,7 +240,7 @@ static int p9fs_vget(mp, ino, flags, vpp)
                 st = p9_client_stat(fid);
                 if (st == NULL) {
                         retval = -ENOMEM;
-                        goto release_sb;
+                        goto out;
                 }
 
 		vp->v_type = st->va_type;
@@ -251,12 +248,14 @@ static int p9fs_vget(mp, ino, flags, vpp)
 
 
 		/* Init the vnode with the disk info*/
-                v9fs_stat2inode_dotl(st, vp);
+                p9fs_stat_vnode_dotl(st, vp);
                 p9_free(st, sizeof(*st));
 	}
 
 	*vpp = vp;
 	return (0);
+out:
+	return retval;
 }
 
 /* Main mount function for 9pfs*/
@@ -301,27 +300,27 @@ static int
 	struct p9_stat_dotl *st = NULL;
 
 	/* Create the stat structure to init the vnode */
-	if (p9fs_proto_dotl(v9ses)) {
+	if (p9fs_proto_dotl(p9s)) {
 		st = p9_client_getattr_dotl(fid, P9_STATS_BASIC);
         	if (st == NULL) {
 			retval = -ENOMEM;
-			goto release_sb;
+			goto out;
 		}
 		memcpy(root->p9n_qid, st->qid, sizeof(st->qid));
 		/* Init the vnode with the disk info*/
-                v9fs_stat2inode_dotl(st, root);
+                p9fs_stat_vnode_dotl(st, root->p9_vnode);
                 p9_free(st, sizeof(*st));
         } else {
                 struct p9_wstat *st = NULL;
                 st = p9_client_stat(fid);
                 if (st == NULL) {
                         retval = -ENOMEM;
-                        goto release_sb;
+                        goto out;
                 }
 
 		memcpy(root->p9n_qid, st->qid, sizeof(st->qid));
 		/* Init the vnode with the disk info*/
-                v9fs_stat2inode_dotl(st, root);
+                p9fs_stat_vnode_dotl(st, root);
                 p9_free(st, sizeof(*st));
 	}
 
@@ -375,27 +374,18 @@ struct p9fs_session {
      unsigned short debug;
      unsigned int afid;
      unsigned int cache;
-     // These look important .
      struct mount *p9s_mount;
      struct p9fs_node p9s_rootnp;
-     char *uname;        /* user name to mount as */
-     char *aname;        /* name of remote hierarchy being mounted */
      unsigned int maxdata;   /* max data for client interface */
-     kuid_t dfltuid;     /* default uid/muid for legacy support */
-     kgid_t dfltgid;     /* default gid for legacy support */
-     kuid_t uid;     /* if ACCESS_SINGLE, the uid that has access */
+     uid_t uid;     /* if ACCESS_SINGLE, the uid that has access */
      struct p9_client *clnt; /* 9p client */
-     struct list_head slist; /* list of sessions registered with v9fs */
      mtx_lock p9s_lock;
 
 #endif
 
 #endif
 
-/* Mount entry point. Note: This is going be just an etry to setup things and later ,
-we call into the commonf code as the freebsd mount happens. But instead of sending 
-direct block reads on bh, send the vitio rpc commands. */
-
+/* Mount entry point */
 static int
 p9fs_mount(struct mount *mp)
 {
@@ -432,8 +422,7 @@ p9fs_mount(struct mount *mp)
         	return (error);
     	}
 
-	/* Determine if type of source file is supported (VREG or VCHR) */
-    	/*
+	/* Determine if type of source file is supported (VREG or VCHR)
      	** If mount by non-root, then verify that user has necessary
      	** permissions on the device.
      	**/
@@ -482,16 +471,6 @@ static int
 p9fs_statfs(struct mount *mp, struct statfs *sbp)
 {
 
-	/*
-	 * XXX Uhhh..???
-	 *     There does not be a 9P2000 call for filesystem level info!
-	 *     Have to implement 9P2000.L statfs for that...
-	 */
-	sbp->f_version = STATFS_VERSION;
-	sbp->f_bsize = DEV_BSIZE;
-	sbp->f_iosize = MAXPHYS;
-	sbp->f_blocks = 2; /* from devfs: 1K to keep df happy */
-	return (0);
 }
 
 static int

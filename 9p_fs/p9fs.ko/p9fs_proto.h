@@ -1,29 +1,3 @@
-/*-
- * Copyright (c) 2015 Will Andrews.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS        
- * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED   
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR       
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS        
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR           
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF             
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS         
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN          
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)          
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       
- * POSSIBILITY OF SUCH DAMAGE.                                                      
- */
-
 /*
  * Plan9 filesystem (9P2000.u) protocol definitions.
  */
@@ -229,6 +203,7 @@
 #ifndef	__P9FS_PROTO_H__
 #define	__P9FS_PROTO_H__
 
+#include "../../9p.h"
 /*
  * The message type used as the fifth byte for all 9P2000 messages.
  */
@@ -262,13 +237,6 @@ enum p9fs_msg_type {
 	Twstat,
 	Rwstat,
 };
-
-/* All 9P2000* messages are prefixed with: size[4] <Type> tag[2] */
-struct p9fs_msg_hdr {
-	uint32_t	hdr_size;
-	uint8_t		hdr_type;
-	uint16_t	hdr_tag;
-} __attribute__((packed));
 
 /*
  * Common structures for 9P2000 message payload items.
@@ -341,211 +309,12 @@ struct p9fs_stat_u_footer {
 	uint32_t n_muid;
 } __attribute__((packed));
 
-/*
- * Basic structures for 9P2000 message types.
- *
- * Aside from Rerror and Tcreate, all variable length fields follow fixed
- * length fields.
- */
-
-struct p9fs_msg_Tversion {
-	struct p9fs_msg_hdr Tversion_hdr;
-	uint32_t Tversion_max_size;
-	/* Tversion_version[s] */
-} __attribute__((packed));
-
-struct p9fs_msg_Rversion {
-	struct p9fs_msg_hdr Rversion_hdr;
-	uint32_t Rversion_max_size;
-	/* Rversion_version[s] */
-} __attribute__((packed));
-
-struct p9fs_msg_Tauth {
-	struct p9fs_msg_hdr Tauth_hdr;
-	uint32_t Tauth_afid;
-	/* Tauth_uname[s] */
-	/* Tauth_aname[s] */
-} __attribute__((packed));
-
-struct p9fs_msg_Rauth {
-	struct p9fs_msg_hdr Rauth_hdr;
-	struct p9fs_qid Rauth_aqid;
-} __attribute__((packed));
-
-struct p9fs_msg_Tattach {
-	struct p9fs_msg_hdr Tattach_hdr;
-	uint32_t Tattach_fid;
-	uint32_t Tattach_afid;
-	/* Tattach_uname[s] */
-	/* Tattach_aname[s] */
-} __attribute__((packed));
-
-struct p9fs_msg_Rattach {
-	struct p9fs_msg_hdr Rattach_hdr;
-	struct p9fs_qid Rattach_qid;
-} __attribute__((packed));
-
-struct p9fs_msg_Rerror {
-	struct p9fs_msg_hdr Rerror_hdr;
-	/* Rerror_ename[s] */
-	uint32_t Rerror_errno;
-} __attribute__((packed));
-
-struct p9fs_msg_Tflush {
-	struct p9fs_msg_hdr Tflush_hdr;
-	uint16_t Tflush_oldtag;
-} __attribute__((packed));
-
-struct p9fs_msg_Rflush {
-	struct p9fs_msg_hdr Rflush_hdr;
-} __attribute__((packed));
-
-struct p9fs_msg_Twalk {
-	struct p9fs_msg_hdr Twalk_hdr;
-	uint32_t Twalk_fid;
-	uint32_t Twalk_newfid;
-	uint16_t Twalk_nwname;
-	/* Twalk_wname[s][] */
-} __attribute__((packed));
-
-struct p9fs_msg_Rwalk {
-	struct p9fs_msg_hdr Rwalk_hdr;
-	uint16_t Rwalk_nwqid;
-	/* struct p9fs_qid Rwalk_nwqid[] */
-} __attribute__((packed));
-
-struct p9fs_msg_Topen {
-	struct p9fs_msg_hdr Topen_hdr;
-	uint32_t Topen_fid;
-	uint8_t Topen_mode;
-} __attribute__((packed));
-
-struct p9fs_msg_Ropen {
-	struct p9fs_msg_hdr Ropen_hdr;
-	struct p9fs_qid Ropen_qid;
-	uint32_t Ropen_iounit;
-} __attribute__((packed));
-
-struct p9fs_msg_Tcreate {
-	struct p9fs_msg_hdr Tcreate_hdr;
-	uint32_t Tcreate_fid;
-	/* Tcreate_name[s] */
-	uint32_t Tcreate_perm;
-	uint8_t Tcreate_mode;
-} __attribute__((packed));
-
-struct p9fs_msg_Rcreate {
-	struct p9fs_msg_hdr Rcreate_hdr;
-	struct p9fs_qid Rcreate_qid;
-	uint32_t Rcreate_iounit;
-} __attribute__((packed));
-
-struct p9fs_msg_Tread {
-	struct p9fs_msg_hdr Tread_hdr;
-	uint32_t Tread_fid;
-	uint64_t Tread_offset;
-	uint32_t Tread_count;
-} __attribute__((packed));
-
-struct p9fs_msg_Rread {
-	struct p9fs_msg_hdr Rread_hdr;
-	uint32_t Rread_count;
-	/* uint8_t data[count] */
-} __attribute__((packed));
-
-struct p9fs_msg_Twrite {
-	struct p9fs_msg_hdr Twrite_hdr;
-	uint32_t Twrite_fid;
-	uint64_t Twrite_offset;
-	uint32_t Twrite_count;
-	/* uint8_t data[count] */
-} __attribute__((packed));
-
-struct p9fs_msg_Rwrite {
-	struct p9fs_msg_hdr Rwrite_hdr;
-	uint32_t Rwrite_count;
-} __attribute__((packed));
-
-struct p9fs_msg_Tclunk {
-	struct p9fs_msg_hdr Tclunk_hdr;
-	uint32_t Tclunk_fid;
-} __attribute__((packed));
-
-struct p9fs_msg_Rclunk {
-	struct p9fs_msg_hdr Rclunk_hdr;
-} __attribute__((packed));
-
-struct p9fs_msg_Tremove {
-	struct p9fs_msg_hdr Tremove_hdr;
-	uint32_t Tremove_fid;
-} __attribute__((packed));
-
-struct p9fs_msg_Rremove {
-	struct p9fs_msg_hdr Rremove_hdr;
-} __attribute__((packed));
-
-struct p9fs_msg_Tstat {
-	struct p9fs_msg_hdr Tstat_hdr;
-	uint32_t Tstat_fid;
-} __attribute__((packed));
-
-struct p9fs_msg_Rstat {
-	struct p9fs_msg_hdr Rstat_hdr;
-	struct p9fs_stat Rstat_stat;
-} __attribute__((packed));
-
-struct p9fs_msg_Twstat {
-	struct p9fs_msg_hdr Twstat_hdr;
-	uint32_t Twstat_fid;
-	struct p9fs_stat Twstat_stat;
-} __attribute__((packed));
-
-struct p9fs_msg_Rwstat {
-	struct p9fs_msg_hdr Rwstat_hdr;
-} __attribute__((packed));
-
-/*
- * The main 9P message management structure.
- */
-union p9fs_msg {
-	struct p9fs_msg_hdr p9msg_hdr;
-	struct p9fs_msg_Tversion p9msg_Tversion;
-	struct p9fs_msg_Rversion p9msg_Rversion;
-	struct p9fs_msg_Tauth p9msg_Tauth;
-	struct p9fs_msg_Rauth p9msg_Rauth;
-	struct p9fs_msg_Tattach p9msg_Tattach;
-	struct p9fs_msg_Rattach p9msg_Rattach;
-	struct p9fs_msg_Rerror p9msg_Rerror;
-	struct p9fs_msg_Tflush p9msg_Tflush;
-	struct p9fs_msg_Rflush p9msg_Rflush;
-	struct p9fs_msg_Twalk p9msg_Twalk;
-	struct p9fs_msg_Rwalk p9msg_Rwalk;
-	struct p9fs_msg_Topen p9msg_Topen;
-	struct p9fs_msg_Ropen p9msg_Ropen;
-	struct p9fs_msg_Tcreate p9msg_Tcreate;
-	struct p9fs_msg_Rcreate p9msg_Rcreate;
-	struct p9fs_msg_Tread p9msg_Tread;
-	struct p9fs_msg_Rread p9msg_Rread;
-	struct p9fs_msg_Twrite p9msg_Twrite;
-	struct p9fs_msg_Rwrite p9msg_Rwrite;
-	struct p9fs_msg_Tclunk p9msg_Tclunk;
-	struct p9fs_msg_Rclunk p9msg_Rclunk;
-	struct p9fs_msg_Tremove p9msg_Tremove;
-	struct p9fs_msg_Rremove p9msg_Rremove;
-	struct p9fs_msg_Tstat p9msg_Tstat;
-	struct p9fs_msg_Rstat p9msg_Rstat;
-	struct p9fs_msg_Twstat p9msg_Twstat;
-	struct p9fs_msg_Rwstat p9msg_Rwstat;
-} __attribute__((packed));
-
-#define	NOTAG		(unsigned short)~0
 #define	NOFID		(uint32_t)~0
 /* This FID is not specified by the standard, but implemented here as such. */
 #define	ROOTFID		(uint32_t)0
 
 #define	P9_VERS		"9P2000"
 #define	UN_VERS		P9_VERS ".u"
-#define	P9_MSG_MAX	MAXPHYS + sizeof (struct p9fs_msg_hdr)
 
 #define	OREAD	0
 #define	OWRITE	1
@@ -556,44 +325,6 @@ union p9fs_msg {
 /**************************************************************************
  * Plan9 session details section
  **************************************************************************/
-
-struct p9fs_req {
-	TAILQ_ENTRY(p9fs_req) req_link;
-	uint16_t req_tag;
-	struct mbuf *req_msg;
-	int req_error;
-};
-TAILQ_HEAD(p9fs_req_list, p9fs_req);
-
-/* NB: This is used for in-core, not wire format. */
-struct p9fs_str {
-	uint16_t p9str_size;
-	char *p9str_str;
-};
-
-/* Payload structures passed to requesters via callback.  In-core only. */
-struct p9fs_stat_payload {
-	struct p9fs_stat *pay_stat;
-	struct p9fs_str pay_name;
-	struct p9fs_str pay_uid;
-	struct p9fs_str pay_gid;
-	struct p9fs_str pay_muid;
-};
-struct p9fs_stat_u_payload {
-	struct p9fs_stat_payload upay_std;
-	struct p9fs_str upay_extension;
-	struct p9fs_stat_u_footer *upay_footer;
-};
-
-struct p9fs_recv {
-	uint32_t p9r_resid;
-	uint32_t p9r_size;
-	int p9r_error;
-	int p9r_soupcalls;
-	struct mbuf *p9r_msg;
-	struct p9fs_req_list p9r_reqs;
-};
-
 enum p9s_state {
 	P9S_INIT,
 	P9S_RUNNING,
@@ -612,71 +343,97 @@ struct p9fs_node_user {
 	uint16_t p9nu_append_refs;
 };
 
+
+/* The in memory representation of the on disk inode. Save the current 
+ * fields to write it back later. */
+
+struct p9fs_inode {
+
+        uint64_t        i_blocks;       /* 0: size in device blocks             */
+        uint64_t        i_size;         /* 8: size in bytes                     */
+        uint64_t        i_ctime;        /* 16: creation time in seconds         */
+        uint64_t        i_mtime;        /* 24: modification time in seconds part*/
+	/* WE can add atime and b time later . They already exist in the stat */
+        uint32_t        i_ctime_nsec;   /* 32: creation time nanoseconds part   */
+        uint32_t        i_mtime_nsec;   /* 36: modification time in nanoseconds */
+        uint32_t        i_uid;          /* 40: user id                          */
+        uint32_t        i_gid;          /* 44: group id                         */
+        uint16_t        i_mode;         /* 48: file mode                        */
+        uint16_t        i_links_count;  /* 50: number of references to the inode*/
+        uint32_t        i_flags;        /* 52: NANDFS_*_FL flags                */
+        uint64_t        i_special;      /* 56: special                          */
+	/* Do we need block numbers here ? */
+	/* We are read ing and writing to the host, by sending requests .*/ 
+        //uint64_t        i_db[NDADDR];   /* 64: Direct disk blocks.              */
+        //uint64_t        i_ib[NIADDR];   /* 160: Indirect disk blocks.           */
+        uint64_t        i_xattr;        /* 184: reserved for extended attributes*/
+        uint32_t        i_generation;   /* 192: file generation for NFS         */
+        uint32_t        i_pad[15];      /* 196: make it 64 bits aligned         */
+};
+
 /* A Plan9 node. */
 struct p9fs_node {
-	uint32_t p9n_fid;
-	uint32_t p9n_ofid;
-	uint32_t p9n_opens;
-	struct p9fs_qid p9n_qid;
-	struct vnode *p9n_vnode;
-	struct p9fs_session *p9n_session;
+	uint32_t p9n_fid; /*node fid*/
+	uint32_t p9n_ofid; /* open fid for this file */
+	uint32_t p9n_opens; /* Number of open handlers. */
+	struct p9fs_qid p9n_qid; /* the server qid, will be from the host*/
+	struct vnode *p9n_vnode; /* vnode for this fs_node. */
+	struct p9fs_inode inode; /* This represents the ondisk in mem inode */
+	struct p9fs_session *p9n_session; /*  Session_ptr for this node */
 };
 
 #define	MAXUNAMELEN	32
+/* these session fields look good for now.
+ * WEll add more later.*/ 
 struct p9fs_session {
 
      unsigned char flags;
      unsigned char nodev;
      unsigned short debug;
      unsigned int afid;
-     unsigned int cache;
-     // These look important .
      struct mount *p9s_mount;
      struct p9fs_node p9s_rootnp;
-     char *uname;        /* user name to mount as */
-     char *aname;        /* name of remote hierarchy being mounted */
      unsigned int maxdata;   /* max data for client interface */
-     kuid_t dfltuid;     /* default uid/muid for legacy support */
-     kgid_t dfltgid;     /* default gid for legacy support */
-     kuid_t uid;     /* if ACCESS_SINGLE, the uid that has access */
+     uid_t uid;     /* if ACCESS_SINGLE, the uid that has access */
      struct p9_client *clnt; /* 9p client */
-     struct list_head slist; /* list of sessions registered with v9fs */
-     // use the below lock for protection.
-     mtx_lock p9s_lock;
+     struct mtx p9s_lock;
 };
 
 
-typedef int (*io_callback)(void *, uint32_t, size_t *, struct uio *);
+#define	V9FS_ACCESS_ANY (V9FS_ACCESS_SINGLE | \
+			 V9FS_ACCESS_USER |   \
+			 V9FS_ACCESS_CLIENT)
+#define V9FS_ACCESS_MASK V9FS_ACCESS_ANY
+#define V9FS_ACL_MASK V9FS_POSIX_ACL
+#define	VFSTOP9(mp) ((mp)->mnt_data)
+
+enum p9_session_flags {
+	V9FS_PROTO_2000U	= 0x01,
+	V9FS_PROTO_2000L	= 0x02,
+	V9FS_ACCESS_SINGLE	= 0x04,
+	V9FS_ACCESS_USER	= 0x08,
+	V9FS_ACCESS_CLIENT	= 0x10,
+	V9FS_POSIX_ACL		= 0x20
+};
+
 
 /* Primary 9P2000.u client API calls. */
-int p9fs_client_version(struct p9fs_session *);
-int p9fs_client_auth(struct p9fs_session *);
-int p9fs_client_attach(struct p9fs_session *);
-int p9fs_client_clunk(struct p9fs_session *, uint32_t);
-int p9fs_client_error(struct p9fs_session *, void **, enum p9fs_msg_type);
-int p9fs_client_flush(void);
-int p9fs_client_open(struct p9fs_session *, uint32_t, int);
-int p9fs_client_create(void);
-int p9fs_client_read(struct p9fs_session *, uint32_t, io_callback, struct uio *);
-int p9fs_client_write(struct p9fs_session *, uint32_t, io_callback, struct uio *);
-int p9fs_client_remove(void);
-int p9fs_client_stat(struct p9fs_session *, uint32_t, struct vattr *);
-int p9fs_client_wstat(void);
-int p9fs_client_walk(struct p9fs_session *, uint32_t, uint32_t *, size_t,
-    const char *, struct p9fs_qid *);
-
-/* Helpers for working with API data. */
-int p9fs_client_uio_callback(void *, uint32_t, size_t *, struct uio *);
-void p9fs_client_parse_std_stat(void *, struct p9fs_stat_payload *, size_t *);
-void p9fs_client_parse_u_stat(void *, struct p9fs_stat_u_payload *, size_t *);
-
-/* Wrapper API calls. */
-int p9fs_nget(struct p9fs_session *, uint32_t, struct p9fs_qid *,
-    int, struct p9fs_node **);
-int p9fs_client_getnode(struct p9fs_node *, char *, struct p9fs_node **);
-
-/* Helpers for managing tags and fids. */
-uint32_t p9fs_getfid(struct p9fs_session *);
-void p9fs_relfid(struct p9fs_session *, uint32_t);
+int p9_client_version(struct p9_client *clnt);
+struct p9_fid *p9_client_attach(struct p9_client *clnt, struct p9_fid *afid,
+        char *uname, uid_t n_uname, char *aname);
+struct p9_client *p9_client_create(struct mount *mp);
+void p9_client_destroy(struct p9_client *clnt);
+int p9_client_detach(struct p9_fid *fid);
+struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
+                char **wnames, int clone);
+int p9fs_client_open(struct p9_client *clnt, int mode);
+int p9fs_proto_dotl(struct p9fs_session *p9s);
+struct p9_fid *p9fs_init_session(struct mount *mp);
+struct p9_wstat *p9_client_stat(struct p9_fid *fid);
+struct p9_stat_dotl *p9_client_getattr_dotl(struct p9_fid *fid, uint64_t mask);
+int p9_client_setattr(struct p9_fid *fid, struct p9_iattr_dotl *p9attr);
+int p9_client_wstat(struct p9_fid *fid, struct p9_wstat *wst);
+int p9_client_statfs(struct p9_fid *fid, struct p9_rstatfs *sb);
+int p9_client_readdir(struct p9_fid *fid, char *data, uint32_t count, uint64_t offset);
 
 #endif /* __P9FS_PROTO_H__ */

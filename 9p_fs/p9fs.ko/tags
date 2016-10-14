@@ -1,0 +1,306 @@
+VFSTOP9	p9fs_vfsops.c	/^#define	VFSTOP9(mp) ((mp)->mnt_data)$/
+VOP_ACCESS	vnode_if.h	/^static __inline int VOP_ACCESS($/
+VOP_ACCESSX	vnode_if.h	/^static __inline int VOP_ACCESSX($/
+VOP_ACLCHECK	vnode_if.h	/^static __inline int VOP_ACLCHECK($/
+VOP_ADD_WRITECOUNT	vnode_if.h	/^static __inline int VOP_ADD_WRITECOUNT($/
+VOP_ADVISE	vnode_if.h	/^static __inline int VOP_ADVISE($/
+VOP_ADVLOCK	vnode_if.h	/^static __inline int VOP_ADVLOCK($/
+VOP_ADVLOCKASYNC	vnode_if.h	/^static __inline int VOP_ADVLOCKASYNC($/
+VOP_ADVLOCKPURGE	vnode_if.h	/^static __inline int VOP_ADVLOCKPURGE($/
+VOP_ALLOCATE	vnode_if.h	/^static __inline int VOP_ALLOCATE($/
+VOP_BMAP	vnode_if.h	/^static __inline int VOP_BMAP($/
+VOP_CACHEDLOOKUP	vnode_if.h	/^static __inline int VOP_CACHEDLOOKUP($/
+VOP_CLOSE	vnode_if.h	/^static __inline int VOP_CLOSE($/
+VOP_CLOSEEXTATTR	vnode_if.h	/^static __inline int VOP_CLOSEEXTATTR($/
+VOP_CREATE	vnode_if.h	/^static __inline int VOP_CREATE($/
+VOP_DELETEEXTATTR	vnode_if.h	/^static __inline int VOP_DELETEEXTATTR($/
+VOP_FSYNC	vnode_if.h	/^static __inline int VOP_FSYNC($/
+VOP_GETACL	vnode_if.h	/^static __inline int VOP_GETACL($/
+VOP_GETATTR	vnode_if.h	/^static __inline int VOP_GETATTR($/
+VOP_GETEXTATTR	vnode_if.h	/^static __inline int VOP_GETEXTATTR($/
+VOP_GETPAGES	vnode_if.h	/^static __inline int VOP_GETPAGES($/
+VOP_GETWRITEMOUNT	vnode_if.h	/^static __inline int VOP_GETWRITEMOUNT($/
+VOP_GET_WRITECOUNT	vnode_if.h	/^static __inline int VOP_GET_WRITECOUNT($/
+VOP_INACTIVE	vnode_if.h	/^static __inline int VOP_INACTIVE($/
+VOP_IOCTL	vnode_if.h	/^static __inline int VOP_IOCTL($/
+VOP_ISLOCKED	vnode_if.h	/^static __inline int VOP_ISLOCKED($/
+VOP_IS_TEXT	vnode_if.h	/^static __inline int VOP_IS_TEXT($/
+VOP_KQFILTER	vnode_if.h	/^static __inline int VOP_KQFILTER($/
+VOP_LINK	vnode_if.h	/^static __inline int VOP_LINK($/
+VOP_LISTEXTATTR	vnode_if.h	/^static __inline int VOP_LISTEXTATTR($/
+VOP_LOCK1	vnode_if.h	/^static __inline int VOP_LOCK1($/
+VOP_LOOKUP	vnode_if.h	/^static __inline int VOP_LOOKUP($/
+VOP_MARKATIME	vnode_if.h	/^static __inline int VOP_MARKATIME($/
+VOP_MKDIR	vnode_if.h	/^static __inline int VOP_MKDIR($/
+VOP_MKNOD	vnode_if.h	/^static __inline int VOP_MKNOD($/
+VOP_OPEN	vnode_if.h	/^static __inline int VOP_OPEN($/
+VOP_OPENEXTATTR	vnode_if.h	/^static __inline int VOP_OPENEXTATTR($/
+VOP_PATHCONF	vnode_if.h	/^static __inline int VOP_PATHCONF($/
+VOP_POLL	vnode_if.h	/^static __inline int VOP_POLL($/
+VOP_PRINT	vnode_if.h	/^static __inline int VOP_PRINT($/
+VOP_PUTPAGES	vnode_if.h	/^static __inline int VOP_PUTPAGES($/
+VOP_READ	vnode_if.h	/^static __inline int VOP_READ($/
+VOP_READDIR	vnode_if.h	/^static __inline int VOP_READDIR($/
+VOP_READLINK	vnode_if.h	/^static __inline int VOP_READLINK($/
+VOP_REALLOCBLKS	vnode_if.h	/^static __inline int VOP_REALLOCBLKS($/
+VOP_RECLAIM	vnode_if.h	/^static __inline int VOP_RECLAIM($/
+VOP_REMOVE	vnode_if.h	/^static __inline int VOP_REMOVE($/
+VOP_RENAME	vnode_if.h	/^static __inline int VOP_RENAME($/
+VOP_REVOKE	vnode_if.h	/^static __inline int VOP_REVOKE($/
+VOP_RMDIR	vnode_if.h	/^static __inline int VOP_RMDIR($/
+VOP_SETACL	vnode_if.h	/^static __inline int VOP_SETACL($/
+VOP_SETATTR	vnode_if.h	/^static __inline int VOP_SETATTR($/
+VOP_SETEXTATTR	vnode_if.h	/^static __inline int VOP_SETEXTATTR($/
+VOP_SETLABEL	vnode_if.h	/^static __inline int VOP_SETLABEL($/
+VOP_SET_TEXT	vnode_if.h	/^static __inline int VOP_SET_TEXT($/
+VOP_SPARE1	vnode_if.h	/^static __inline int VOP_SPARE1($/
+VOP_SPARE2	vnode_if.h	/^static __inline int VOP_SPARE2($/
+VOP_SPARE3	vnode_if.h	/^static __inline int VOP_SPARE3($/
+VOP_SPARE4	vnode_if.h	/^static __inline int VOP_SPARE4($/
+VOP_SPARE5	vnode_if.h	/^static __inline int VOP_SPARE5($/
+VOP_STRATEGY	vnode_if.h	/^static __inline int VOP_STRATEGY($/
+VOP_SYMLINK	vnode_if.h	/^static __inline int VOP_SYMLINK($/
+VOP_UNLOCK	vnode_if.h	/^static __inline int VOP_UNLOCK($/
+VOP_UNP_BIND	vnode_if.h	/^static __inline int VOP_UNP_BIND($/
+VOP_UNP_CONNECT	vnode_if.h	/^static __inline int VOP_UNP_CONNECT($/
+VOP_UNP_DETACH	vnode_if.h	/^static __inline int VOP_UNP_DETACH($/
+VOP_UNSET_TEXT	vnode_if.h	/^static __inline int VOP_UNSET_TEXT($/
+VOP_VPTOCNP	vnode_if.h	/^static __inline int VOP_VPTOCNP($/
+VOP_VPTOFH	vnode_if.h	/^static __inline int VOP_VPTOFH($/
+VOP_WHITEOUT	vnode_if.h	/^static __inline int VOP_WHITEOUT($/
+VOP_WRITE	vnode_if.h	/^static __inline int VOP_WRITE($/
+p9fs_access	p9fs_vnops.c	/^p9fs_access(struct vop_access_args *ap)$/
+p9fs_client_auth	p9fs_client_proto.c	/^p9fs_client_auth(struct p9fs_session *p9s)$/
+p9fs_client_clunk	p9fs_client_proto.c	/^p9fs_client_clunk(struct p9fs_session *p9s, uint32/
+p9fs_client_create	p9fs_client_proto.c	/^p9fs_client_create(void)$/
+p9fs_client_error	p9fs_client_proto.c	/^p9fs_client_error(struct p9fs_session *p9s, void */
+p9fs_client_flush	p9fs_client_proto.c	/^p9fs_client_flush(void)$/
+p9fs_client_open	p9fs_client_proto.c	/^p9fs_client_open(struct p9fs_session *p9s, uint32_/
+p9fs_client_parse_std_stat	p9fs_client_proto.c	/^p9fs_client_parse_std_stat(void *m, struct p9fs_st/
+p9fs_client_parse_u_stat	p9fs_client_proto.c	/^p9fs_client_parse_u_stat(void *m, struct p9fs_stat/
+p9fs_client_read	p9fs_client_proto.c	/^p9fs_client_read(struct p9fs_session *p9s, uint32_/
+p9fs_client_remove	p9fs_client_proto.c	/^p9fs_client_remove(void)$/
+p9fs_client_stat	p9fs_client_proto.c	/^p9fs_client_stat(struct p9fs_session *p9s, uint32_/
+p9fs_client_uio_callback	p9fs_client_proto.c	/^p9fs_client_uio_callback(void *mp, uint32_t count,/
+p9fs_client_version	p9fs_client_proto.c	/^p9fs_client_version(struct p9fs_session *p9s)$/
+p9fs_client_walk	p9fs_client_proto.c	/^p9fs_client_walk(struct p9fs_session *p9s, uint32_/
+p9fs_client_write	p9fs_client_proto.c	/^p9fs_client_write(struct p9fs_session *p9s, uint32/
+p9fs_client_wstat	p9fs_client_proto.c	/^p9fs_client_wstat(void)$/
+p9fs_close	p9fs_vnops.c	/^p9fs_close(struct vop_close_args *ap)$/
+p9fs_close_session	p9fs_subr.c	/^p9fs_close_session(struct mount *mp)$/
+p9fs_create	p9fs_vnops.c	/^p9fs_create(struct vop_create_args *ap)$/
+p9fs_fsync	p9fs_vnops.c	/^p9fs_fsync(struct vop_fsync_args *ap)$/
+p9fs_getattr	p9fs_vnops.c	/^p9fs_getattr(struct vop_getattr_args *ap)$/
+p9fs_getfid	p9fs_subr.c	/^p9fs_getfid(struct p9fs_session *p9s)$/
+p9fs_inactive	p9fs_vnops.c	/^p9fs_inactive(struct vop_inactive_args *ap)$/
+p9fs_init_session	p9fs_subr.c	/^p9fs_init_session(struct mount *mp)$/
+p9fs_link	p9fs_vnops.c	/^p9fs_link(struct vop_link_args *ap)$/
+p9fs_lookup	p9fs_vnops.c	/^p9fs_lookup(struct vop_cachedlookup_args *ap)$/
+p9fs_mkdir	p9fs_vnops.c	/^p9fs_mkdir(struct vop_mkdir_args *ap)$/
+p9fs_mknod	p9fs_vnops.c	/^p9fs_mknod(struct vop_mknod_args *ap)$/
+p9fs_mode	p9fs_proto.h	/^enum p9fs_mode {$/
+p9fs_mount	p9fs_vfsops.c	/^struct p9fs_mount {$/
+p9fs_mount_parse_opts	p9fs_vfsops.c	/^p9fs_mount_parse_opts(struct mount *mp)$/
+p9fs_msg	p9fs_proto.h	/^union p9fs_msg {$/
+p9fs_msg_Rattach	p9fs_proto.h	/^struct p9fs_msg_Rattach {$/
+p9fs_msg_Rauth	p9fs_proto.h	/^struct p9fs_msg_Rauth {$/
+p9fs_msg_Rclunk	p9fs_proto.h	/^struct p9fs_msg_Rclunk {$/
+p9fs_msg_Rcreate	p9fs_proto.h	/^struct p9fs_msg_Rcreate {$/
+p9fs_msg_Rerror	p9fs_proto.h	/^struct p9fs_msg_Rerror {$/
+p9fs_msg_Rflush	p9fs_proto.h	/^struct p9fs_msg_Rflush {$/
+p9fs_msg_Ropen	p9fs_proto.h	/^struct p9fs_msg_Ropen {$/
+p9fs_msg_Rread	p9fs_proto.h	/^struct p9fs_msg_Rread {$/
+p9fs_msg_Rremove	p9fs_proto.h	/^struct p9fs_msg_Rremove {$/
+p9fs_msg_Rstat	p9fs_proto.h	/^struct p9fs_msg_Rstat {$/
+p9fs_msg_Rversion	p9fs_proto.h	/^struct p9fs_msg_Rversion {$/
+p9fs_msg_Rwalk	p9fs_proto.h	/^struct p9fs_msg_Rwalk {$/
+p9fs_msg_Rwrite	p9fs_proto.h	/^struct p9fs_msg_Rwrite {$/
+p9fs_msg_Rwstat	p9fs_proto.h	/^struct p9fs_msg_Rwstat {$/
+p9fs_msg_Tattach	p9fs_proto.h	/^struct p9fs_msg_Tattach {$/
+p9fs_msg_Tauth	p9fs_proto.h	/^struct p9fs_msg_Tauth {$/
+p9fs_msg_Tclunk	p9fs_proto.h	/^struct p9fs_msg_Tclunk {$/
+p9fs_msg_Tcreate	p9fs_proto.h	/^struct p9fs_msg_Tcreate {$/
+p9fs_msg_Tflush	p9fs_proto.h	/^struct p9fs_msg_Tflush {$/
+p9fs_msg_Topen	p9fs_proto.h	/^struct p9fs_msg_Topen {$/
+p9fs_msg_Tread	p9fs_proto.h	/^struct p9fs_msg_Tread {$/
+p9fs_msg_Tremove	p9fs_proto.h	/^struct p9fs_msg_Tremove {$/
+p9fs_msg_Tstat	p9fs_proto.h	/^struct p9fs_msg_Tstat {$/
+p9fs_msg_Tversion	p9fs_proto.h	/^struct p9fs_msg_Tversion {$/
+p9fs_msg_Twalk	p9fs_proto.h	/^struct p9fs_msg_Twalk {$/
+p9fs_msg_Twrite	p9fs_proto.h	/^struct p9fs_msg_Twrite {$/
+p9fs_msg_Twstat	p9fs_proto.h	/^struct p9fs_msg_Twstat {$/
+p9fs_msg_hdr	p9fs_proto.h	/^struct p9fs_msg_hdr {$/
+p9fs_msg_type	p9fs_proto.h	/^enum p9fs_msg_type {$/
+p9fs_node	p9fs_proto.h	/^struct p9fs_node {$/
+p9fs_node_user	p9fs_proto.h	/^struct p9fs_session;$/
+p9fs_open	p9fs_vnops.c	/^p9fs_open(struct vop_open_args *ap)$/
+p9fs_pathconf	p9fs_vnops.c	/^p9fs_pathconf(struct vop_pathconf_args *ap)$/
+p9fs_print	p9fs_vnops.c	/^p9fs_print(struct vop_print_args *ap)$/
+p9fs_qid	p9fs_proto.h	/^struct p9fs_qid {$/
+p9fs_qid_type	p9fs_proto.h	/^enum p9fs_qid_type {$/
+p9fs_read	p9fs_vnops.c	/^p9fs_read(struct vop_read_args *ap)$/
+p9fs_readdir	p9fs_vnops.c	/^p9fs_readdir(struct vop_readdir_args *ap)$/
+p9fs_readlink	p9fs_vnops.c	/^p9fs_readlink(struct vop_readlink_args *ap)$/
+p9fs_reclaim	p9fs_vnops.c	/^p9fs_reclaim(struct vop_reclaim_args *ap)$/
+p9fs_recv	p9fs_proto.h	/^struct p9fs_recv {$/
+p9fs_relfid	p9fs_subr.c	/^p9fs_relfid(struct p9fs_session *p9s, uint32_t fid/
+p9fs_remove	p9fs_vnops.c	/^p9fs_remove(struct vop_remove_args *ap)$/
+p9fs_rename	p9fs_vnops.c	/^p9fs_rename(struct vop_rename_args *ap)$/
+p9fs_req	p9fs_proto.h	/^struct p9fs_req {$/
+p9fs_rmdir	p9fs_vnops.c	/^p9fs_rmdir(struct vop_rmdir_args *ap)$/
+p9fs_session	p9fs_proto.h	/^struct p9fs_session {$/
+p9fs_setattr	p9fs_vnops.c	/^p9fs_setattr(struct vop_setattr_args *ap)$/
+p9fs_stat	p9fs_proto.h	/^struct p9fs_stat {$/
+p9fs_stat_payload	p9fs_proto.h	/^struct p9fs_stat_payload {$/
+p9fs_stat_u	p9fs_proto.h	/^struct p9fs_stat_u {$/
+p9fs_stat_u_footer	p9fs_proto.h	/^struct p9fs_stat_u_footer {$/
+p9fs_stat_u_payload	p9fs_proto.h	/^struct p9fs_stat_u_payload {$/
+p9fs_str	p9fs_proto.h	/^struct p9fs_str {$/
+p9fs_symlink	p9fs_vnops.c	/^p9fs_symlink(struct vop_symlink_args *ap)$/
+p9fs_unmount	p9fs_vfsops.c	/^p9fs_unmount(struct mount *mp, int mntflags)$/
+p9fs_vptofh	p9fs_vnops.c	/^p9fs_vptofh(struct vop_vptofh_args *ap)$/
+p9fs_write	p9fs_vnops.c	/^p9fs_write(struct vop_write_args *ap)$/
+p9s_state	p9fs_proto.h	/^enum p9s_state {$/
+print_vattr	p9fs_client_proto.c	/^print_vattr(struct vattr *vap, uint32_t fid)$/
+uio	p9fs_proto.h	/^typedef int (*io_callback)(void *, uint32_t, size_/
+vop_access_args	vnode_if.h	/^struct vop_access_args {$/
+vop_access_t	vnode_if_typedef.h	/^struct vop_access_args;$/
+vop_accessx_args	vnode_if.h	/^struct vop_accessx_args {$/
+vop_accessx_t	vnode_if_typedef.h	/^struct vop_accessx_args;$/
+vop_aclcheck_args	vnode_if.h	/^struct vop_aclcheck_args {$/
+vop_aclcheck_t	vnode_if_typedef.h	/^struct vop_aclcheck_args;$/
+vop_add_writecount_args	vnode_if.h	/^struct vop_add_writecount_args {$/
+vop_add_writecount_t	vnode_if_typedef.h	/^struct vop_add_writecount_args;$/
+vop_advise_args	vnode_if.h	/^struct vop_advise_args {$/
+vop_advise_t	vnode_if_typedef.h	/^struct vop_advise_args;$/
+vop_advlock_args	vnode_if.h	/^struct vop_advlock_args {$/
+vop_advlock_t	vnode_if_typedef.h	/^struct vop_advlock_args;$/
+vop_advlockasync_args	vnode_if.h	/^struct vop_advlockasync_args {$/
+vop_advlockasync_t	vnode_if_typedef.h	/^struct vop_advlockasync_args;$/
+vop_advlockpurge_args	vnode_if.h	/^struct vop_advlockpurge_args {$/
+vop_advlockpurge_t	vnode_if_typedef.h	/^struct vop_advlockpurge_args;$/
+vop_allocate_args	vnode_if.h	/^struct vop_allocate_args {$/
+vop_allocate_t	vnode_if_typedef.h	/^struct vop_allocate_args;$/
+vop_bmap_args	vnode_if.h	/^struct vop_bmap_args {$/
+vop_bmap_t	vnode_if_typedef.h	/^struct vop_bmap_args;$/
+vop_cachedlookup_args	vnode_if.h	/^struct vop_cachedlookup_args {$/
+vop_cachedlookup_t	vnode_if_typedef.h	/^struct vop_cachedlookup_args;$/
+vop_close_args	vnode_if.h	/^struct vop_close_args {$/
+vop_close_t	vnode_if_typedef.h	/^struct vop_close_args;$/
+vop_closeextattr_args	vnode_if.h	/^struct vop_closeextattr_args {$/
+vop_closeextattr_t	vnode_if_typedef.h	/^struct vop_closeextattr_args;$/
+vop_create_args	vnode_if.h	/^struct vop_create_args {$/
+vop_create_t	vnode_if_typedef.h	/^struct vop_create_args;$/
+vop_deleteextattr_args	vnode_if.h	/^struct vop_deleteextattr_args {$/
+vop_deleteextattr_t	vnode_if_typedef.h	/^struct vop_deleteextattr_args;$/
+vop_fsync_args	vnode_if.h	/^struct vop_fsync_args {$/
+vop_fsync_t	vnode_if_typedef.h	/^struct vop_fsync_args;$/
+vop_get_writecount_args	vnode_if.h	/^struct vop_get_writecount_args {$/
+vop_get_writecount_t	vnode_if_typedef.h	/^struct vop_get_writecount_args;$/
+vop_getacl_args	vnode_if.h	/^struct vop_getacl_args {$/
+vop_getacl_t	vnode_if_typedef.h	/^struct vop_getacl_args;$/
+vop_getattr_args	vnode_if.h	/^struct vop_getattr_args {$/
+vop_getattr_t	vnode_if_typedef.h	/^struct vop_getattr_args;$/
+vop_getextattr_args	vnode_if.h	/^struct vop_getextattr_args {$/
+vop_getextattr_t	vnode_if_typedef.h	/^struct vop_getextattr_args;$/
+vop_getpages_args	vnode_if.h	/^struct vop_getpages_args {$/
+vop_getpages_t	vnode_if_typedef.h	/^struct vop_getpages_args;$/
+vop_getwritemount_args	vnode_if.h	/^struct vop_getwritemount_args {$/
+vop_getwritemount_t	vnode_if_typedef.h	/^struct vop_getwritemount_args;$/
+vop_inactive_args	vnode_if.h	/^struct vop_inactive_args {$/
+vop_inactive_t	vnode_if_typedef.h	/^struct vop_inactive_args;$/
+vop_ioctl_args	vnode_if.h	/^struct vop_ioctl_args {$/
+vop_ioctl_t	vnode_if_typedef.h	/^struct vop_ioctl_args;$/
+vop_is_text_args	vnode_if.h	/^struct vop_is_text_args {$/
+vop_is_text_t	vnode_if_typedef.h	/^struct vop_is_text_args;$/
+vop_islocked_args	vnode_if.h	/^struct vop_islocked_args {$/
+vop_islocked_t	vnode_if_typedef.h	/^struct vop_islocked_args;$/
+vop_kqfilter_args	vnode_if.h	/^struct vop_kqfilter_args {$/
+vop_kqfilter_t	vnode_if_typedef.h	/^struct vop_kqfilter_args;$/
+vop_link_args	vnode_if.h	/^struct vop_link_args {$/
+vop_link_t	vnode_if_typedef.h	/^struct vop_link_args;$/
+vop_listextattr_args	vnode_if.h	/^struct vop_listextattr_args {$/
+vop_listextattr_t	vnode_if_typedef.h	/^struct vop_listextattr_args;$/
+vop_lock1_args	vnode_if.h	/^struct vop_lock1_args {$/
+vop_lock1_t	vnode_if_typedef.h	/^struct vop_lock1_args;$/
+vop_lookup_args	vnode_if.h	/^struct vop_lookup_args {$/
+vop_lookup_t	vnode_if_typedef.h	/^struct vop_lookup_args;$/
+vop_markatime_args	vnode_if.h	/^struct vop_markatime_args {$/
+vop_markatime_t	vnode_if_typedef.h	/^struct vop_markatime_args;$/
+vop_mkdir_args	vnode_if.h	/^struct vop_mkdir_args {$/
+vop_mkdir_t	vnode_if_typedef.h	/^struct vop_mkdir_args;$/
+vop_mknod_args	vnode_if.h	/^struct vop_mknod_args {$/
+vop_mknod_t	vnode_if_typedef.h	/^struct vop_mknod_args;$/
+vop_open_args	vnode_if.h	/^struct vop_open_args {$/
+vop_open_t	vnode_if_typedef.h	/^struct vop_open_args;$/
+vop_openextattr_args	vnode_if.h	/^struct vop_openextattr_args {$/
+vop_openextattr_t	vnode_if_typedef.h	/^struct vop_openextattr_args;$/
+vop_pathconf_args	vnode_if.h	/^struct vop_pathconf_args {$/
+vop_pathconf_t	vnode_if_typedef.h	/^struct vop_pathconf_args;$/
+vop_poll_args	vnode_if.h	/^struct vop_poll_args {$/
+vop_poll_t	vnode_if_typedef.h	/^struct vop_poll_args;$/
+vop_print_args	vnode_if.h	/^struct vop_print_args {$/
+vop_print_t	vnode_if_typedef.h	/^struct vop_print_args;$/
+vop_putpages_args	vnode_if.h	/^struct vop_putpages_args {$/
+vop_putpages_t	vnode_if_typedef.h	/^struct vop_putpages_args;$/
+vop_read_args	vnode_if.h	/^struct vop_read_args {$/
+vop_read_t	vnode_if_typedef.h	/^struct vop_read_args;$/
+vop_readdir_args	vnode_if.h	/^struct vop_readdir_args {$/
+vop_readdir_t	vnode_if_typedef.h	/^struct vop_readdir_args;$/
+vop_readlink_args	vnode_if.h	/^struct vop_readlink_args {$/
+vop_readlink_t	vnode_if_typedef.h	/^struct vop_readlink_args;$/
+vop_reallocblks_args	vnode_if.h	/^struct vop_reallocblks_args {$/
+vop_reallocblks_t	vnode_if_typedef.h	/^struct vop_reallocblks_args;$/
+vop_reclaim_args	vnode_if.h	/^struct vop_reclaim_args {$/
+vop_reclaim_t	vnode_if_typedef.h	/^struct vop_reclaim_args;$/
+vop_remove_args	vnode_if.h	/^struct vop_remove_args {$/
+vop_remove_t	vnode_if_typedef.h	/^struct vop_remove_args;$/
+vop_rename_args	vnode_if.h	/^struct vop_rename_args {$/
+vop_rename_t	vnode_if_typedef.h	/^struct vop_rename_args;$/
+vop_revoke_args	vnode_if.h	/^struct vop_revoke_args {$/
+vop_revoke_t	vnode_if_typedef.h	/^struct vop_revoke_args;$/
+vop_rmdir_args	vnode_if.h	/^struct vop_rmdir_args {$/
+vop_rmdir_t	vnode_if_typedef.h	/^struct vop_rmdir_args;$/
+vop_set_text_args	vnode_if.h	/^struct vop_set_text_args {$/
+vop_set_text_t	vnode_if_typedef.h	/^struct vop_set_text_args;$/
+vop_setacl_args	vnode_if.h	/^struct vop_setacl_args {$/
+vop_setacl_t	vnode_if_typedef.h	/^struct vop_setacl_args;$/
+vop_setattr_args	vnode_if.h	/^struct vop_setattr_args {$/
+vop_setattr_t	vnode_if_typedef.h	/^struct vop_setattr_args;$/
+vop_setextattr_args	vnode_if.h	/^struct vop_setextattr_args {$/
+vop_setextattr_t	vnode_if_typedef.h	/^struct vop_setextattr_args;$/
+vop_setlabel_args	vnode_if.h	/^struct vop_setlabel_args {$/
+vop_setlabel_t	vnode_if_typedef.h	/^struct vop_setlabel_args;$/
+vop_spare1_args	vnode_if.h	/^struct vop_spare1_args {$/
+vop_spare1_t	vnode_if_typedef.h	/^struct vop_spare1_args;$/
+vop_spare2_args	vnode_if.h	/^struct vop_spare2_args {$/
+vop_spare2_t	vnode_if_typedef.h	/^struct vop_spare2_args;$/
+vop_spare3_args	vnode_if.h	/^struct vop_spare3_args {$/
+vop_spare3_t	vnode_if_typedef.h	/^struct vop_spare3_args;$/
+vop_spare4_args	vnode_if.h	/^struct vop_spare4_args {$/
+vop_spare4_t	vnode_if_typedef.h	/^struct vop_spare4_args;$/
+vop_spare5_args	vnode_if.h	/^struct vop_spare5_args {$/
+vop_spare5_t	vnode_if_typedef.h	/^struct vop_spare5_args;$/
+vop_strategy_args	vnode_if.h	/^struct vop_strategy_args {$/
+vop_strategy_t	vnode_if_typedef.h	/^struct vop_strategy_args;$/
+vop_symlink_args	vnode_if.h	/^struct vop_symlink_args {$/
+vop_symlink_t	vnode_if_typedef.h	/^struct vop_symlink_args;$/
+vop_unlock_args	vnode_if.h	/^struct vop_unlock_args {$/
+vop_unlock_t	vnode_if_typedef.h	/^struct vop_unlock_args;$/
+vop_unp_bind_args	vnode_if.h	/^struct vop_unp_bind_args {$/
+vop_unp_bind_t	vnode_if_typedef.h	/^struct vop_unp_bind_args;$/
+vop_unp_connect_args	vnode_if.h	/^struct vop_unp_connect_args {$/
+vop_unp_connect_t	vnode_if_typedef.h	/^struct vop_unp_connect_args;$/
+vop_unp_detach_args	vnode_if.h	/^struct vop_unp_detach_args {$/
+vop_unp_detach_t	vnode_if_typedef.h	/^struct vop_unp_detach_args;$/
+vop_unset_text_args	vnode_if.h	/^struct vop_unset_text_args {$/
+vop_unset_text_t	vnode_if_typedef.h	/^struct vop_unset_text_args;$/
+vop_vector	vnode_if_newproto.h	/^struct vop_vector {$/
+vop_vptocnp_args	vnode_if.h	/^struct vop_vptocnp_args {$/
+vop_vptocnp_t	vnode_if_typedef.h	/^struct vop_vptocnp_args;$/
+vop_vptofh_args	vnode_if.h	/^struct vop_vptofh_args {$/
+vop_vptofh_t	vnode_if_typedef.h	/^struct vop_vptofh_args;$/
+vop_whiteout_args	vnode_if.h	/^struct vop_whiteout_args {$/
+vop_whiteout_t	vnode_if_typedef.h	/^struct vop_whiteout_args;$/
+vop_write_args	vnode_if.h	/^struct vop_write_args {$/
+vop_write_t	vnode_if_typedef.h	/^struct vop_write_args;$/

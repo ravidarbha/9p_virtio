@@ -5,7 +5,6 @@ __FBSDID("$FreeBSD$");
 #include <sys/param.h>
 #include <sys/vnode.h>
 #include <sys/mount.h>
-#include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/malloc.h>
 #include <sys/kernel.h>
@@ -14,7 +13,6 @@ __FBSDID("$FreeBSD$");
 #include <sys/namei.h>
 
 #include "p9fs_proto.h"
-#include "p9fs_subr.h"
 
 struct vop_vector p9fs_vnops;
 static MALLOC_DEFINE(M_P9NODE, "p9fs_node", "p9fs node structures");
@@ -71,7 +69,7 @@ p9fs_lookup(struct vop_cachedlookup_args *ap)
 	printf("%s: not implemented yet\n", __func__);	\
 	return (EINVAL)
 
-/* We ll implement thi once mount works fine .*/
+/* We ll implement this once mount works fine .*/
 static int
 p9fs_create(struct vop_create_args *ap)
 {
@@ -96,64 +94,11 @@ p9fs_open(struct vop_open_args *ap)
 
 	printf("%s(fid %u)\n", __func__, np->p9n_fid);
 
-	/*
-	 * XXX XXX XXX
-	 * XXX Each fid is associated with a particular open mode, so this
-	 *     isn't good enough.  Need to map the mode to a particular fid.
-	 *     Oh, but wait, we can't determine the correct fid for a given
-	 *     client I/O call, because the filesystem can't store per file
-	 *     descriptor state... sigh...
-	 *
-	 * diod's docs for 9P2000.L mention that each user gets its own
-	 * attach fid on which to perform its operations.  That doesn't help
-	 * with the per-fid open mode issue though... a given user can have
-	 * multiple open modes.
-	 *
-	 * So perhaps p9fs would have to create a list of per-user open modes
-	 * to fids?  Then read/write calls would lookup the appropriate one
-	 * given the implied request mode?
-	 *
-	 * IO_APPEND is always included for VOP_WRITE() for fd's that were
-	 * opened with O_APPEND.  So for each user we'd need at most three
-	 * different fids: one each for reads, writes, and appends.  Each fid
-	 * would have a refcount based on the number of times an open() call
-	 * was issued with its bit set in the mode flag.  That way we could
-	 * clunk fids only when they no longer have corresponding users.
-	 *
-	 * However, R/W modes are quite common, so perhaps we should try to
-	 * always open R/W and let VFS do the per-fd restriction?  Ah, but
-	 * that won't work because some files will only be openable read-only
-	 * or write-only or append-only on the server end.
-	 *
-	 * Append presents another challenge: a given user can have multiple
-	 * append fd's open on the same file at once.  Different appends can
-	 * be at different offsets.  And some filesystems implement having
-	 * append-only files.  However, looks like in that scenario the
-	 * overlapping appends will always just get sent to the file's
-	 * current size regardless.  This does mean we need an append fid.
-	 *
-	 * Finally, a p9fs_node should be indexed in the vfs hash by qid
-	 * instead of by fid, since each vnode will be mappable to
-	 * potentially many fids.  p9fs_nget() already takes a qid.  The
-	 * main challenge is that vfs_hash_insert() only takes an u_int for
-	 * the hash value, so we'll need to provide a comparator.
-	 *
-	 * Although, according to py9p, we can't clone an open fid, so
-	 * perhaps we need a normal fid that is used just for cloning and
-	 * metadata operations.
-	 *
-	 * NB: We likely also have to implement Tattach for every user, so
-	 *     that the server has correct credentials for each fid and
-	 *     tree of fids.  The initial attach would be defined by the
-	 *     mount, but followup accesses by other users will require
-	 *     their own attach.
-	 */
 	if (np->p9n_opens > 0) {
 		np->p9n_opens++;
 		return (0);
 	}
 
-	/* XXX Can this be cached in some reasonable fashion? */
 	stat  = p9_client_stat(np->p9n_fid);
 	if (error != 0)
 		return (error);
@@ -161,19 +106,17 @@ p9fs_open(struct vop_open_args *ap)
 	/*
 	 * XXX VFS calls VOP_OPEN() on a directory it's about to perform
 	 *     VOP_READDIR() calls on.  However, 9P2000 Twalk requires that
-	 *     the given fid not have been opened.  What should we do?
-	 *
-	 * For now, this call performs an internal Twalk to obtain a cloned
-	 * fid that can be opened separately.  It will be clunk'd at the
-	 * same time as the unopened fid.
+	 *     the given fid not have been opened.
+	 * 	For now, this call performs an internal Twalk to obtain a cloned
+	 * 	fid that can be opened separately.  It will be clunk'd at the
+	 * 	same time as the unopened fid.
 	 */
 	if (ap->a_vp->v_type == VDIR) {
 		if (np->p9n_ofid == 0) {
-			np->p9n_ofid = p9_fid_create(clnt);
 
 			/*ofid is the open fid for this file.*/
 			np->p9n_ofid = p9_client_walk(np->p9n_fid,
-			     0, NULL, 1); /* CLone the fid here.*/
+			     0, NULL, 1); /* Clone the fid here.*/
 			if (error != 0) {
 				np->p9n_ofid = 0;
 				return (error);
@@ -182,6 +125,7 @@ p9fs_open(struct vop_open_args *ap)
 		fid = np->p9n_ofid;
 	}
 
+	/* Use the newly created fid for the open.*/
 	error = p9_client_open(fid, ap->a_mode);
 	if (error == 0) {
 		np->p9n_opens = 1;
@@ -213,57 +157,6 @@ p9fs_close(struct vop_close_args *ap)
 	return (0);
 }
 
-
-#if 0
-static int
-p9fs_access(struct vop_access_args *ap)
-{
-	struct p9fs_node *np = ap->a_vp->v_data;
-	int accmode = ap->a_accmode;
-	struct vattr vattr;
-	int error;
-
-	/* Read-only filesystem check. */
-	if ((accmode & VMODIFY_PERMS) != 0 &&
-	    (ap->a_vp->v_mount->mnt_flag & MNT_RDONLY) != 0) {
-		switch (ap->a_vp->v_type) {
-		case VDIR:
-		case VLNK:
-		case VREG:
-			error = EROFS;
-			goto out;
-		default:
-			break;
-		}
-	}
-
-	error = vfs_unixify_accmode(&accmode);
-	if (error != 0)
-		goto out;
-
-	if (accmode == 0)
-		goto out;
-
-	/*
-	 * We have some access mode to check.
-	 *
-	 * XXX In cooperation with p9fs_{open,getattr}(), can this metadata
-	 *     be cached in a reasonable fashion?
-	 */
-	error = p9fs_client_stat(np->p9n_session, np->p9n_fid, &vattr);
-	if (error != 0)
-		goto out;
-
-	error = vaccess(ap->a_vp->v_type, vattr.va_mode, vattr.va_uid,
-	    vattr.va_gid, accmode, ap->a_cred, NULL);
-
-out:
-	printf("%s(fid %d) ret %d\n", __func__, np->p9n_fid, error);
-	return (error);
-}
-
-#endif 
-
 static int
 p9fs_getattr(struct vop_getattr_args *ap)
 {
@@ -272,6 +165,34 @@ p9fs_getattr(struct vop_getattr_args *ap)
 
 	printf("%s(fid %d) ret %d\n", __func__, np->p9n_fid, error);
 	return 0;
+}
+
+
+int
+p9fs_stat_vnode_dotl(void *st, struct vnode *vp)
+{
+
+	struct p9fs_node = vp->v_data;
+	struct p9fs_inode *inode = 9fs_node->inode;
+
+	if (p9fs_proto_dotl(p9s)) {
+		struct p9_stat_dotl *stat = (struct p9_stat_dotl *)st;
+
+		/* Just get the needed fields for now. We can add more later. */
+                inode->i_mtime = stat->st_mtime_sec;
+                inode->i_mtime_nsec = stat->st_mtime_nsec;
+                inode->i_ctime = stat->st_ctime_sec;
+                inode->i_ctime_nsec = stat->st_ctime_nsec;
+                inode->i_uid = stat->st_uid;
+                inode->i_gid = stat->st_gid;
+                inode->i_blocks = stat->st_blocks;
+		inode->i_mode = stat->st_mode;
+	}
+	else
+		struct p9_wstat *stat = (struct p9_wstat *)st;
+		warn(" We still dont support this version ");
+	
+	}
 }
 
 static int
@@ -343,82 +264,99 @@ p9fs_symlink(struct vop_symlink_args *ap)
 static int
 p9fs_readdir(struct vop_readdir_args *ap)
 {
+	struct uio *uio = ap->a_uio;
+        struct vnode *vp = ap->a_vp;
+	struct p9_dirent *curdirent;
+        struct dirent dirent;
+        uint64_t file_size, diroffset, transoffset, blkoff;
+        uint8_t *pos, name_len;
 	struct p9fs_node *np = ap->a_vp->v_data;
-	struct p9_dirent curdirent;
-	struct iovec iov;
-	int error = 0;
+        int error = 0;
 
 	if (ap->a_uio->uio_iov->iov_len <= 0)
 		return (EINVAL);
 
-	if (ap->a_ncookies != NULL) {
-		u_long ncookies = ap->a_uio->uio_resid / DIRENT_MIN_LEN + 1;
-		*ap->a_cookies = malloc(ncookies * sizeof (*ap->a_cookies),
-		    M_TEMP, M_WAITOK);
+	if (vp->v_type != VDIR)
+		return (ENOTDIR);
+
+	/* This should have the updated value always.*/
+	file_size = node->p9_inode.i_size;
+
+	/* We are called just as long as we keep on pushing data in */
+	error = 0;
+	if ((uio->uio_offset < file_size) &&
+	    (uio->uio_resid >= sizeof(struct dirent))) {
+		diroffset = uio->uio_offset;
+		transoffset = diroffset;
+
+		/* Our version of the readdir through the virtio. The data buf has the 
+		 * data block information. Now parse through the buf and make the dirent.
+		 * /
+		error = p9_client_readdir(np->p9n_ofid, (char *)data,
+		clnt->msize, 0); /* The max size our client can handle */
+
+		if (error) {
+			return (EIO);
+		}
 	}
+#if 0
+	struct p9_dirent {
+        struct p9_qid qid;
+        uint64_t d_off;
+        unsigned char d_type;
+        char d_name[256];
+};
+#endif // Directory entry 
 
-	/*
-	 * Plan9 doesn't have a vnode operation specific to reading
-	 * directories; doing read()s on a directory is the equivalent.  For
-	 * directories, this call returns a list of p9fs_stat structures for
-	 * each entry.  Only when subsequent calls return nothing is the
-	 * list completely fulfilled.  Set up the local uio before starting.
-	 * This local uio tracks the offset from the server's point of view.
-	 */
+		offset = 0;
+		while (diroffset < file_size) {
 
-	/*
-	 * XXX How to translate caller offset to internal offset?
-	 *     VOP_READDIR() will get called again until no more
-	 *     entries are found.  However, the caller's uio uses a
-	 *     different scale.
-	 *
-	 *     In ZFS, offset is merely the object count.  In UFS,
-	 *     it's the byte count; in that filesystem the entry
-	 *     size is a fixed quantity, so it's effectively also an
-	 *     object count.
-	 *
-	 *     However, on the plus side, what this means is that
-	 *     the caller's uio_offset is internal state only.
-	 *     Therefore, we can set it to whatever we want.
-	 */
-	// do the client based readdir using the ofid for the file.
-	error = p9_client_readdir(np->p9n_ofid, (char *)data,
-		DIRENTRY_SIZE, 0);
-	/* Stop on error or if no more entries can be sent to caller. */
-	if (error != 0 || ap->a_uio->uio_resid < DIRENT_MIN_LEN ||
-	    ap->a_uio->uio_resid == resid)
-		return error;
+			/* Read and make sense out of the buffer in one dirent
+			 * This is part of 9p protocol read.
+			 */
+			err = p9dirent_read(fid->clnt, data + offset,
+                                            sizeof(curdirent),
+                                            &curdirent);
+                        if (err < 0) {
+                                p9_debug(P9_DEBUG_VFS, "returned %d\n", err);
+                                return -EIO;                                             
+                        }
 
-	/* Clean up as needed. */
-	if (error != 0 && ap->a_ncookies != NULL) {
-		free(*ap->a_cookies, M_TEMP);
-		*ap->a_ncookies = 0;
-		*ap->a_cookies = NULL;
-	}
-	/* Now run the loop in the buffer for the entry and give it back to the user.
-	 * in the uio.*/
-	//parse_cb(data, ap);
-	/// Call the dirent structure to read with buf directly.
-	while (1)
-	{
-		err = p9dirent_read(fid->clnt, data + offset,
-				    sizeof(curdirent), &curdirent);
-		if (err < 0) {
-			p9_debug(P9_DEBUG_VFS, "returned %d\n", err);
-			return -EIO;
+			name_len = curdirent->name_len;
+			memset(&dirent, 0, sizeof(struct dirent));
+			memcpy(&dirent.d_fileno, &curdirent->qid, sizeof(curdirent->qid));
+			if (dirent.d_fileno) {
+				dirent.d_type = curdirent->file_type;
+				dirent.d_namlen = name_len;
+				strncpy(dirent.d_name, curdirent->name, name_len);
+				dirent.d_reclen = GENERIC_DIRSIZ(&dirent);
+			}
+
+			/*
+			 * If there isn't enough space in the uio to return a
+			 * whole dirent, break off read
+			 */
+			if (uio->uio_resid < GENERIC_DIRSIZ(&dirent))
+				break;
+
+			/* Transfer */
+			if (dirent.d_fileno)
+				uiomove(&dirent, GENERIC_DIRSIZ(&dirent), uio);
+
+			/* Advance */
+			diroffset += curdirent->rec_len;
+			offset += curdirent->rec_len;
+
+			transoffset = diroffset;
 		}
 
-		/* All good, now send it to the caller. */
-		error = uiomove((void *)&curdirent, curdirent.d_reclen, ap->a_uio);
-		if (error != 0)
-			break;
-		printf("%s loop iter end off %zu\n", __func__, *offp);
-		offset += sizeof(curdirent);
+		/* Pass on last transferred offset */
+		uio->uio_offset = transoffset;
 	}
 
-	free(iov.iov_base, M_TEMP);
+	if (ap->a_eofflag)
+		*ap->a_eofflag = (uio->uio_offset >= file_size);
 
-	printf("%s(fid %d) ret %d\n", __func__, np->p9n_ofid, error);
 	return (error);
 }
 
@@ -433,59 +371,6 @@ p9fs_inactive(struct vop_inactive_args *ap)
 {
 	return (0);
 }
-
-#if 0 // close all the other functions.
-static int
-p9fs_reclaim(struct vop_reclaim_args *ap)
-{
-	struct p9fs_node *np = ap->a_vp->v_data;
-	int error;
-
-	/* Remove the p9fs_node from visibility. */
-	vnode_destroy_vobject(ap->a_vp);
-	vfs_hash_remove(ap->a_vp);
-	VI_LOCK(ap->a_vp);
-	ap->a_vp->v_data = NULL;
-	VI_UNLOCK(ap->a_vp);
-
-	error = p9fs_client_clunk(np->p9n_session, np->p9n_fid);
-	if (error != 0) {
-		/* Failure should never happen here! */
-		printf("%s(%d): error %d\n", __func__, np->p9n_fid, error);
-	}
-	printf("%s(fid %d ofid %d)\n", __func__, np->p9n_fid, np->p9n_ofid);
-
-	if (np->p9n_ofid != 0)
-		p9fs_relfid(np->p9n_session, np->p9n_ofid);
-
-	/* The root vnode has a special fid and backing for its np. */
-	if (np->p9n_fid != ROOTFID) {
-		p9fs_relfid(np->p9n_session, np->p9n_fid);
-		free(np, M_P9NODE);
-	}
-
-	return (0);
-}
-
-static int
-p9fs_print(struct vop_print_args *ap)
-{
-	VNOP_UNIMPLEMENTED;
-}
-
-static int
-p9fs_pathconf(struct vop_pathconf_args *ap)
-{
-	VNOP_UNIMPLEMENTED;
-}
-
-static int
-p9fs_vptofh(struct vop_vptofh_args *ap)
-{
-	VNOP_UNIMPLEMENTED;
-}
-
-#endif // 
 
 struct vop_vector p9fs_vnops = {
 	.vop_default =		&default_vnodeops,
@@ -510,9 +395,4 @@ struct vop_vector p9fs_vnops = {
 	.vop_readdir =		p9fs_readdir,
 	.vop_readlink =		p9fs_readlink,
 	.vop_inactive =		p9fs_inactive,
-	/* First build commenting it out */
-//	.vop_reclaim =		p9fs_reclaim,
-//	.vop_print =		p9fs_print,
-//	.vop_pathconf =		p9fs_pathconf,
-//	.vop_vptofh =		p9fs_vptofh,
 };
