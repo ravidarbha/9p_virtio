@@ -230,7 +230,13 @@ static int p9_virtio_attach(device_t dev)
 	}
 
 	chan->inuse = false;
-	name_len = strlen("ravi");
+	/* This is the mount tag for now. Qemu server has to export the device using this mount	
+	 * tag.*/
+	/* /usr/bin/qemu-kvm -m 1024 -name f15 -drive file=/images/f15.img,if=virtio
+	 * -fsdev local,security_model=passthrough,id=fsdev0,path=/tmp/share -device virtio-9p-pci,
+	 * id=fs0,fsdev=fsdev0,mount_tag=hostshare
+	 */
+	name_len = strlen("hostshare");
 	chan->chan_name = p9_malloc(name_len);
 	if (!chan->chan_name) {
 		err = -ENOMEM;
@@ -238,7 +244,7 @@ static int p9_virtio_attach(device_t dev)
 	}
 
 	chan->chan_name_len = name_len;
-	chan->chan_name ="ravi"; // This will be replaced with the trans from mount
+	chan->chan_name ="hostshare";
 
 	// Add to this wait queue which will later be woken up.
 	///TAILQ_INIT(&chan->vc_wq);
@@ -281,7 +287,7 @@ out_p9_free_vq:
  */
 
 static int
-p9_virtio_create(struct p9_client *client, const char *devname)
+p9_virtio_create(struct p9_client *client)
 {
 	struct vchan_softc *chan;
 	int ret = -ENOENT;

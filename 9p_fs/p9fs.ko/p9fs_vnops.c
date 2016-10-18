@@ -20,19 +20,19 @@ static MALLOC_DEFINE(M_P9NODE, "p9fs_node", "p9fs node structures");
 static int
 p9fs_lookup(struct vop_cachedlookup_args *ap)
 {
+	/* direnode */
 	struct vnode *dvp = ap->a_dvp;
-	struct vnode **vpp = ap->a_vpp;
+	struct vnode **vpp = ap->a_vpp, *vp;
 	struct componentname *cnp = ap->a_cnp;
-	struct p9fs_node *dnp = dvp->v_data;
+	struct p9fs_node *dnp = dvp->v_data; /*dir p9_node */
 	struct p9fs_session *p9s = dnp->p9n_session;
 	struct p9fs_node *np = NULL;
+	struct mount *mp = p9s->p9s_mount; /* Get the mount point */
 	struct p9fs_qid qid;
 	uint32_t newfid;
 	int error;
 
 	*vpp = NULL;
-	printf("%s(fid %u name '%.*s')\n", __func__, dnp->p9n_fid,
-	    (int)cnp->cn_namelen, cnp->cn_nameptr);
 
 	/* Special case: lookup a directory from itself. */
 	if (cnp->cn_namelen == 1 && *cnp->cn_nameptr == '.') {
@@ -43,7 +43,7 @@ p9fs_lookup(struct vop_cachedlookup_args *ap)
 
 	/* The clone has to be set to get a new fid */
 	error = p9_client_walk(dnp->p9n_fid,
-	    cnp->cn_namelen, cnp->cn_nameptr, 1);
+	    cnp->cn_namelen, &cnp->cn_nameptr, 1);
 	if (error == 0) {
 		int ltype = 0;
 
@@ -52,7 +52,7 @@ p9fs_lookup(struct vop_cachedlookup_args *ap)
 			VOP_UNLOCK(dvp, 0);
 		}
 		/* Vget gets the vp for the newly created vnode. Stick it to the p9fs_node too*/
-		error = p9fs_vget(ap->mp, newfid, cnp->cn_lkflags, &vp);
+		error = p9fs_vget(mp, newfid, cnp->cn_lkflags, &vp);
 		if (cnp->cn_flags & ISDOTDOT)
 			vn_lock(dvp, ltype | LK_RETRY);
 	}
@@ -65,6 +65,7 @@ p9fs_lookup(struct vop_cachedlookup_args *ap)
 	return (error);
 }
 
+#if 0
 #define	VNOP_UNIMPLEMENTED				\
 	printf("%s: not implemented yet\n", __func__);	\
 	return (EINVAL)
@@ -89,10 +90,8 @@ p9fs_open(struct vop_open_args *ap)
 {
 	int error;
 	struct p9fs_node *np = ap->a_vp->v_data;
-	uint32_t fid = np->p9n_fid;
-	struct wstat *stat;
-
-	printf("%s(fid %u)\n", __func__, np->p9n_fid);
+	struct p9_fid *fid = np->p9n_fid;
+	struct p9_wstat *stat;
 
 	if (np->p9n_opens > 0) {
 		np->p9n_opens++;
@@ -112,13 +111,14 @@ p9fs_open(struct vop_open_args *ap)
 	 * 	same time as the unopened fid.
 	 */
 	if (ap->a_vp->v_type == VDIR) {
-		if (np->p9n_ofid == 0) {
+		if (np->p9n_ofid == NULL) {
 
 			/*ofid is the open fid for this file.*/
+			/* Note: Client_walk returns struct p9_fid* */
 			np->p9n_ofid = p9_client_walk(np->p9n_fid,
 			     0, NULL, 1); /* Clone the fid here.*/
 			if (error != 0) {
-				np->p9n_ofid = 0;
+				np->p9n_ofid = NULL;
 				return (error);
 			}
 		}
@@ -163,17 +163,14 @@ p9fs_getattr(struct vop_getattr_args *ap)
 	struct p9fs_node *np = ap->a_vp->v_data;
 	ap->a_vap = p9_client_stat(np->p9n_fid, ap->a_vap);
 
-	printf("%s(fid %d) ret %d\n", __func__, np->p9n_fid, error);
 	return 0;
 }
-
 
 int
 p9fs_stat_vnode_dotl(void *st, struct vnode *vp)
 {
-
 	struct p9fs_node = vp->v_data;
-	struct p9fs_inode *inode = 9fs_node->inode;
+	struct p9fs_inode *inode = p9fs_node->inode;
 
 	if (p9fs_proto_dotl(p9s)) {
 		struct p9_stat_dotl *stat = (struct p9_stat_dotl *)st;
@@ -189,70 +186,72 @@ p9fs_stat_vnode_dotl(void *st, struct vnode *vp)
 		inode->i_mode = stat->st_mode;
 	}
 	else
+	{
 		struct p9_wstat *stat = (struct p9_wstat *)st;
-		warn(" We still dont support this version ");
-	
+		printf(" We still dont support this version ");
 	}
+	/* What typeof file is it ? */
+	vnode->v_type = st->mode;
 }
 
 static int
 p9fs_setattr(struct vop_setattr_args *ap)
 {
-	VNOP_UNIMPLEMENTED;
+	return 0;
 }
 
 static int
 p9fs_read(struct vop_read_args *ap)
 {
-	VNOP_UNIMPLEMENTED;
+	return 0;
 }
 
 static int
 p9fs_write(struct vop_write_args *ap)
 {
-	VNOP_UNIMPLEMENTED;
+	return 0;
 }
 
 static int
 p9fs_fsync(struct vop_fsync_args *ap)
 {
-	VNOP_UNIMPLEMENTED;
+	return 0;
 }
 
 static int
 p9fs_remove(struct vop_remove_args *ap)
 {
-	VNOP_UNIMPLEMENTED;
+	return 0; 
 }
 
 static int
 p9fs_link(struct vop_link_args *ap)
 {
-	VNOP_UNIMPLEMENTED;
+	return 0;
 }
 
 static int
 p9fs_rename(struct vop_rename_args *ap)
 {
-	VNOP_UNIMPLEMENTED;
+	return 0;
 }
 
 static int
 p9fs_mkdir(struct vop_mkdir_args *ap)
 {
-	VNOP_UNIMPLEMENTED;
+	return 0;
 }
 
 static int
 p9fs_rmdir(struct vop_rmdir_args *ap)
 {
-	VNOP_UNIMPLEMENTED;
+	return 0;
 }
 
 static int
 p9fs_symlink(struct vop_symlink_args *ap)
 {
-	VNOP_UNIMPLEMENTED;
+	return 0;
 }
 
 /*

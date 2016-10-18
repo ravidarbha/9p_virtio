@@ -103,11 +103,12 @@ int p9_client_rename(struct p9_fid *fid, struct p9_fid *newdirfid,
 int p9_client_renameat(struct p9_fid *olddirfid, const char *old_name,
 		       struct p9_fid *newdirfid, const char *new_name);
 struct p9_client *p9_client_create(struct mount *mp);
+void
+p9fs_close_session(struct mount *mp);
 void p9_client_destroy(struct p9_client *clnt);
 void p9_client_disconnect(struct p9_client *clnt);
 void p9_client_begin_disconnect(struct p9_client *clnt);
-struct p9_fid *p9_client_attach(struct p9_client *clnt, struct p9_fid *afid,
-				char *uname, uid_t n_uname, char *aname);
+struct p9_fid *p9_client_attach(struct p9_client *clnt);
 struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 		char **wnames, int clone);
 int p9_client_open(struct p9_fid *fid, int mode);
@@ -138,9 +139,9 @@ int p9_client_mknod_dotl(struct p9_fid *oldfid, char *name, int mode,
 			dev_t rdev, gid_t gid, struct p9_qid *);
 int p9_client_mkdir_dotl(struct p9_fid *fid, char *name, int mode,
 				gid_t gid, struct p9_qid *);
-int p9_client_lock_dotl(struct p9_fid *fid, struct p9_flock *flock, u8 *status);
+int p9_client_lock_dotl(struct p9_fid *fid, struct p9_flock *flock, uint8_t *status);
 int p9_client_getlock_dotl(struct p9_fid *fid, struct p9_getlock *fl);
-struct p9_req_t *p9_tag_lookup(struct p9_client *, u16);
+struct p9_req_t *p9_tag_lookup(struct p9_client *, uint16_t);
 void p9_client_cb(struct p9_client *c, struct p9_req_t *req);
 
 int p9_parse_header(struct p9_fcall *, int32_t *, int8_t *, int16_t *, int);

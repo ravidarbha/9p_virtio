@@ -5,7 +5,6 @@
  */
 
 
-
 // ALl local headers move to include and then compile with the include.
 #include "../client.h"
 #include "../transport.h"
@@ -319,7 +318,7 @@ error:
 #define INT_MAX 1024 // This is the max inode number.
 /* Return the client to the session in the FS to hold it */
 struct p9_client * 
-p9_client_create(const char *dev_name, struct mount *mp)
+p9_client_create(struct mount *mp)
 {
 	int err = 0;
 	struct p9_client *clnt;
@@ -360,7 +359,8 @@ p9_client_create(const char *dev_name, struct mount *mp)
 	p9_debug(P9_DEBUG_MUX, "clnt %p trans %p msize %d protocol %d\n",
 		 clnt, clnt->trans_mod, clnt->msize, clnt->proto_version);
 
-	err = clnt->trans_mod->create(clnt, dev_name);
+	/* For now avoiding any dev_names being passed from the mount */
+	err = clnt->trans_mod->create(clnt);
 	if (err) {
 		err = -NOCLIENT_ERROR; // add sometghing here.
 		goto bail_out;
@@ -413,26 +413,26 @@ void p9_client_begin_disconnect(struct p9_client *clnt)
 /* This is called from the mount. This fid which is created for the root inode.
  * the other instances already have the afid .
  */
-struct p9_fid *p9_client_attach(struct p9_client *clnt, struct p9_fid *afid,
-	char *uname, uid_t n_uname, char *aname)
+struct p9_fid *p9_client_attach(struct p9_client *clnt)
 {
 	int err = 0;
 	struct p9_req_t *req;
 	struct p9_fid *fid = NULL;
 	struct p9_qid qid;
 
-	p9_debug(P9_DEBUG_9P, ">>> TATTACH afid %d uname %s aname %s\n",
-		 afid ? afid->fid : -1, uname, aname);
+	p9_debug(P9_DEBUG_9P, ">>> TATTACH \n");
 	fid = p9_fid_create(clnt);
 	if (fid == NULL) {
 		err = -ENOMEM;
 		fid = NULL;
 		goto error;
 	}
-	fid->uid = n_uname;
+	fid->uid = 0;
 
+	/* Woah giving access to everyone  ? */
+	/* Get uname from mount and stick it in this function. */ 
 	req = p9_client_rpc(clnt, P9_TATTACH, "ddss?u", fid->fid,
-			afid ? afid->fid : P9_NOFID, uname, aname, n_uname);
+			P9_NOFID, 0, NULL, 0);
 	if (req == NULL) {
 		goto error;
 	}
@@ -612,7 +612,7 @@ struct p9_wstat *p9_client_stat(struct p9_fid *fid)
 	struct p9_client *clnt;
 	struct p9_wstat *ret = p9_malloc(sizeof(struct p9_wstat));
 	struct p9_req_t *req;
-	u16 ignored;
+	uint16_t ignored;
 
 	p9_debug(P9_DEBUG_9P, ">>> TSTAT fid %d\n", fid->fid);
 

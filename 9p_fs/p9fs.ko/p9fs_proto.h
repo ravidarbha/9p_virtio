@@ -373,8 +373,8 @@ struct p9fs_inode {
 
 /* A Plan9 node. */
 struct p9fs_node {
-	uint32_t p9n_fid; /*node fid*/
-	uint32_t p9n_ofid; /* open fid for this file */
+	struct p9_fid *p9n_fid; /*node fid*/
+	struct p9_fid *p9n_ofid; /* open fid for this file */
 	uint32_t p9n_opens; /* Number of open handlers. */
 	struct p9fs_qid p9n_qid; /* the server qid, will be from the host*/
 	struct vnode *p9n_vnode; /* vnode for this fs_node. */
@@ -400,6 +400,12 @@ struct p9fs_session {
 };
 
 
+struct p9fs_mount {
+	int p9_debug;
+	struct p9fs_session p9_session;
+	struct mount *p9_mountp;
+};
+
 #define	V9FS_ACCESS_ANY (V9FS_ACCESS_SINGLE | \
 			 V9FS_ACCESS_USER |   \
 			 V9FS_ACCESS_CLIENT)
@@ -419,14 +425,15 @@ enum p9_session_flags {
 
 /* Primary 9P2000.u client API calls. */
 int p9_client_version(struct p9_client *clnt);
-struct p9_fid *p9_client_attach(struct p9_client *clnt, struct p9_fid *afid,
-        char *uname, uid_t n_uname, char *aname);
+struct p9_fid *p9_client_attach(struct p9_client *clnt);
 struct p9_client *p9_client_create(struct mount *mp);
 void p9_client_destroy(struct p9_client *clnt);
 int p9_client_detach(struct p9_fid *fid);
 struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
                 char **wnames, int clone);
 int p9fs_client_open(struct p9_client *clnt, int mode);
+int
+p9fs_stat_vnode_dotl(void *st, struct vnode *vp);
 int p9fs_proto_dotl(struct p9fs_session *p9s);
 struct p9_fid *p9fs_init_session(struct mount *mp);
 struct p9_wstat *p9_client_stat(struct p9_fid *fid);

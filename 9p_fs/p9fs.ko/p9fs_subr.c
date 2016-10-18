@@ -109,10 +109,10 @@ p9fs_close_session(struct mount *mp)
 
 	/* Do the reverse of the init session  */
 	/* Detach the root fid.*/
-	p9_client_detach(&p9s->p9s_rootnp.p9n_fid);
+	p9_client_detach(p9s->p9s_rootnp.p9n_fid);
 	/* Clean up the clnt structure. */
 	p9_client_destroy(p9s->clnt);
 	/* CLeanup the mount structure. */
-	free(p9mp, sizeof(*p9mp));
+	free(p9mp, M_TEMP);
 }
 

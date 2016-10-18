@@ -12,7 +12,7 @@ struct p9_trans_module {
 	int maxsize;		/* max message size of transport */
 	int def;		/* this transport should be default */
 	struct module *owner;
-	int (*create)(struct p9_client *, const char *);
+	int (*create)(struct p9_client *);
 	void (*close) (struct p9_client *);
 	int (*request) (struct p9_client *, struct p9_req_t *req);
 	int (*cancel) (struct p9_client *, struct p9_req_t *req);
@@ -21,6 +21,7 @@ struct p9_trans_module {
 			  struct iov_iter *, struct iov_iter *, int , int, int);
 };
 
+struct p9fs_session;
 void v9fs_register_trans(struct p9_trans_module *m);
 void v9fs_unregister_trans(struct p9_trans_module *m);
 int p9fs_proto_dotl(struct p9fs_session *p9s);

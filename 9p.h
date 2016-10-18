@@ -28,9 +28,9 @@
  */
 #include <sys/types.h>
 
-#define u8 uint8_t
+#define uint8_t uint8_t
 #define u_int uint32_t
-#define u16 uint16_t
+#define uint16_t uint16_t
 #define uint32_t uint32_t 
 #define uint64_t uint64_t
 
@@ -321,7 +321,7 @@ enum p9_qid_t {
 };
 
 /* 9P Magic Numbers */
-#define P9_NOTAG	(u16)(~0)
+#define P9_NOTAG	(uint16_t)(~0)
 #define P9_NOFID	(uint32_t)(~0)
 #define P9_MAXWELEM	16
 
@@ -355,7 +355,7 @@ enum p9_qid_t {
  */
 
 struct p9_qid {
-	u8 type;
+	uint8_t type;
 	uint32_t version;
 	uint64_t path;
 };
@@ -383,8 +383,8 @@ struct p9_qid {
  */
 
 struct p9_wstat {
-	u16 size;
-	u16 type;
+	uint16_t size;
+	uint16_t type;
 	uint32_t dev;
 	struct p9_qid qid;
 	uint32_t mode;
@@ -487,7 +487,7 @@ struct p9_iattr_dotl {
  */
 
 struct p9_flock {
-	u8 type;
+	uint8_t type;
 	uint32_t flags;
 	uint64_t start;
 	uint64_t length;
@@ -504,7 +504,7 @@ struct p9_flock {
  */
 
 struct p9_getlock {
-	u8 type;
+	uint8_t type;
 	uint64_t start;
 	uint64_t length;
 	uint32_t proc_id;
@@ -541,13 +541,13 @@ struct p9_rstatfs {
 
 struct p9_fcall {
 	uint32_t size;
-	u8 id;
-	u16 tag;
+	uint8_t id;
+	uint16_t tag;
 
 	size_t offset;
 	size_t capacity;
 
-	u8 *sdata;
+	uint8_t *sdata;
 };
 
 
