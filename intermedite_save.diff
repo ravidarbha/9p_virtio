@@ -1,0 +1,231 @@
+diff --git a/9p_fs/p9fs.ko/p9fs_vfsops.c b/9p_fs/p9fs.ko/p9fs_vfsops.c
+index fcaff6a..b2248e0 100644
+--- a/9p_fs/p9fs.ko/p9fs_vfsops.c
++++ b/9p_fs/p9fs.ko/p9fs_vfsops.c
+@@ -192,7 +192,6 @@ static int p9fs_vget(mp, ino, flags, vpp)
+ 			error = -ENOMEM;
+ 			goto out;
+ 		}
+-		//vp->v_type = st->va_type;
+ 
+ 		/* copy back the qid into the p9node also,.*/
+ 		memcpy(&p9_node->p9n_qid, &st->qid, sizeof(st->qid));
+@@ -209,10 +208,8 @@ static int p9fs_vget(mp, ino, flags, vpp)
+                         goto out;
+                 }
+ 
+-		//vp->v_type = st->va_type;
+ 		memcpy(&p9_node->p9n_qid, &st->qid, sizeof(st->qid));
+ 
+-
+ 		/* Init the vnode with the disk info*/
+                 p9fs_stat_vnode_dotl(st, vp);
+                 p9_free(st, sizeof(*st));
+diff --git a/9p_fs/p9fs.ko/p9fs_vnops.c b/9p_fs/p9fs.ko/p9fs_vnops.c
+index 525e0fe..0e776d5 100644
+--- a/9p_fs/p9fs.ko/p9fs_vnops.c
++++ b/9p_fs/p9fs.ko/p9fs_vnops.c
+@@ -17,6 +17,14 @@ __FBSDID("$FreeBSD$");
+ struct vop_vector p9fs_vnops;
+ static MALLOC_DEFINE(M_P9NODE, "p9fs_node", "p9fs node structures");
+ 
++void
++p9fs_relfid(struct p9fs_session *p9s, struct p9_fid *fid)
++{
++	//p9_destroy_fid(p9s->clnt, fid);	
++}
++
++/* DO the usual lookup here. Do a read on the data block first and then search for 
++file entry in the data. Create if not found. */
+ static int
+ p9fs_lookup(struct vop_cachedlookup_args *ap)
+ {
+@@ -26,10 +34,9 @@ p9fs_lookup(struct vop_cachedlookup_args *ap)
+ 	struct componentname *cnp = ap->a_cnp;
+ 	struct p9fs_node *dnp = dvp->v_data; /*dir p9_node */
+ 	struct p9fs_session *p9s = dnp->p9n_session;
+-	struct p9fs_node *np = NULL;
+ 	struct mount *mp = p9s->p9s_mount; /* Get the mount point */
+ 	struct p9fs_qid qid;
+-	uint32_t newfid;
++	struct p9_fid *newfid;
+ 	int error;
+ 
+ 	*vpp = NULL;
+@@ -42,22 +49,26 @@ p9fs_lookup(struct vop_cachedlookup_args *ap)
+ 	}
+ 
+ 	/* The clone has to be set to get a new fid */
+-	error = p9_client_walk(dnp->p9n_fid,
++	/* newfid is the fid of the child looked up from the parent .*/
++	newfid = p9_client_walk(dnp->p9n_fid,
+ 	    cnp->cn_namelen, &cnp->cn_nameptr, 1);
+-	if (error == 0) {
++	if (newfid != NULL) {  /* newfid exists which means we have something */
+ 		int ltype = 0;
+ 
+ 		if (cnp->cn_flags & ISDOTDOT) {
+ 			ltype = VOP_ISLOCKED(dvp);
+ 			VOP_UNLOCK(dvp, 0);
+ 		}
+-		/* Vget gets the vp for the newly created vnode. Stick it to the p9fs_node too*/
+-		error = p9fs_vget(mp, newfid, cnp->cn_lkflags, &vp);
++		/* Vget gets the vp for the newly created vnode. Stick it to the p9fs_node too
++		now go ahead and create the newfids vnode, p9fs_node etc to make it legit */
++
++		error = p9fs_vget(mp, newfid->fid, cnp->cn_lkflags, &vp);
+ 		if (cnp->cn_flags & ISDOTDOT)
+ 			vn_lock(dvp, ltype | LK_RETRY);
+ 	}
++
+ 	if (error == 0) {
+-		*vpp = vp;
++		*vpp = vp; /* Return value for the lookup , the vnode either create/found .*/
+ 		vref(*vpp);
+ 	} else
+ 		p9fs_relfid(p9s, newfid);
+@@ -65,26 +76,6 @@ p9fs_lookup(struct vop_cachedlookup_args *ap)
+ 	return (error);
+ }
+ 
+-#if 0
+-#define	VNOP_UNIMPLEMENTED				\
+-	printf("%s: not implemented yet\n", __func__);	\
+-	return (EINVAL)
+-
+-/* We ll implement this once mount works fine .*/
+-static int
+-p9fs_create(struct vop_create_args *ap)
+-{
+-	VNOP_UNIMPLEMENTED;
+-}
+-
+-static int
+-p9fs_mknod(struct vop_mknod_args *ap)
+-{
+-	VNOP_UNIMPLEMENTED;
+-}
+-
+-#endif 
+-
+ static int
+ p9fs_open(struct vop_open_args *ap)
+ {
+@@ -135,6 +126,8 @@ p9fs_open(struct vop_open_args *ap)
+ 	return (error);
+ }
+ 
++
++
+ static int
+ p9fs_close(struct vop_close_args *ap)
+ {
+@@ -169,17 +162,18 @@ p9fs_getattr(struct vop_getattr_args *ap)
+ int
+ p9fs_stat_vnode_dotl(void *st, struct vnode *vp)
+ {
+-	struct p9fs_node = vp->v_data;
+-	struct p9fs_inode *inode = p9fs_node->inode;
++	struct p9fs_node *node = vp->v_data;
++	struct p9fs_inode *inode = &node->inode;
++	struct p9fs_session *p9s = node->p9n_session;
+ 
++
++	/* Havent decided which version to use */
+ 	if (p9fs_proto_dotl(p9s)) {
+ 		struct p9_stat_dotl *stat = (struct p9_stat_dotl *)st;
+ 
+ 		/* Just get the needed fields for now. We can add more later. */
+                 inode->i_mtime = stat->st_mtime_sec;
+-                inode->i_mtime_nsec = stat->st_mtime_nsec;
+                 inode->i_ctime = stat->st_ctime_sec;
+-                inode->i_ctime_nsec = stat->st_ctime_nsec;
+                 inode->i_uid = stat->st_uid;
+                 inode->i_gid = stat->st_gid;
+                 inode->i_blocks = stat->st_blocks;
+@@ -188,10 +182,15 @@ p9fs_stat_vnode_dotl(void *st, struct vnode *vp)
+ 	else
+ 	{
+ 		struct p9_wstat *stat = (struct p9_wstat *)st;
+-		printf(" We still dont support this version ");
++		inode->i_mtime = stat->mtime;
++		inode->i_uid = stat->n_uid;
++		/* this is key to the length of the inode */
++		inode->i_size = stat->length;
++		// can we add a i_mode to stat ? ootherwsie we are doomed .
+ 	}
+ 	/* What typeof file is it ? */
+-	vnode->v_type = st->mode;
++	/* This should be coming from the stat */
++	vp->v_type = VDIR; //st->mode;
+ }
+ 
+ static int
+@@ -258,7 +257,7 @@ p9fs_symlink(struct vop_symlink_args *ap)
+  * Minimum length for a directory entry: size of fixed size section of
+  * struct dirent plus a 1 byte C string for the name.
+  */
+-#define	DIRENT_MIN_LEN	(offsetof(struct dirent, d_name) + 2)
++#define	IRENT_MIN_LEN	(offsetof(struct dirent, d_name) + 2)
+ 
+ static int
+ p9fs_readdir(struct vop_readdir_args *ap)
+@@ -267,10 +266,12 @@ p9fs_readdir(struct vop_readdir_args *ap)
+         struct vnode *vp = ap->a_vp;
+ 	struct p9_dirent *curdirent;
+         struct dirent dirent;
+-        uint64_t file_size, diroffset, transoffset, blkoff;
++        uint64_t file_size, diroffset, transoffset, blkoff, offset;
+         uint8_t *pos, name_len;
+ 	struct p9fs_node *np = ap->a_vp->v_data;
++	struct p9_fid *fid = np->p9n_ofid;
+         int error = 0;
++	char *data; /* This is the stream of data coming from server */ 
+ 
+ 	if (ap->a_uio->uio_iov->iov_len <= 0)
+ 		return (EINVAL);
+@@ -279,7 +280,10 @@ p9fs_readdir(struct vop_readdir_args *ap)
+ 		return (ENOTDIR);
+ 
+ 	/* This should have the updated value always.*/
+-	file_size = node->p9_inode.i_size;
++	file_size = np->inode.i_size;
++
++	/* Allocate an 8K buffer for now .*/
++	data = p9_malloc(8196);
+ 
+ 	/* We are called just as long as we keep on pushing data in */
+ 	error = 0;
+@@ -290,8 +294,8 @@ p9fs_readdir(struct vop_readdir_args *ap)
+ 
+ 		/* Our version of the readdir through the virtio. The data buf has the 
+ 		 * data block information. Now parse through the buf and make the dirent.
+-		 * /
+-		error = p9_client_readdir(np->p9n_ofid, (char *)data,
++		 */
++		error = p9_client_readdir(fid, (char *)data,
+ 		clnt->msize, 0); /* The max size our client can handle */
+ 
+ 		if (error) {
+@@ -313,11 +317,10 @@ p9fs_readdir(struct vop_readdir_args *ap)
+ 			/* Read and make sense out of the buffer in one dirent
+ 			 * This is part of 9p protocol read.
+ 			 */
+-			err = p9dirent_read(fid->clnt, data + offset,
++			error = p9dirent_read(fid->clnt, data + offset,
+                                             sizeof(curdirent),
+                                             &curdirent);
+-                        if (err < 0) {
+-                                p9_debug(P9_DEBUG_VFS, "returned %d\n", err);
++                        if (error < 0) {
+                                 return -EIO;                                             
+                         }
+ 
+@@ -356,6 +359,7 @@ p9fs_readdir(struct vop_readdir_args *ap)
+ 	if (ap->a_eofflag)
+ 		*ap->a_eofflag = (uio->uio_offset >= file_size);
+ 
++	free(data, M_TEMP);
+ 	return (error);
+ }
+ 
