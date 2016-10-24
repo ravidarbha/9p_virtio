@@ -1,4 +1,5 @@
 /*
+
  * net/9p/clnt.c
  *
  * 9P Client API -  We are going to built this a module.
@@ -124,7 +125,7 @@ static struct p9_req_t *p9_client_prepare_req(struct p9_client *c,
 	int err;
 	struct p9_req_t *req;
 
-	p9_debug(P9_DEBUG_MUX, "client %p op %d\n", c, type);
+	p9_debug(TRANS, "client %p op %d\n", c, type);
 
 	/* we allow for any status other than disconnected */
 	if (c->status == Disconnected)
@@ -195,11 +196,11 @@ again:
 	}
 
 	if (req->status == REQ_STATUS_ERROR) {
-		p9_debug(P9_DEBUG_ERROR, "req_status error %d\n", req->t_err);
+		p9_debug(TRANS, "req_status error %d\n", req->t_err);
 		err = req->t_err;
 	}
 	if ((err == -ERESTARTSYS) && (c->status == Connected)) {
-		p9_debug(P9_DEBUG_MUX, "flushing\n");
+		p9_debug(TRANS, "flushing\n");
 
 		// No support for cancel and flush in the first version
 		//if (c->trans_mod->cancel(c, req))
@@ -228,7 +229,7 @@ static struct p9_fid *p9_fid_create(struct p9_client *clnt)
 {
 	struct p9_fid *fid;
 
-	p9_debug(P9_DEBUG_FID, "clnt %p\n", clnt);
+	p9_debug(P9+DEBUG_TRANS_FID, "clnt %p\n", clnt);
 	fid = p9_malloc(sizeof(struct p9_fid));
 
 	if (!fid)
@@ -251,7 +252,7 @@ static void p9_fid_destroy(struct p9_fid *fid)
 {
 	struct p9_client *clnt;
 
-	p9_debug(P9_DEBUG_FID, "fid %d\n", fid->fid);
+	p9_debug(P9+DEBUG_TRANS_FID, "fid %d\n", fid->fid);
 	clnt = fid->clnt;
 	free(fid, M_TEMP);
 }
@@ -264,7 +265,7 @@ int p9_client_version(struct p9_client *c)
 	char *version;
 	int msize;
 
-	p9_debug(P9_DEBUG_9P, ">>> TVERSION msize %d protocol %d\n",
+	p9_debug(TRANS, ">>> TVERSION msize %d protocol %d\n",
 		 c->msize, c->proto_version);
 
 	switch (c->proto_version) {
@@ -289,11 +290,11 @@ int p9_client_version(struct p9_client *c)
 
 	err = p9pdu_readf(req->rc, c->proto_version, "ds", &msize, &version);
 	if (err) {
-		p9_debug(P9_DEBUG_9P, "version error %d\n", err);
+		p9_debug(TRANS, "version error %d\n", err);
 		goto error;
 	}
 
-	p9_debug(P9_DEBUG_9P, "<<< RVERSION msize %d %s\n", msize, version);
+	p9_debug(TRANS, "<<< RVERSION msize %d %s\n", msize, version);
 	if (!strncmp(version, "9P2000.L", 8))
 		c->proto_version = p9_proto_2000L;
 	else if (!strncmp(version, "9P2000.u", 8))
@@ -342,7 +343,7 @@ p9_client_create(struct mount *mp)
 
 	if (clnt->trans_mod == NULL) {
 		err = -EPROTONOSUPPORT;
-		p9_debug(P9_DEBUG_ERROR,
+		p9_debug(P9+DEBUG_TRANS_ERROR,
 			 "No transport defined or default transport\n");
 		goto bail_out;
 	}
@@ -356,7 +357,7 @@ p9_client_create(struct mount *mp)
 		goto bail_out;
 	}
 
-	p9_debug(P9_DEBUG_MUX, "clnt %p trans %p msize %d protocol %d\n",
+	p9_debug(P9+DEBUG_TRANS_MUX, "clnt %p trans %p msize %d protocol %d\n",
 		 clnt, clnt->trans_mod, clnt->msize, clnt->proto_version);
 
 	/* For now avoiding any dev_names being passed from the mount */
@@ -385,7 +386,7 @@ bail_out:
 
 void p9_client_destroy(struct p9_client *clnt)
 {
-	p9_debug(P9_DEBUG_MUX, "clnt %p\n", clnt);
+	p9_debug(P9+DEBUG_TRANS_MUX, "clnt %p\n", clnt);
 
 	if (clnt->trans_mod)
 		clnt->trans_mod->close(clnt);
@@ -400,13 +401,13 @@ void p9_client_destroy(struct p9_client *clnt)
 
 void p9_client_disconnect(struct p9_client *clnt)
 {
-	p9_debug(P9_DEBUG_9P, "clnt %p\n", clnt);
+	p9_debug(TRANS, "clnt %p\n", clnt);
 	clnt->status = Disconnected;
 }
 
 void p9_client_begin_disconnect(struct p9_client *clnt)
 {
-	p9_debug(P9_DEBUG_9P, "clnt %p\n", clnt);
+	p9_debug(TRANS, "clnt %p\n", clnt);
 	clnt->status = BeginDisconnect;
 }
 
@@ -420,7 +421,7 @@ struct p9_fid *p9_client_attach(struct p9_client *clnt)
 	struct p9_fid *fid = NULL;
 	struct p9_qid qid;
 
-	p9_debug(P9_DEBUG_9P, ">>> TATTACH \n");
+	p9_debug(TRANS, ">>> TATTACH \n");
 	fid = p9_fid_create(clnt);
 	if (fid == NULL) {
 		err = -ENOMEM;
@@ -443,7 +444,7 @@ struct p9_fid *p9_client_attach(struct p9_client *clnt)
 		goto error;
 	}
 
-	p9_debug(P9_DEBUG_9P, "<<< RATTACH qid %x.%llx.%x\n",
+	p9_debug(TRANS, "<<< RATTACH qid %x.%llx.%x\n",
 		 qid.type, (unsigned long long)qid.path, qid.version);
 
 	memmove(&fid->qid, &qid, sizeof(struct p9_qid));
@@ -464,7 +465,7 @@ int p9_client_detach(struct p9_fid *fid)
 	struct p9_client *clnt;
 	struct p9_req_t *req;
 
-	p9_debug(P9_DEBUG_9P, ">>> TREMOVE fid %d\n", fid->fid);
+	p9_debug(TRANS, ">>> TREMOVE fid %d\n", fid->fid);
 	err = 0;
 	clnt = fid->clnt;
 
@@ -474,7 +475,7 @@ int p9_client_detach(struct p9_fid *fid)
 		goto error;
 	}
 
-	p9_debug(P9_DEBUG_9P, "<<< RREMOVE fid %d\n", fid->fid);
+	p9_debug(TRANS, "<<< RREMOVE fid %d\n", fid->fid);
 
 	p9_free_req(req);
 error:
@@ -511,7 +512,7 @@ struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 	} else
 		fid = oldfid;
 
-	p9_debug(P9_DEBUG_9P, ">>> TWALK fids %d,%d nwname %ud wname[0] %s\n",
+	p9_debug(TRANS, ">>> TWALK fids %d,%d nwname %ud wname[0] %s\n",
 		 oldfid->fid, fid->fid, nwname, wnames ? wnames[0] : NULL);
 
 	req = p9_client_rpc(clnt, P9_TWALK, "ddT", oldfid->fid, fid->fid,
@@ -528,7 +529,7 @@ struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 	}
 	p9_free_req(req);
 
-	p9_debug(P9_DEBUG_9P, "<<< RWALK nwqid %d:\n", nwqids);
+	p9_debug(TRANS, "<<< RWALK nwqid %d:\n", nwqids);
 
 	if (nwqids != nwname) {
 		err = -ENOENT;
@@ -536,7 +537,7 @@ struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 	}
 
 	for (count = 0; count < nwqids; count++)
-		p9_debug(P9_DEBUG_9P, "<<<     [%d] %x.%llx.%x\n",
+		p9_debug(TRANS, "<<<     [%d] %x.%llx.%x\n",
 			count, wqids[count].type,
 			(unsigned long long)wqids[count].path,
 			wqids[count].version);
@@ -571,7 +572,7 @@ int p9_client_open(struct p9_fid *fid, int mode)
 	int iounit;
 
 	clnt = fid->clnt;
-	p9_debug(P9_DEBUG_9P, ">>> %s fid %d mode %d\n",
+	p9_debug(TRANS, ">>> %s fid %d mode %d\n",
 		p9_is_proto_dotl(clnt) ? "TLOPEN" : "TOPEN", fid->fid, mode);
 	err = 0;
 
@@ -592,7 +593,7 @@ int p9_client_open(struct p9_fid *fid, int mode)
 		goto free_and_error;
 	}
 
-	p9_debug(P9_DEBUG_9P, "<<< %s qid %x.%llx.%x iounit %x\n",
+	p9_debug(TRANS, "<<< %s qid %x.%llx.%x iounit %x\n",
 		p9_is_proto_dotl(clnt) ? "RLOPEN" : "ROPEN",  qid.type,
 		(unsigned long long)qid.path, qid.version, iounit);
 
@@ -614,7 +615,7 @@ struct p9_wstat *p9_client_stat(struct p9_fid *fid)
 	struct p9_req_t *req;
 	uint16_t ignored;
 
-	p9_debug(P9_DEBUG_9P, ">>> TSTAT fid %d\n", fid->fid);
+	p9_debug(TRANS, ">>> TSTAT fid %d\n", fid->fid);
 
 	err = 0;
 	clnt = fid->clnt;
@@ -647,7 +648,7 @@ struct p9_stat_dotl *p9_client_getattr_dotl(struct p9_fid *fid,
 	struct p9_stat_dotl *ret = p9_malloc(sizeof(struct p9_stat_dotl));
 	struct p9_req_t *req;
 
-	p9_debug(P9_DEBUG_9P, ">>> TGETATTR fid %d, request_mask %ld\n",
+	p9_debug(TRANS, ">>> TGETATTR fid %d, request_mask %ld\n",
 							fid->fid, request_mask);
 	if (!ret)
 		return NULL;
@@ -667,7 +668,7 @@ struct p9_stat_dotl *p9_client_getattr_dotl(struct p9_fid *fid,
 		goto error;
 	}
 
-	p9_debug(P9_DEBUG_9P,
+	p9_debug(TRANS,
 		"<<< RGETATTR st_result_mask=%ld\n"
 		"<<< qid=%x.%lx.%x\n"
 		"<<< st_mode=%8.8x st_nlink=%lu\n"
@@ -751,8 +752,8 @@ int p9_client_setattr(struct p9_fid *fid, struct p9_iattr_dotl *p9attr)
 
 	err = 0;
 	clnt = fid->clnt;
-	p9_debug(P9_DEBUG_9P, ">>> TSETATTR fid %d\n", fid->fid);
-	p9_debug(P9_DEBUG_9P,
+	p9_debug(TRANS, ">>> TSETATTR fid %d\n", fid->fid);
+	p9_debug(TRANS,
 		"    valid=%x mode=%x size=%ld\n"
 		"    atime_sec=%ld atime_nsec=%ld\n"
 		"    mtime_sec=%ld mtime_nsec=%ld\n",
@@ -766,7 +767,7 @@ int p9_client_setattr(struct p9_fid *fid, struct p9_iattr_dotl *p9attr)
 		err = -ENOMEM;
 		goto error;
 	}
-	p9_debug(P9_DEBUG_9P, "<<< RSETATTR fid %d\n", fid->fid);
+	p9_debug(TRANS, "<<< RSETATTR fid %d\n", fid->fid);
 	p9_free_req(req);
 error:
 	return err;
@@ -781,7 +782,7 @@ int p9_client_statfs(struct p9_fid *fid, struct p9_rstatfs *sb)
 	err = 0;
 	clnt = fid->clnt;
 
-	p9_debug(P9_DEBUG_9P, ">>> TSTATFS fid %d\n", fid->fid);
+	p9_debug(TRANS, ">>> TSTATFS fid %d\n", fid->fid);
 
 	req = p9_client_rpc(clnt, P9_TSTATFS, "d", fid->fid);
 	if (req == NULL) {
@@ -797,7 +798,7 @@ int p9_client_statfs(struct p9_fid *fid, struct p9_rstatfs *sb)
 		goto error;
 	}
 
-	p9_debug(P9_DEBUG_9P, "<<< RSTATFS fid %d type 0x%lx bsize %ld "
+	p9_debug(TRANS, "<<< RSTATFS fid %d type 0x%lx bsize %ld "
 		"blocks %lu bfree %lu bavail %lu files %lu ffree %lu "
 		"fsid %lu namelen %ld\n",
 		fid->fid, (long unsigned int)sb->type, (long int)sb->bsize,
@@ -817,7 +818,7 @@ int p9_client_readdir(struct p9_fid *fid, char *data, uint32_t count, uint64_t o
 	struct p9_req_t *req = NULL;
 	char *dataptr;
 
-	p9_debug(P9_DEBUG_9P, ">>> TREADDIR fid %d offset %llu count %d\n",
+	p9_debug(TRANS, ">>> TREADDIR fid %d offset %llu count %d\n",
 				fid->fid, (unsigned long long) offset, count);
 
 	err = 0;
@@ -842,7 +843,7 @@ int p9_client_readdir(struct p9_fid *fid, char *data, uint32_t count, uint64_t o
 		goto free_and_error;
 	}
 
-	p9_debug(P9_DEBUG_9P, "<<< RREADDIR count %d\n", count);
+	p9_debug(TRANS, "<<< RREADDIR count %d\n", count);
 
 	/* COpy back the data into the input buffer. */
 	memmove(data, dataptr, count);

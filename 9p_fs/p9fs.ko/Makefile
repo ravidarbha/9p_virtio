@@ -1,11 +1,9 @@
 # $FreeBSD$
 
-#.PATH=	${.CURDIR}/../../fs/p9fs
+KMOD=	virtfs
 
-KMOD=	p9fs
-
-SRCS+=	p9fs_subr.c
-SRCS+=	p9fs_vfsops.c
-SRCS+=	p9fs_vnops.c
+SRCS+=	virtfs_subr.c
+SRCS+=	virtfs_vfops.c
+SRCS+=	virtfs_vnops.c
 SRCS+=	vnode_if.h
 .include <bsd.kmod.mk>
