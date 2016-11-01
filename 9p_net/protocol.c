@@ -22,6 +22,7 @@
 static int
 p9pdu_writef(struct p9_fcall *pdu, int proto_version, const char *fmt, ...);
 void p9stat_p9_free(struct p9_wstat *stbuf);
+int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st);
 
 void p9stat_p9_free(struct p9_wstat *stbuf)
 {
@@ -480,7 +481,7 @@ int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st)
 
 	ret = p9pdu_readf(&fake_pdu, clnt->proto_version, "S", st);
 	if (ret) {
-		p9_debug(P9_DEBUG_9P, "<<< p9stat_read failed: %d\n", ret);
+		p9_debug(PROTO, "<<< p9stat_read failed: %d\n", ret);
 	}
 
 	return ret;
@@ -501,7 +502,7 @@ int p9pdu_finalize(struct p9_client *clnt, struct p9_fcall *pdu)
 	err = p9pdu_writef(pdu, 0, "d", size);
 	pdu->size = size;
 
-	p9_debug(P9_DEBUG_9P, ">>> size=%d type: %d tag: %d\n",
+	p9_debug(PROTO, ">>> size=%d type: %d tag: %d\n",
 		 pdu->size, pdu->id, pdu->tag);
 
 	return err;
@@ -530,7 +531,7 @@ int p9dirent_read(struct p9_client *clnt, char *buf, int len,
 	ret = p9pdu_readf(&fake_pdu, clnt->proto_version, "Qqbs", &dirent->qid,
 			  &dirent->d_off, &dirent->d_type, &nameptr);
 	if (ret) {
-		p9_debug(P9_DEBUG_9P, "<<< p9dirent_read failed: %d\n", ret);
+		p9_debug(PROTO, "<<< p9dirent_read failed: %d\n", ret);
 		goto out;
 	}
 

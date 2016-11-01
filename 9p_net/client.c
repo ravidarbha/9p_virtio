@@ -8,10 +8,13 @@
 
 // ALl local headers move to include and then compile with the include.
 #include "../client.h"
-#include "../transport.h"
+#include "transport.h"
 #include "../protocol.h"
 
 struct p9_req_t *get_request(void);
+void p9_client_begin_disconnect(struct p9_client *clnt);
+void p9_client_disconnect(struct p9_client *clnt);
+void p9_client_cb(struct p9_client *c, struct p9_req_t *req);
 
 inline int p9_is_proto_dotl(struct p9_client *clnt)
 {
@@ -26,7 +29,7 @@ inline int p9_is_proto_dotu(struct p9_client *clnt)
 /**
  * parse_options - parse mount options into client structure
  * @opts: options string passed from mount
- * @clnt: existing v9fs client information
+ * @clnt: existing p9 client information
  *
  * Return 0 upon success, -ERRNO upon failure
  */
@@ -46,7 +49,7 @@ static int parse_opts(struct mount  *mp, struct p9_client *clnt)
 	/* This will be moved to mod where we can have multiple entries in the 
 	 * table to search for and return the correct pointer. For now its a 
 	 * global pointer only for the trans_virtio set */
-    	clnt->trans_mod = v9fs_get_trans_by_name(trans);
+    	clnt->trans_mod = p9_get_trans_by_name(trans);
     	if (clnt->trans_mod == NULL) {
             	printf("Could not find request transport: %s\n",trans);
             	error = -EINVAL;
@@ -229,7 +232,7 @@ static struct p9_fid *p9_fid_create(struct p9_client *clnt)
 {
 	struct p9_fid *fid;
 
-	p9_debug(P9+DEBUG_TRANS_FID, "clnt %p\n", clnt);
+	p9_debug(TRANS, "clnt %p\n", clnt);
 	fid = p9_malloc(sizeof(struct p9_fid));
 
 	if (!fid)
@@ -252,7 +255,7 @@ static void p9_fid_destroy(struct p9_fid *fid)
 {
 	struct p9_client *clnt;
 
-	p9_debug(P9+DEBUG_TRANS_FID, "fid %d\n", fid->fid);
+	p9_debug(TRANS, "fid %d\n", fid->fid);
 	clnt = fid->clnt;
 	free(fid, M_TEMP);
 }
@@ -339,11 +342,11 @@ p9_client_create(struct mount *mp)
 		goto bail_out;
 
 	if (!clnt->trans_mod)
-		clnt->trans_mod = v9fs_get_default_trans();
+		clnt->trans_mod = p9_get_default_trans();
 
 	if (clnt->trans_mod == NULL) {
 		err = -EPROTONOSUPPORT;
-		p9_debug(P9+DEBUG_TRANS_ERROR,
+		p9_debug(TRANS,
 			 "No transport defined or default transport\n");
 		goto bail_out;
 	}
@@ -357,7 +360,7 @@ p9_client_create(struct mount *mp)
 		goto bail_out;
 	}
 
-	p9_debug(P9+DEBUG_TRANS_MUX, "clnt %p trans %p msize %d protocol %d\n",
+	p9_debug(TRANS, "clnt %p trans %p msize %d protocol %d\n",
 		 clnt, clnt->trans_mod, clnt->msize, clnt->proto_version);
 
 	/* For now avoiding any dev_names being passed from the mount */
@@ -386,12 +389,12 @@ bail_out:
 
 void p9_client_destroy(struct p9_client *clnt)
 {
-	p9_debug(P9+DEBUG_TRANS_MUX, "clnt %p\n", clnt);
+	p9_debug(TRANS, "clnt %p\n", clnt);
 
 	if (clnt->trans_mod)
 		clnt->trans_mod->close(clnt);
 
-	v9fs_put_trans(clnt->trans_mod);
+	p9_put_trans(clnt->trans_mod);
 
 	if (clnt->fidpool)
 		delete_unrhdr(clnt->fidpool);
@@ -480,7 +483,7 @@ int p9_client_detach(struct p9_fid *fid)
 	p9_free_req(req);
 error:
 	if (err == -ERESTARTSYS)
-		p9_client_clunk(fid);
+		p9_client_close(fid);
 	else
 		p9_fid_destroy(fid);
 	return err;
@@ -552,7 +555,7 @@ struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 
 clunk_fid:
 	p9_free(wqids, strlen(wqids));
-	p9_client_clunk(fid);
+	p9_client_close(fid);
 	fid = NULL;
 
 error:
@@ -825,8 +828,8 @@ int p9_client_readdir(struct p9_fid *fid, char *data, uint32_t count, uint64_t o
 	clnt = fid->clnt;
 
 	rsize = fid->iounit;
-	if (!rsize || rsize > clnt->msize-P9_READDIRHDRSZ)
-		rsize = clnt->msize - P9_READDIRHDRSZ;
+	if (!rsize || rsize > clnt->msize)
+		rsize = clnt->msize;
 
 	if (count < rsize)
 		rsize = count;

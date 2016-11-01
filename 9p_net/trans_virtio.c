@@ -5,7 +5,7 @@
 #include <sys/errno.h>
 #include "../9p.h"
 #include "../client.h"
-#include "../transport.h"
+#include "transport.h"
 #include "../protocol.h"
 
 #include <sys/module.h>

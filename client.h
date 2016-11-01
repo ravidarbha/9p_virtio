@@ -125,4 +125,24 @@ int p9_is_proto_dotu(struct p9_client *clnt);
 int p9_is_proto_dotl(struct p9_client *clnt);
 int p9_client_version(struct p9_client *c);
 
+
+extern int p9_debug; /* All denugs on now */
+
+#define P9_DEBUG_TRANS            0x0001
+#define P9_DEBUG_SUBR             0x0002
+#define P9_DEBUG_VFS              0x0004
+#define P9_DEBUG_PROTO            0x0008
+#define P9_DEBUG_VOPS             0x0010
+#define P9_DEBUG_COMPONENTNAME    0x0020
+#define P9_DEBUG_VNODE            0x0040
+#define P9_DEBUG_DIR              0x0080
+#define P9_DEBUG_NAMECACHE        0x0100
+#define P9_DEBUG_NODE             0x0200
+
+#define p9_debug(category, fmt, ...) \
+ do {                             \
+         if ((p9_debug & P9_DEBUG_##category) != 0)  \
+	                 printf(fmt, ##__VA_ARGS__);  \
+			         } while (0)
+
 #endif /* NET_9P_CLIENT_H */

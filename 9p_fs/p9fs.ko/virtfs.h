@@ -79,7 +79,7 @@ extern int p9_debug; /* All denugs on now */
 
 #define P9_DEBUG_TRANS		  0x0001
 #define P9_DEBUG_SUBR             0x0002
-#define P9_DEBUG_LOCK             0x0004
+#define P9_DEBUG_VFS             0x0004
 #define P9_DEBUG_LOOKUP           0x0008
 #define P9_DEBUG_VOPS             0x0010
 #define P9_DEBUG_COMPONENTNAME    0x0020
