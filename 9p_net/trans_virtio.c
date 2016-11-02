@@ -13,9 +13,9 @@
 #include <sys/queue.h>
 #include <machine/bus.h>
 #include <sys/bus.h>
-/* This is very ugly ? How do i get these defs into this module  ?*/
-#include "../../virtfs_bhyve/sys/dev/virtio/virtio.h"
-#include "../../virtfs_bhyve/sys/dev/virtio/virtqueue.h"
+
+#include "dev/virtio/virtio.h"
+#include "dev/virtio/virtqueue.h"
 
 
 #include <sys/condvar.h>
@@ -90,7 +90,7 @@ p9_virtio_request(struct p9_client *client, struct p9_req_t *req)
 	int err, out, in;
 	struct vchan_softc *chan = client->trans;
 
-	p9_debug(P9_DEBUG_TRANS, "9p debug: virtio request\n");
+	p9_debug(TRANS, "9p debug: virtio request\n");
 
 	req->status = REQ_STATUS_SENT;
 req_retry:
@@ -113,17 +113,17 @@ req_retry:
 			mtx_unlock_spin(&chan->lock);
 			/* Condvar for the submit queue.*/
 			cv_wait(&chan->submit_cv, &chan->submit_cv_lock);
-			p9_debug(P9_DEBUG_TRANS, "Retry virtio request\n");
+			p9_debug(TRANS, "Retry virtio request\n");
 			goto req_retry;
 		} else {
 			mtx_unlock_spin(&chan->lock);
-			p9_debug(P9_DEBUG_TRANS,
+			p9_debug(TRANS,
 				 "virtio rpc add_sgs returned failure\n");
 			return -EIO;
 		}
 	}
 
-	p9_debug(P9_DEBUG_TRANS, "virtio request kicked\n");
+	p9_debug(TRANS, "virtio request kicked\n");
 	/* We return back to the client and wait there for the submission. */
 	return 0;
 }
@@ -307,12 +307,12 @@ p9_virtio_create(struct p9_client *client)
 	}*/
 	// This hack will be cleaned up after POC with SLISTs.
 	if (global_ctx)
-	chan = global_ctx; 
-	
+	chan = global_ctx;
+
 	mtx_unlock(&virtio_9p_lock);
 
 	if (!found) {
-		printf("no channels available for device %s\n", devname);
+		printf("no channels available for device %s\n", client->name);
 		return ret;
 	}
 

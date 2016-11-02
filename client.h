@@ -123,8 +123,8 @@ struct p9_stat_dotl *p9_client_getattr(struct p9_fid *fid, uint64_t request_mask
 struct p9_stat_dotl *p9_client_getattr_dotl(struct p9_fid *fid, uint64_t request_mask);
 int p9_is_proto_dotu(struct p9_client *clnt);
 int p9_is_proto_dotl(struct p9_client *clnt);
-int p9_client_version(struct p9_client *c);
-
+void p9_client_cb(struct p9_client *c, struct p9_req_t *req);
+struct p9_trans_module *v9fs_get_trans_by_name(char *s);
 
 extern int p9_debug; /* All denugs on now */
 

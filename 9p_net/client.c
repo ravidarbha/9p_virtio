@@ -14,7 +14,6 @@
 struct p9_req_t *get_request(void);
 void p9_client_begin_disconnect(struct p9_client *clnt);
 void p9_client_disconnect(struct p9_client *clnt);
-void p9_client_cb(struct p9_client *c, struct p9_req_t *req);
 
 inline int p9_is_proto_dotl(struct p9_client *clnt)
 {
