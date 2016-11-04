@@ -11,17 +11,17 @@
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS        
- * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED   
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR       
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS        
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR           
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF             
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS         
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN          
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)          
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE       
- * POSSIBILITY OF SUCH DAMAGE.                                                      
+ * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS
+ * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS
+ * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 /*
@@ -114,9 +114,6 @@ parse_opt_o(struct mnt_context *ctx)
 static void
 extract_addrinfo(struct addrinfo *ai, int *family, char *hn, char *sn)
 {
-	struct sockaddr_in *sin;
-	struct sockaddr_in6 *sin6;
-
 	*family = ai->ai_addr->sa_family;
 	(void) getnameinfo(ai->ai_addr, ai->ai_addrlen, hn, NI_MAXHOST,
 	    sn, NI_MAXSERV, NI_NUMERICHOST | NI_NUMERICSERV);
@@ -132,10 +129,8 @@ static int
 try_addrinfo(struct mnt_context *ctx, struct addrinfo *ai)
 {
 	int error, s;
-	void *addr;
-
 	{
-		int family, port;
+		int family;
 		char hostname[NI_MAXHOST], servname[NI_MAXSERV];
 
 		extract_addrinfo(ai, &family, hostname, servname);
@@ -177,12 +172,12 @@ try_addrinfo(struct mnt_context *ctx, struct addrinfo *ai)
 static void
 parse_required_args(struct mnt_context *ctx, char **argv)
 {
-	char *path;
-	int addrlen, error;
 	struct addrinfo *ai, *res;
-	struct addrinfo hints = { 0 };
-	struct sockaddr *addr;
+	struct addrinfo hints;
+	char fstype[] = "p9fs";
+	int error;
 
+	bzero(&hints, sizeof(hints));
 	/* Parse pathspec */
 	ctx->path = strchr(argv[0], ':');
 	if (ctx->path == NULL)
@@ -211,7 +206,7 @@ parse_required_args(struct mnt_context *ctx, char **argv)
 	if (ctx->saddr.sa_family == 0)
 		errx(1, "No working address found for %s", argv[0]);
 
-	build_iovec(&ctx->iov, &ctx->iovlen, "fstype", "p9fs", (size_t)-1);
+	build_iovec(&ctx->iov, &ctx->iovlen, "fstype", fstype, (size_t)-1);
 	build_iovec(&ctx->iov, &ctx->iovlen, "hostname", argv[0], (size_t)-1);
 	build_iovec(&ctx->iov, &ctx->iovlen, "fspath", argv[1], (size_t)-1);
 	build_iovec(&ctx->iov, &ctx->iovlen, "path", ctx->path, (size_t)-1);
@@ -223,9 +218,10 @@ int
 main(int argc, char **argv)
 {
 	int ch;
-	struct mnt_context ctx = { 0 };
+	struct mnt_context ctx;
 	const char *optstr = "o:";
 
+	bzero(&ctx, sizeof(ctx));
 	while ((ch = getopt(argc, argv, optstr)) != -1) {
 		switch (ch) {
 		case 'o':
