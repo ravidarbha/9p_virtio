@@ -127,7 +127,7 @@ struct virtfs_session {
    for interactions*/
 int virtfs_vget(mp, ino, flags, vpp)
         struct mount *mp;
-        int ino;
+        ino_t ino;
         int flags;
         struct vnode **vpp;
 {
