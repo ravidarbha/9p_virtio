@@ -1,4 +1,3 @@
-
 #ifndef NET_9P_TRANSPORT_H
 #define NET_9P_TRANSPORT_H
 
