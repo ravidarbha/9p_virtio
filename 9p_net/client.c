@@ -45,8 +45,8 @@ static int parse_opts(struct mount  *mp, struct p9_client *clnt)
     	if (error)
         	return (error);
 
-	/* This will be moved to mod where we can have multiple entries in the 
-	 * table to search for and return the correct pointer. For now its a 
+	/* This will be moved to mod where we can have multiple entries in the
+	 * table to search for and return the correct pointer. For now its a
 	 * global pointer only for the trans_virtio set */
     	clnt->trans_mod = p9_get_trans_by_name(trans);
     	if (clnt->trans_mod == NULL) {
@@ -81,11 +81,11 @@ static void p9_free_req(struct p9_req_t *r)
  */
 void p9_client_cb(struct p9_client *c, struct p9_req_t *req)
 {
-	
+
 	// Finish the request to upper layers.
-	// Copy the information into buffers if needed (FS specific) 
+	// Copy the information into buffers if needed (FS specific)
 	// Add the request back into the list.
-//	complete_upper(req); 
+//	complete_upper(req);
 /*
 	bzero(req, sizeof(*req));
 	// add it back to the pool.
@@ -114,8 +114,8 @@ struct p9_req_t *get_request(void)
 		req->tc = p9_fcall_alloc(alloc_msize);
 	if (!req->rc)
 		req->rc = p9_fcall_alloc(alloc_msize);
-	
-	if (req->tc == NULL || req->rc == NULL) 
+
+	if (req->tc == NULL || req->rc == NULL)
 		return NULL;
 	return req;
 }
@@ -174,7 +174,7 @@ p9_client_rpc(struct p9_client *c, int8_t type, const char *fmt, ...)
 	struct p9_req_t *req;
 
 	va_start(ap, fmt);
-	/* This will get the req . Malloc the request, fill in the fd allocs 
+	/* This will get the req . Malloc the request, fill in the fd allocs
 	 * and then send the request for the type. */
 	req = p9_client_prepare_req(c, type, c->msize, fmt, ap);
 	va_end(ap);
@@ -222,7 +222,7 @@ reterr:
 	return NULL;
 }
 
-/* For the fid create, just use malloc for now.. 
+/* For the fid create, just use malloc for now..
  * we ll figure out a pool after POC */
 /* For every client_walk, start at the root node,and then do
  * a client walk till you find the node you are looking for.
@@ -320,12 +320,12 @@ error:
 
 #define INT_MAX 1024 // This is the max inode number.
 /* Return the client to the session in the FS to hold it */
-struct p9_client * 
+struct p9_client *
 p9_client_create(struct mount *mp)
 {
 	int err = 0;
 	struct p9_client *clnt;
-   
+
 	clnt = p9_malloc(sizeof(struct p9_client));
 	if (!clnt)
 		goto bail_out;
@@ -378,11 +378,11 @@ p9_client_create(struct mount *mp)
 	return clnt;
 
 bail_out:
-	if (err == -NOCLIENT_ERROR) 
+	if (err == -NOCLIENT_ERROR)
 	clnt->trans_mod->close(clnt);
 	if (clnt)
 	free(clnt, M_TEMP);
-	
+
 	return NULL;
 }
 
@@ -433,7 +433,7 @@ struct p9_fid *p9_client_attach(struct p9_client *clnt)
 	fid->uid = 0;
 
 	/* Woah giving access to everyone  ? */
-	/* Get uname from mount and stick it in this function. */ 
+	/* Get uname from mount and stick it in this function. */
 	req = p9_client_rpc(clnt, P9_TATTACH, "ddss?u", fid->fid,
 			P9_NOFID, 0, NULL, 0);
 	if (req == NULL) {
@@ -812,7 +812,7 @@ error:
 	return err;
 }
 
-/* Only support for readdir for now .*/ 
+/* Only support for readdir for now .*/
 int p9_client_readdir(struct p9_fid *fid, char *data, uint32_t count, uint64_t offset)
 {
 	int err, rsize;
@@ -847,7 +847,7 @@ int p9_client_readdir(struct p9_fid *fid, char *data, uint32_t count, uint64_t o
 
 	p9_debug(TRANS, "<<< RREADDIR count %d\n", count);
 
-	/* COpy back the data into the input buffer. */
+	/* Copy back the data into the input buffer. */
 	memmove(data, dataptr, count);
 
 	p9_free_req(req);
